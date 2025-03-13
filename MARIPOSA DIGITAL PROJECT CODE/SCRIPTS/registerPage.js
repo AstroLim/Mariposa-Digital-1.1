@@ -1,3 +1,4 @@
+//User Types Containers
 let Users = []
 let CourierUsers = []
 let StaffUsers = []
@@ -57,9 +58,8 @@ function registerUser(){
     localStorage.setItem("strMainAdminUsers", strMainAdminUsers)
 }
 
-
 function remItem(){
-    localStorage.removeItem("")
+    localStorage.removeItem("strUsers")
 }
 
 
