@@ -1,0 +1,683 @@
+/* Applied to All HTML Tags */
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url(../RESOURCES/imgFiles/Client_Home-Page/Landing-Homepage\ Ricefield.png);
+    background-size: cover;
+}
+
+/*NAV*/
+.mainCont-nav{
+    width: 100%;
+    height: 12%;
+    display: flex;
+    flex-direction: row;
+    background: rgba( 255, 255, 255, 0.1 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 3.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.mainCont-nav > div > a ,
+.mainCont-nav > div > p{
+    text-decoration: none;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/*NAV - Left-Sec*/
+.nav-left-sec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 8%;
+}
+
+.Logo{
+    margin-left: 15%;
+    width: 65%;
+}
+
+/*NAV - Right-Sec*/
+.nav-right-sec{
+    width: 47.5%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 8%;
+    margin-right: 2.5%;
+}
+
+.MainSection{
+    width: 100%;
+    height: 88%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.MainSection-header{
+    width: 100%;
+    height: 15vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    background-color: #162416;
+    margin-top: 2.5%;
+}
+
+.header-box1{
+    width: 30%;
+    height: 50%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+.header-box-content1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+}
+
+.MainSection-Content{
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.MainSection-Content-left-sec{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.lotManagementBox{
+    width: 55%;
+    height: 90%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+}
+
+.lotManagementBox-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.lotManagementBox-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.lotManagementBox-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 10%;
+}
+
+.lotManagementBox-sec-bot > button{
+    width: 90%;
+    height: 10%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/* DASHBOARD CSS */
+.MainSection-Content-right-sec{
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.right-sec-topContent{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5%;
+}
+
+.availableLotsStat-container{
+    width: 35%;
+    height: 75%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.availableLotsStat-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.availableLotsStat-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.availableLotsStat-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.statContainer{
+    width: 90%;
+    height: 20%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5%;
+}
+
+.statLabel, .stat{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1vw;  
+}
+
+.reservedLotsStat-container{
+    width: 35%;
+    height: 75%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.reservedLotsStat-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.reservedLotsStat-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.reservedLotsStat-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-sec-botContent{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.rentedLotsStat-container{
+    width: 75%;
+    height: 73%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.rentedLotsStat-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.rentedLotsStat-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.rentedLotsStat-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ADD LOT CSS */
+.addLotBox{
+    width: 55%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    gap: 5%;
+}
+
+.addLotBox-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.addLotBox-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.addLotBox-sec-bot{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: row;
+}
+
+.sec-bot-leftSec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12%;
+}
+
+.sec-bot-leftSec > label{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.5vw;  
+    margin-left: 50%;
+}
+
+.sec-bot-rightSec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 13%;
+}
+
+.sec-bot-rightSec > input{
+    width: 80%;
+    height: 12%;
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.5vw;  
+    background-color: #223a23da;
+    border-radius: 22px;
+    margin-top: 2%;
+}
+
+.addLotBox-sec-footer{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addLotBox-sec-footer > button{
+    width: 50%;
+    height: 30%;
+    background-color: #F5F5F5;
+    border-radius: 32px;
+    color: #000000;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/*Remove LOT CSS */
+.removeLotBox{
+    width: 60%;
+    height: 45%;
+    display: flex;
+    flex-direction: column;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    gap: 5%;
+}
+
+.removeLotBox-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.removeLotBox-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.removeLotBox-sec-bot{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5%;
+}
+
+.removeLotBox-sec-bot > label{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.5vw;  
+    margin-left: 10%;
+}
+
+.removeLotBox-sec-bot > input{
+    width: 60%;
+    height: 20%;
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.5vw;  
+    background-color: #223a23da;
+    border-radius: 22px;
+    margin-top: 1%;
+}
+
+.removeLotBox-sec-footer{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+.removeLotBox-sec-footer > button{
+    width: 50%;
+    height: 70%;
+    background-color: #F5F5F5;
+    border-radius: 32px;
+    color: #000000;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/*Cancel LOT Reservation CSS */
+.cancelLotReservationBox{
+    width: 50%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    gap: 5%;
+}
+
+.cancelLotReservationBox-sec-top{
+    width: 100%;
+    height: 15%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.cancelLotReservationBox-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.cancelLotReservation-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5%;
+    overflow-y: auto;
+}
+
+.cancelLotBox{
+    width: 40%;
+    height: 45%;
+    display: flex;
+    flex-direction: column;
+    background-color: #D9D9D9 ;
+}
+
+.cancelLotBox > header{
+    width: 100%;
+    height: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lotImg{
+    width: 40%;
+    height: 85%;
+    background-color: #660001;
+}
+
+.cancelLotBox > main{
+    width: 100%;
+    height: 55%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10%;
+}
+
+.cancelLotBox > main > div{
+    width: 90%;
+    height: 30%;
+    background-color: #142214;
+    border-radius: 5px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    display: flex;
+    justify-content: center;
+}
+
+.cancelLotBox > main > button{
+    width: 80%;
+    height: 30%;
+    background-color: #142214;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 0.8vw;
+}
+
+/*Lot Contract Signing Date CSS*/
+.manageContractScheduleBox{
+    width: 80%;
+    height: 90%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    margin-left: 5%;
+}
+
+.manageContractScheduleBox-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.manageContractScheduleBox-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.manageContractScheduleBox-sec-bot{
+    width: 100%;
+    height: 75%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2.5%;
+    overflow-y: auto;
+}
+
+.contractLotInfoBox{
+    width: 30%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    background-color: #D9D9D9 ;
+}
+
+.contractLotInfoBox > header{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contractLotInfoBox > header >  h1{
+    color: #000000;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+}
+
+.contractLotInfoBox > main{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: row;
+}
+
+.main-contractLotInfoBox-leftSec{
+    width: 45%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+}
+
+.main-contractLotInfoBox-rightSec{
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.lotImg{
+    width: 80%;
+    height: 75%;
+    background-color: #660001;
+}
+
+.main-contractLotInfoBox-leftSec > button{
+    width: 85%;
+    height: 19%;
+    background-color: #142214;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 0.8vw;
+}
+
+.main-contractLotInfoBox-leftSec > div{
+    width: 90%;
+    height: 19%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #142214;
+    border-radius: 5px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 0.7vw;
+}

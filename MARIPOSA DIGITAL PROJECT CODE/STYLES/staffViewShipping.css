@@ -1,0 +1,227 @@
+/* Applied to All HTML Tags */
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url(../RESOURCES/imgFiles/Client_Home-Page/Landing-Homepage\ Ricefield.png);
+    background-size: cover;
+}
+
+/*NAV*/
+.mainCont-nav{
+    width: 100%;
+    height: 12%;
+    display: flex;
+    flex-direction: row;
+    background: rgba( 255, 255, 255, 0.1 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 3.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.mainCont-nav > div > a ,
+.mainCont-nav > div > p{
+    text-decoration: none;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/*NAV - Left-Sec*/
+.nav-left-sec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 8%;
+}
+
+.Logo{
+    margin-left: 15%;
+    width: 65%;
+}
+
+/*NAV - Right-Sec*/
+.nav-right-sec{
+    width: 47.5%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 8%;
+    margin-right: 2.5%;
+}
+
+.MainSection{
+    width: 100%;
+    height: 88%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.MainSection-header{
+    width: 100%;
+    height: 15vh;
+    display: flex;
+    flex-direction: row;
+    background-color: #162416;
+    margin-top: 2.5%;
+}
+
+.header-box-leftSec{
+    width: 120%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.header-box-rightSec{
+    width: 80%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.header-box1{
+    width: 30%;
+    height: 40%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+.header-box2{
+    width: 30%;
+    height: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10%;
+}
+
+.header-box-content1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+}
+
+.header-box-content2{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.5vw;  
+}
+
+/* VIEWPORT-1 | MainSection-Rows*/
+.MainSection-Row{
+    width: 100%;
+    height: 70.5vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    overflow-y: auto;
+}
+
+/* VIEWPORT-1 | MainSection-Rows-Divs*/
+.MainSection-Row > div{
+    width: 20%;
+    height: 85%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* VIEWPORT-1 | Main Section-Rows-Divs-SecTop*/
+.order-sec-top{
+    width: 100%;
+    height: 25%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.order-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+/* VIEWPORT-1 | Main Section-Rows-Divs-SecBot*/
+.order-sec-bot{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 5%;
+}
+
+.order-sec-bot > div{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.order-sec-bot > a{
+    width: 40%;
+    height: 75%;
+    margin-left: 5%;
+}
+
+.order-sec-bot-btn{
+    width: 100%;
+    height: 70%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/* VIEWPORT-1 | Main Section-Rows-Divs-footer*/
+.order-sec-footer{
+    width: 100%;
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-sec-footer > p {
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.2vw;  
+}
+
+.status{
+    margin-left: 2%;
+}

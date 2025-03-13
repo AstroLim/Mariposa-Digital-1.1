@@ -1,0 +1,200 @@
+/* Applied to All HTML Tags */
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+nav{
+    width: 100%;
+    height: 12%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    background-color: #FFFFFF;
+}
+
+nav > div > a ,
+nav > div > p{
+    text-decoration: none;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/*NAV -Left-Sec*/
+.nav-left-sec{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 3%;
+}
+
+.Logo{
+    margin-left: 15%;
+    width: 65%;
+}
+
+/*NAV - Right-Sec*/
+.nav-right-sec{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 3%;
+    margin-right: 2.5%;
+}
+
+/*MainSection*/
+.MainSection{
+    width: 100%;
+    height: 88%;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*MainSection | Header*/
+.MainSection-header{
+    width: 100%;
+    height: 17vh;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: #162416;
+}
+
+.header-box{
+    width: 20%;
+    height: 40%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+.header-box-content1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+}
+
+.MainSection-mainCont{
+    width: 90%;
+    height: 73vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    gap: 3%;
+    padding-top: 8%;
+    padding-bottom: 8%;
+}
+
+/* VIEWPORT-1 | MainSection-Rows*/
+.MainSection-Row{
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    min-height: 0;
+}
+
+/* VIEWPORT-1 | MainSection-Rows-Divs*/
+.MainSection-Row > div{
+    width: 25%;
+    height: 90%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* VIEWPORT-1 | Main Section-Rows-Divs-SecTop*/
+.order-sec-top{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.order-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+/* VIEWPORT-1 | Main Section-Rows-Divs-SecBot*/
+.order-sec-bot{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 5%;
+}
+
+/* VIEWPORT-1 | Main Section-Rows-Divs-SecBotBTN*/
+.order-sec-bot > button{
+    width: 40%;
+    height: 85%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    margin-left: 5%;
+    position: relative;
+    top: 100%;
+}
+
+.description{
+    width: 40%;
+    height: 75%;
+    margin-left: 5%;
+    position: relative;
+    top: 100%;
+}
+
+.order-sec-bot-btn{
+    width: 100%;
+    height: 100%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/* VIEWPORT-1 | Main Section-Rows-Divs-SecBotIMG*/
+.orderPic{
+    background-color: #223A23;
+    width: 30%;
+    height: 100%;
+    position: relative;
+    bottom: 10%;
+    left: 60%;
+}

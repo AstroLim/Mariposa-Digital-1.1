@@ -1,0 +1,763 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(245, 245, 245);
+}
+
+.nav-container {
+  display: flex;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  background: transparent;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 100;
+  position: fixed;
+  width: 100%;
+  font-weight: bold;
+  transition: background-color 0.3s ease; 
+  background-color: white;
+}
+
+.nav-container.scrolled {
+  background: white; 
+  color: black; 
+}
+
+.nav-user {
+  display: flex;
+  flex: 1;
+}
+
+.nav-shortcuts {
+  display: flex;
+  flex: 2;
+  align-items: center;
+  padding-left: 280px;
+}
+
+.nav-shortcut-links {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  margin-right: 100px;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  text-decoration: none;
+  color: black;
+}
+
+.nav-user-container {
+  display: flex;
+  flex: 1;
+  justify-content: space-evenly;
+  align-items: center;
+  color: rgba(104, 42, 46, 1);
+}
+
+.nav-shortcut-links--design {
+  display: flex;
+  padding: 10px;
+  text-decoration: none;
+  color: rgba(104, 42, 46, 1);
+}
+
+.nav-shortcut-links--active {
+  background-color: rgba(139, 0, 0, 0.117);
+  border-radius: 10px;
+}
+
+.main {
+  display: flex;
+}
+
+#sidebar {
+  width: 230px;
+}
+
+.sidebar-logo {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sidebar-logo--fit {
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.sidebar-option--selected {
+  background-color: darkred;
+  border-radius: 10px;
+  color: white;
+}
+
+.manage-mainview {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  margin-left: 320px;
+  margin-top: 60px;
+  margin-right: 80px;
+}
+
+.manage-mainview-title {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.manage-mainview-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.manage-mainview-title-container button {
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 30px;
+  cursor: pointer;
+}
+
+
+.manage-mainview-settings {
+  background-color: white;
+  border-radius: 20px;
+  width: 100%;
+  display: flex;
+  margin-bottom: 100px;
+}
+
+.manage-mainview-settings-options {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  padding-right: 30px;
+  padding-top: 20px;
+  background-color: white;
+  border-radius: 20px;
+}
+
+.manage-mainview-settings-options-button {
+  white-space: nowrap;
+  margin: 10px 5px;
+  padding: 10px 15px;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9em;
+  color: grey;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.manage-mainview-settings-options--selected{
+  color: darkred;
+  background-color: rgba(139, 0, 0, 0.117);
+}
+
+#manage-mainview-settings-header {
+  position: absolute;
+  margin-top: -25px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#manage-mainview-settings-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  border-radius: 20px;
+  width: 100%;
+  margin-right: 60px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+#manage-mainview-settings-editable {
+  border-radius: 20px;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* View Lots Css */
+.view-lots {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  white-space: wrap;
+}
+
+.view-lots-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 10px;
+  width: 260px;
+}
+
+.view-lots-container-header {
+  margin-bottom: 0;
+}
+
+.view-lots-container-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.view-lots-container-info-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  border-radius: 20px;
+  margin-right: 10px;
+  margin-top: 0;
+}
+
+.view-lots-container-info-left-button {
+  background-color: darkred;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 30px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.view-lots-container-info-left-description {
+  background-color: rgba(80, 123, 88, 1);
+  color: rgba(27, 24, 16, 1);
+  padding: 10px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 20px;
+  font-size: 15px;
+  margin-top: 0;
+  width: 100%;
+}
+
+/* End of View Lots CSS */
+
+
+/* Add Lots CSS */
+.add-lot-container {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.add-lot-container-header {
+  font-size: 1.5em;
+  color: darkred;
+  margin-bottom: 20px;
+}
+
+.add-lot-container-info {
+  display: flex;
+  gap: 20px;
+}
+
+.add-lot-container-info-left,
+.add-lot-container-info-right {
+  flex: 1;
+  margin: 10px;
+}
+
+.add-lot-container-info label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.add-lot-container-info input,
+.add-lot-container-info textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.add-lot-container-info textarea {
+  resize: vertical;
+}
+
+.add-lot-container-info button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: darkred;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-lot-container-info button:hover {
+  background-color: red;
+}
+/* End of Add Lots CSS */
+
+
+/* Remove Lot CSS */
+.remove-lot {
+  padding: 20px;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.remove-lot h2 {
+  font-size: 1.5em;
+  color: darkred;
+  margin-bottom: 20px;
+}
+
+.remove-lot-form-group {
+  margin-bottom: 15px;
+}
+
+.remove-lot-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.remove-lot-form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.remove-lot-button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: darkred;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* End of Remove Lot CSS */
+
+
+/* Lot Reservation CSS */
+.lot-reservation {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.lot-reservation-container {
+  margin-bottom: 20px;
+}
+
+.lot-reservation-container-header {
+  font-size: 1.5em;
+  color: darkred;
+  margin-bottom: 20px;
+}
+
+.lot-reservation-container-box-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.lot-reservation-container-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: white;
+  width: fit-content;
+}
+
+.lot-reservation-container-box-img img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.lot-reservation-container-box div {
+  font-size: 1em;
+  color: black;
+  font-weight: bold;
+}
+
+.lot-reservation-container-box div span {
+  font-size: 1em;
+  color: darkred;
+  font-weight: normal;
+}
+
+.lot-reservation-container-box button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: darkred;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.lot-reservation-container-box button:hover {
+  background-color: red;
+}
+/* End of Lot Reservation CSS */
+
+
+/* Contract Schedule CSS */
+.contract-schedule {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.contract-schedule-layout {
+  margin-bottom: 20px;
+}
+
+.contract-schedule-layout-header {
+  font-size: 1.5em;
+  color: darkred;
+  margin-bottom: 50px;
+}
+
+.contract-schedule-layout-box-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.contract-schedule-layout-box {
+  padding: 20px;
+  width: fit-content;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.contract-schedule-layout-box h2 {
+  font-size: 1.2em;
+  color: darkred;
+  margin-bottom: 0px;
+}
+
+.contract-schedule-layout-box-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contract-schedule-layout-box-info-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-right: 20px;
+  margin-top: 0;
+}
+
+.contract-schedule-layout-box-info-left div {
+  font-size: 1em;
+  color: black;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.contract-schedule-layout-box-info-left div span{
+  font-size: 1em;
+  color: darkred;
+}
+
+.contract-schedule-layout-box-info-left button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: darkred;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contract-schedule-layout-box-info-left button:hover {
+  background-color: red;
+}
+
+.contract-schedule-layout-box img {
+  width: 100px;
+  height: auto;
+  border-radius: 5px;
+}
+/* End of Contract Schedule CSS */
+
+
+/* View Products CSS */
+.view-products {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  white-space: wrap;
+}
+
+.view-products-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 10px;
+  width: 260px;
+}
+
+.view-products-container-header {
+  margin-bottom: 0;
+}
+
+.view-products-container-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.view-products-container-info-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  border-radius: 20px;
+  margin-right: 10px;
+  margin-top: 0;
+}
+
+.view-products-container-info-left-button {
+  background-color: darkred;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 30px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.view-products-container-info-left-description {
+  background-color: rgba(80, 123, 88, 1);
+  color: rgba(27, 24, 16, 1);
+  padding: 10px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 20px;
+  font-size: 15px;
+  margin-top: 0;
+  width: 100%;
+  cursor: pointer;
+}
+/* End of View Products CSS */
+
+
+/* Add Product CSS */
+.add-products {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.add-products-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-products-container label {
+  font-weight: bold;
+  color: darkred;
+}
+
+.add-products-container input[type="text"],
+.add-products-container input[type="file"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.add-products-container button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: darkred;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.add-products-container button:hover {
+  background-color: red;
+}
+/* End of Add Product CSS */
+
+
+/* Remove Product CSS */
+.remove-product {
+  padding: 20px;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.remove-product h2 {
+  font-size: 1.5em;
+  color: darkred;
+  margin-bottom: 20px;
+}
+
+.remove-product-form-group {
+  margin-bottom: 15px;
+}
+
+.remove-product-form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.remove-product-form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.remove-product-button {
+  padding: 10px 15px;
+  font-size: 1em;
+  color: white;
+  background-color: darkred;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* End of Remove Product CSS */
+
+
+/* Product Logs CSS */
+.logs {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+.logs-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+.logs-container h2 {
+  font-size: 1.2em;
+  color: darkred;
+  white-space: nowrap;
+}
+
+.logs-container div {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 1px solid rgba(139, 0, 0, 0.597);
+}
+
+.logs-container div span {
+  color: darkred;
+}
+/* End of Product Logs CSS */
+
+aside {
+  position: fixed;
+  z-index: 100;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  background-color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+aside a {
+  display: block;
+  margin: 0;
+  font-size: 1.0em;
+  color: grey;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+section {
+  width: 80%;
+  padding: 20px;
+}
+
+header h1 {
+  font-size: 2em;
+  display: inline-block;
+  color: darkred;
+}
+
+button:hover {
+  opacity: 0.8;
+  transition: 0.2s;
+}
+
+section div {
+  margin-top: 20px;
+}
+
+section h2 {
+  font-size: 1.5em;
+  color: darkred;
+}
+
+section p {
+  font-size: 1.2em;
+}

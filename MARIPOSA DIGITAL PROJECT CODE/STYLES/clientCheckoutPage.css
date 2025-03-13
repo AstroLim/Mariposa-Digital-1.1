@@ -1,0 +1,274 @@
+/* Applied to All HTML Tags */
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+nav{
+    width: 100%;
+    height: 12%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    background-color: #FFFFFF;
+}
+
+nav > div > a ,
+nav > div > p{
+    text-decoration: none;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/*NAV -Left-Sec*/
+.nav-left-sec{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 3%;
+}
+
+.Logo{
+    margin-left: 15%;
+    width: 65%;
+}
+
+/*NAV - Right-Sec*/
+.nav-right-sec{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 3%;
+    margin-right: 2.5%;
+}
+
+/*MainSection | Header*/
+.MainSection-header{
+    width: 100%;
+    height: 17vh;
+    display: flex;
+    flex-direction: row;
+    background-color: #162416;
+}
+
+.header-box-leftSec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.header-box-rightSec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.header-box1{
+    width: 30%;
+    height: 40%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+.header-box2{
+    width: 30%;
+    height: 40%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10%;
+}
+
+.header-box-content{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+}
+
+.MainSection-mainCont{
+    width: 90%;
+    height: 71vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.mainCont-leftSec{
+    width: 45%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.paymentMethod-container{
+    width: 75%;
+    height: 30%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10%;
+}
+
+.pmc-sec-top{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.pmc-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.pmc-sec-bot{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 15%;
+}
+
+.pmc-sec-bot > button{
+    width: 30%;
+    height: 30%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+.mainCont-rightSec{
+    width: 55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    overflow-y: auto;
+}
+
+.mainCont-rightSec-Row{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.mainCont-rightSec-Row > div{
+    width: 45%;
+    height: 55%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* VIEWPORT-1 | mainCont-rightSec-RowDivs-SecTop*/
+.order-sec-top{
+    width: 100%;
+    height: 40%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.order-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+/* VIEWPORT-1 | mainCont-rightSec-Row-Divs-SecBot*/
+.order-sec-bot{
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 15%;
+}
+
+/* VIEWPORT-1 | mainCont-rightSec-Row-Divs-SecBotBTN*/
+.order-sec-bot > button{
+    width: 40%;
+    height: 85%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    margin-left: 5%;
+    position: relative;
+    top: 50%;
+}
+
+.description{
+    width: 40%;
+    height: 75%;
+    margin-left: 5%;
+    position: relative;
+    top:50%;
+}
+
+.order-sec-bot-btn{
+    width: 100%;
+    height: 100%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/* VIEWPORT-1 | mainCont-rightSec-Row-Divs-SecBotIMG*/
+.orderPic{
+    background-color: #223A23;
+    width: 30%;
+    height: 100%;
+    position: relative;
+    bottom: 10%;
+    left: 60%;
+}
