@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <link rel="stylesheet" href="../STYLES/ma-settings.css">
+</head>
+<body>
+  <nav class="nav-container">
+    <div class="nav-shortcuts">
+      <div class="nav-shortcut-links">
+        <a class="nav-shortcut-links--design" href="ma-home-page.html">Home</a>
+        <a class="nav-shortcut-links--design" href="ma-view-shipping.html">View Shipping</a>
+        <a class="nav-shortcut-links--design nav-shortcut-links--active" href="ma-settings.html">Settings</a>
+        <a class="nav-shortcut-links--design" href="ma-manage-lots.html">Manage</a>
+      </div>
+    </div>
+
+    <div class="nav-user">
+      <div class="nav-user-container">
+        <div>Suarez, Lander Gerard R.</div>
+        <img src="images/profile.png" alt="pfp">
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <aside id="sidebar">
+      <a href="ma-home-page.html" class="sidebar-logo">
+        <img class="sidebar-logo--fit" src="../RESOURCES/imgFiles/Logo.png" alt="Mariposa Digital">
+      </a>
+      <a href="ma-settings.html" class="sidebar-option--selected">User</a>
+    </aside>
+
+    <section class="settings-mainview">
+      <section class="settings-mainview-title">
+        <h1>Settings</h1>
+      </section>
+      <section class="settings-mainview-content">
+        <div class="settings-mainview-content-header">
+          <h3>Your Profile</h3>
+          <h5>Please update your profile settings here</h5>
+        </div>
+
+        <div class="settings-mainview-content-container">
+          <h4>Username</h4>
+          <div class="input-container">
+            <input class="input-username" type="text" placeholder="username">
+            <input class="input-submit" type="submit" value="Apply">
+          </div>
+        </div>
+
+        <div class="settings-mainview-content-container">
+          <h4>Phone Number</h4>
+          <div class="input-container">
+            <input class="input-phone" type="text" placeholder="phone">
+            <input class="input-submit" type="submit" value="Apply">
+          </div>
+        </div>
+
+        <div class="settings-mainview-content-container">
+          <h4>Profile Picture</h4>
+          <div class="input-container">
+            <img src="" alt="pfp">
+            <input class="input-phone" type="file" placeholder="Edit">
+            <input class="input-submit" type="submit" value="Apply">
+            <input class="input-delete" type="submit" value="Delete">
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

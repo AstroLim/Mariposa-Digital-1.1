@@ -2,26 +2,20 @@ body {
   font-family: Georgia, 'Times New Roman', Times, serif;
   margin: 0;
   padding: 0;
+  background-color: black;
 }
 
 .nav-container {
   display: flex;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-  background: transparent;
   align-items: center;
-  padding: 10px 20px;
+  padding: 0px 10px;
   z-index: 2;
   position: fixed;
   width: 100%;
   color: darkred;
   font-weight: bold;
   transition: background-color 0.3s ease; 
-  background-color: rgba(80, 123, 88, 1);
-}
-
-.nav-container.scrolled {
-  background: white; 
-  color: black; 
+  background-color: white;
 }
 
 .nav-user {
@@ -40,10 +34,13 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  flex: 1;
+  height: 100px;
 }
 
 .nav-shortcut-links {
   display: flex;
+  position: relative;
   flex: 1;
   flex-wrap: wrap;
   margin-right: 100px;
@@ -51,6 +48,45 @@ body {
   align-items: flex-start;
   text-decoration: none;
   color: black;
+}
+
+.nav-shortcut-dropdown {
+  display: none;
+  position: relative;
+  background-color: white;
+  background-image: url('../RESOURCES/mainAdminImgs/nav-dropdown.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+  padding: 20px;
+  z-index: 1;
+}
+
+.nav-shortcut-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.nav-shortcut-dropdown:hover .nav-shortcut-dropdown-content {
+  display: block;
+}
+
+@media screen and (max-width: 1000px) {
+  .nav-shortcuts {
+    flex: 1;
+  }
+
+  .nav-shortcut-links {
+    display: none;
+  }
+
+  .nav-shortcut-dropdown {
+    display: block;
+  }
 }
 
 .nav-logo--fit {
@@ -66,35 +102,48 @@ body {
   flex: 1;
   justify-content: space-evenly;
   align-items: center;
-  color: rgba(104, 42, 46, 1);
+  color: #2D5F4D;
 }
 
 .nav-shortcut-links--design {
   display: flex;
   padding: 10px;
   text-decoration: none;
-  color: rgba(104, 42, 46, 1);
+  color: grey;
 }
 
 .nav-shortcut-links--active {
-  color: white;
+  color: #2D5F4D;
+  border-bottom: 1px solid #FFD17B;
 }
 
 .main-admin-welcome-container {
   width: 40%;
   padding: 100px;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
   display: block;
   z-index: 0;
   position: absolute;
+  left: 0;
   border-radius: 20px;
+  color: white;
+}
+
+.main-admin-welcome-container span {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1vw;
+}
+
+.main-admin-welcome-container p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1vw;
+  
 }
 
 .main-admin-welcome {
-  color: yellowgreen;
+  color: white;
   font-size: 6vw;
-  text-align: center;
+  text-align: left;
+  margin: 30px 0;
 }
 
 .main-admin-options {
@@ -102,6 +151,7 @@ body {
   height: 100vh;
   background-color: white;
   z-index: 1;
+  position: relative;
 }
 
 .main-admin-background-img {
@@ -110,6 +160,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  filter: brightness(0.8);
   height: 100%;
   width: 100%;
   top: 0;
@@ -149,18 +200,36 @@ body {
   width: 100%;
   height: 100%;
   padding-bottom: 100px;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: white;
+  position: relative;
+}
+
+.divider {
+  background: url('../RESOURCES/SVG/main-admin/ripped-edge.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 1000;
+  background-size: cover;
+  width: 100%;
+  aspect-ratio: 900/50;
+  z-index: 1;
 }
 
 .main-admin-options-label {
   display: flex;
   flex-direction: column;
   font-size: 7vh;
-  color: yellowgreen;
-  padding-top: 170px;
+  color: rgb(1, 113, 74);
+  padding-top: 100px;
   padding-bottom: 170px;;
   width: 70%;
   align-items: center;
+  border-top: #2D5F4D solid 2px;
+}
+
+.main-admin-options-label--subtitle {
+  font-size: 4vh;
+  padding-top: 10px;
 }
 
 .main-admin-options-container {
@@ -170,6 +239,7 @@ body {
   width: 70%;
   height: 100%;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .main-admin-options-container-manage-orders {

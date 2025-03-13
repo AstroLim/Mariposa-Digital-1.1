@@ -12,7 +12,7 @@
         <div class="nav-shortcut-links">
           <a class="nav-shortcut-links--design" href="ma-home-page.html">Home</a>
           <a class="nav-shortcut-links--design" href="ma-view-shipping.html">View Shipping</a>
-          <a class="nav-shortcut-links--design" href="ma-services.html">Settings</a>
+          <a class="nav-shortcut-links--design" href="ma-settings.html">Settings</a>
           <a class="nav-shortcut-links--design nav-shortcut-links--active" href="ma-manage-accounts.html">Manage</a>
         </div>
       </div>
@@ -34,39 +34,61 @@
         <a href="ma-manage-products.html">Products</a>
         <a href="ma-manage-orders.html">Orders</a>
         <a href="ma-manage-accounts.html" class="sidebar-option--selected">Accounts</a>
-        <a href="ma-manage-staff.html">Staff</a>
       </aside>
       <div class="manage-mainview">
         <section class="manage-mainview-title">
           <header class="manage-mainview-title-container">
             <h1>Users</h1>
-            <button>+Add User</button>
+            <button onclick="manageAccountsSelectedOpt('Add User');">+Add User</button>
           </header>
         </section>
         <section class="manage-mainview-settings">
           <div class="manage-mainview-settings-options">
-            <button class="manage-mainview-settings-options-button manage-mainview-settings-options--selected">View Users</button>
-            <button class="manage-mainview-settings-options-button">Add User</button>
-            <button class="manage-mainview-settings-options-button">Remove User</button>
-            <button class="manage-mainview-settings-options-button">Edit User</button>
-            <button class="manage-mainview-settings-options-button">User</button>  
+            <button onclick="manageAccountsSelectedOpt('View Accounts');" class="manage-mainview-settings-options-button manage-mainview-settings-options--selected">View Accounts</button>
+            <button onclick="manageAccountsSelectedOpt('Add User');" class="manage-mainview-settings-options-button">Add User</button>
+            <button onclick="manageAccountsSelectedOpt('Remove User');" class="manage-mainview-settings-options-button">Remove User</button>
+            <button onclick="manageAccountsSelectedOpt('Edit User');" class="manage-mainview-settings-options-button">Edit User</button>  
+            <button onclick="manageAccountsSelectedOpt('Logs');" class="manage-mainview-settings-options-button">Logs</button>  
           </div>
-          <div id="manage-mainview-settings-editable">
-            <div>
-              <h2>Available Lots</h2>
-              <p>Number of available lots: <span id="available-lots-count">0</span></p>
-            </div>
-            <div>
-              <h2>Reserved Lots</h2>
-              <p>Number of reserved lots: <span id="reserved-lots-count">0</span></p>
-            </div>
-            <div>
-              <h2>Rented Lots</h2>
-              <p>Number of rented lots: <span id="rented-lots-count">0</span></p>
-            </div>  
+          <div id="manage-mainview-settings-container">
+            <div id="manage-mainview-settings-header">View Users</div>
+            <div id="manage-mainview-settings-editable">
+              <div class="view-users">
+                <div class="view-users-search">
+                  <input type="text" placeholder="Search for users...">
+                  <button>Search</button>
+                </div>
+                <div class="user-card">
+                  <div class="user-info">
+                    <h3>John Doe</h3>
+                    <p>Email: john.doe@example.com</p>
+                    <p>Role: Admin</p>
+                    <p>User ID: <span>N/A</span></p>
+                  </div>
+                  <div class="user-actions">
+                    <button onclick="manageAccountsSelectedOpt('Edit User');">Edit</button>
+                    <button onclick="manageAccountsSelectedOpt('Remove User');">Remove</button>
+                  </div>
+                </div>
+                <div class="user-card">
+                  <div class="user-info">
+                    <h3>Jane Smith</h3>
+                    <p>Email: jane.smith@example.com</p>
+                    <p>Role: User</p>
+                    <p>User ID: <span>N/A</span></p>
+                  </div>
+                  <div class="user-actions">
+                    <button>Edit</button>
+                    <button>Remove</button>
+                  </div>
+                </div>
+                <!-- TBC -->
+              </div>
+            </div>   
           </div>
         </section>
       </div>
     </main>
+    <script src="../SCRIPTS/ma-manage.js"></script>
   </body>
 </html>

@@ -2,27 +2,20 @@ body {
   font-family: Georgia, 'Times New Roman', Times, serif;
   margin: 0;
   padding: 0;
-  background-color: rgba(234, 207, 155, 1);
+  background-color: #2D5F4D;
 }
 
 .nav-container {
   display: flex;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-  background: transparent;
   align-items: center;
-  padding: 10px 20px;
+  padding: 0px 10px;
   z-index: 2;
   position: fixed;
   width: 100%;
   color: darkred;
   font-weight: bold;
   transition: background-color 0.3s ease; 
-  background-color: rgba(80, 123, 88, 1);
-}
-
-.nav-container.scrolled {
-  background: white; 
-  color: black; 
+  background-color: white;
 }
 
 .nav-user {
@@ -41,10 +34,13 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  flex: 1;
+  height: 100px;
 }
 
 .nav-shortcut-links {
   display: flex;
+  position: relative;
   flex: 1;
   flex-wrap: wrap;
   margin-right: 100px;
@@ -52,6 +48,45 @@ body {
   align-items: flex-start;
   text-decoration: none;
   color: black;
+}
+
+.nav-shortcut-dropdown {
+  display: none;
+  position: relative;
+  background-color: white;
+  background-image: url('../RESOURCES/mainAdminImgs/nav-dropdown.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+  padding: 20px;
+  z-index: 1;
+}
+
+.nav-shortcut-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.nav-shortcut-dropdown:hover .nav-shortcut-dropdown-content {
+  display: block;
+}
+
+@media screen and (max-width: 1000px) {
+  .nav-shortcuts {
+    flex: 1;
+  }
+
+  .nav-shortcut-links {
+    display: none;
+  }
+
+  .nav-shortcut-dropdown {
+    display: block;
+  }
 }
 
 .nav-logo--fit {
@@ -67,18 +102,19 @@ body {
   flex: 1;
   justify-content: space-evenly;
   align-items: center;
-  color: rgba(104, 42, 46, 1);
+  color: #2D5F4D;
 }
 
 .nav-shortcut-links--design {
   display: flex;
   padding: 10px;
   text-decoration: none;
-  color: rgba(104, 42, 46, 1);
+  color: grey;
 }
 
 .nav-shortcut-links--active {
-  color: white;
+  color: #2D5F4D;
+  border-bottom: 1px solid #FFD17B;
 }
 
 #order-interface {
@@ -86,7 +122,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 100px;
+  padding-top: 150px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
@@ -97,7 +133,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background-color: rgba(80, 123, 88, 1);
+  background-color: rgba(1, 50, 33, 1);
   color: white;
   font-weight: bold;
   border-radius: 10px;

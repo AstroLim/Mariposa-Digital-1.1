@@ -92,7 +92,6 @@ body {
 
 .sidebar-option--selected {
   background-color: darkred;
-  border-radius: 10px;
   color: white;
 }
 
@@ -518,6 +517,57 @@ body {
 }
 /* End of Contract Schedule CSS */
 
+/* Lot Logs CSS */
+.lot-logs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.lot-logs-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.lot-logs-header label {
+  font-weight: bold;
+}
+
+.lot-logs-header input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.lot-logs-header button {
+  padding: 10px 20px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.lot-logs-header button:hover {
+  opacity: 0.7;
+}
+
+.lot-logs-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-entry {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+/* End of Lot Logs CSS */
+
 
 /* View Products CSS */
 .view-products {
@@ -708,7 +758,516 @@ body {
 .logs-container div span {
   color: darkred;
 }
+
+.product-logs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-logs button {
+  padding: 10px 20px;
+  background-color: darkred;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
 /* End of Product Logs CSS */
+
+
+/* View Orders CSS */
+.view-orders {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  white-space: wrap;
+}
+
+.view-orders-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 10px;
+  width: 260px;
+}
+
+.view-orders-container-header {
+  margin-bottom: 0;
+}
+
+.view-orders-container-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.view-orders-container-info-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: start;
+  border-radius: 20px;
+  margin-right: 10px;
+  margin-top: 0;
+}
+
+.view-orders-container-info-left-button {
+  background-color: darkred;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 30px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.view-orders-container-info-left-description {
+  background-color: rgba(80, 123, 88, 1);
+  color: rgba(27, 24, 16, 1);
+  padding: 10px 20px;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 20px;
+  font-size: 15px;
+  margin-top: 0;
+  width: 100%;
+  cursor: pointer;
+}
+/* End of View Orders CSS */
+
+
+/* Update Order CSS */
+.update-order {
+  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 10px;
+}
+
+.update-order button{
+  padding: 10px 20px;
+  background-color: darkred;
+  color: white;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.update-order input{
+  padding: 10px 20px;
+  margin: 0px 20px;
+  border-radius: 10px;
+}
+
+.update-order select{
+  padding: 10px 20px;
+  margin: 0px 20px;
+  border-radius: 10px;
+}
+/* End of Update Order CSS */
+
+
+/* Add Order CSS */
+.add-order {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.add-order h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.order-form-group {
+  margin-bottom: 15px;
+}
+
+.order-form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.order-form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-order-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-order-form button:hover {
+  opacity: 0.7;
+}
+/* End of Add Order CSS */
+
+
+/* Remove Order CSS */
+.remove-order {
+  display: flex;
+  flex-direction: column;
+}
+
+.remove-order-search {
+  display: flex;
+  gap: 20px;
+  margin-top: 0;
+  padding-bottom: 20px;
+}
+
+.remove-order-search button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: darkred;
+  color: white;
+  cursor: pointer;
+}
+
+.remove-order-search input {
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.remove-order-container {
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  border: 1px solid #ccc;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.remove-order-container button {
+  padding: 10px 20px;
+  background-color: darkred;
+  color: white;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.remove-order-container div {
+  margin: 0;
+}
+/* End of Remove Order CSS */
+
+/* Order Logs CSS */
+.order-logs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-logs-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.order-logs-header label {
+  font-weight: bold;
+}
+
+.order-logs-header input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.order-logs-header button {
+  padding: 10px 20px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.order-logs-header button:hover {
+  opacity: 0.7;
+}
+
+.order-logs-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-entry {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+
+/* View Users CSS */
+.view-users {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.view-users-search {
+  display: flex;
+  gap: 20px;
+  margin-top: 0;
+  padding-bottom: 20px;
+}
+
+.view-users-search input {
+  padding: 10px 20px;
+  border-radius: 20px;
+}
+
+.view-users-search button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: darkred;
+  color: white;
+  cursor: pointer;
+}
+
+.user-card {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.user-actions button {
+  padding: 10px 20px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.user-actions button:hover {
+  background-color: #a00;
+}
+/* End of View Users CSS */
+
+
+/* Remove User CSS */
+.remove-user {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.remove-user h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.remove-user-form-group {
+  margin-bottom: 15px;
+}
+
+.remove-user-form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.remove-user-form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#remove-user-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#remove-user-form button:hover {
+  opacity: 0.7;
+}
+
+/* Add User CSS */
+.add-user {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.add-user h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-user-form-group {
+  margin-bottom: 15px;
+}
+
+.add-user-form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.add-user-form-group input,
+.add-user-form-group select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#add-user-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#add-user-form button:hover {
+  opacity: 0.7;
+}
+/* End of Add User CSS */
+
+
+/* Edit User CSS */
+.edit-user {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.edit-user h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.edit-user-form-group {
+  margin-bottom: 15px;
+}
+
+.edit-user-form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.edit-user-form-group input,
+.edit-user-form-group select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#edit-user-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#edit-user-form button:hover {
+  opacity: 0.7;
+}
+/* End of Edit User CSS */
+
+/* Account Logs CSS */
+.account-logs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.account-logs-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.account-logs-header label {
+  font-weight: bold;
+}
+
+.account-logs-header input {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.account-logs-header button {
+  padding: 10px 20px;
+  background-color: darkred;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.account-logs-header button:hover {
+  opacity: 0.7;
+}
+
+.account-logs-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.account-logs-log-entry {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+/* End of Account Logs CSS */
 
 aside {
   position: fixed;
@@ -719,7 +1278,6 @@ aside {
   left: 0;
 
   background-color: white;
-  padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 

@@ -1,0 +1,211 @@
+aside {
+  position: fixed;
+  z-index: 100;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+aside a {
+  display: block;
+  margin: 0;
+  font-size: 1.0em;
+  color: grey;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(245, 245, 245);
+}
+
+.nav-container {
+  display: flex;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  background: transparent;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 100;
+  position: fixed;
+  width: 100%;
+  font-weight: bold;
+  transition: background-color 0.3s ease; 
+  background-color: white;
+}
+
+.nav-container.scrolled {
+  background: white; 
+  color: black; 
+}
+
+.nav-user {
+  display: flex;
+  flex: 1;
+}
+
+.nav-shortcuts {
+  display: flex;
+  flex: 2;
+  align-items: center;
+  padding-left: 280px;
+}
+
+.nav-shortcut-links {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  margin-right: 100px;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  text-decoration: none;
+  color: black;
+}
+
+.nav-user-container {
+  display: flex;
+  flex: 1;
+  justify-content: space-evenly;
+  align-items: center;
+  color: #2D5F4D;
+}
+
+.nav-shortcut-links--design {
+  display: flex;
+  padding: 10px;
+  text-decoration: none;
+  color: #2D5F4D;
+}
+
+.nav-shortcut-links--active {
+  background-color: #6ab69a77;
+  border-radius: 10px;
+}
+
+.main {
+  display: flex;
+}
+
+#sidebar {
+  width: 230px;
+}
+
+.sidebar-logo {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sidebar-logo--fit {
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.sidebar-option--selected {
+  background-color: #2D5F4D;
+  color: white;
+}
+
+.settings-mainview {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  margin-left: 320px;
+  margin-top: 80px;
+  margin-right: 80px;
+}
+
+.settings-mainview-title {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.settings-mainview-title h1 {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.settings-mainview-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.settings-mainview-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.settings-mainview-content-header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.settings-mainview-content-header h3 {
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+
+.settings-mainview-content-header h5 {
+  color: rgb(106, 106, 106);
+}
+
+.settings-mainview-content-container {
+  display: flex;
+  flex-direction: row;;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  margin-top: 20px;
+  border-top: rgba(128, 128, 128, 0.439) 1px solid;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.settings-mainview-content-container .input-container {
+  position: absolute;
+  left: 40%;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 20px;
+}
+
+.settings-mainview-content-container .input-container input {
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 20px;
+  border: 1px solid grey;
+}
+
+.input-submit {
+  background-color: #2D5F4D;
+  color: white;
+  cursor: pointer;
+}
+.input-delete {
+  background-color: #8e1414;
+  color: white;
+  cursor: pointer;
+}

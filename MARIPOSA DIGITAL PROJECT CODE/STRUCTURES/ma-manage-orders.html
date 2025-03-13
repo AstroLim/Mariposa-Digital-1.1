@@ -12,7 +12,7 @@
         <div class="nav-shortcut-links">
           <a class="nav-shortcut-links--design" href="ma-home-page.html">Home</a>
           <a class="nav-shortcut-links--design" href="ma-view-shipping.html">View Shipping</a>
-          <a class="nav-shortcut-links--design" href="ma-services.html">Settings</a>
+          <a class="nav-shortcut-links--design" href="ma-settings.html">Settings</a>
           <a class="nav-shortcut-links--design nav-shortcut-links--active" href="ma-manage-orders.html">Manage</a>
         </div>
       </div>
@@ -34,38 +34,80 @@
         <a href="ma-manage-products.html">Products</a>
         <a href="ma-manage-orders.html" class="sidebar-option--selected">Orders</a>
         <a href="ma-manage-accounts.html">Accounts</a>
-        <a href="ma-manage-staff.html">Staff</a>
       </aside>
       <div class="manage-mainview">
         <section class="manage-mainview-title">
           <header class="manage-mainview-title-container">
             <h1>Orders</h1>
-            <button>Order Logs</button>
+            <button onclick="manageOrderSelectedOpt('Logs');">Order Logs</button>
           </header>
         </section>
         <section class="manage-mainview-settings">
           <div class="manage-mainview-settings-options">
-            <button class="manage-mainview-settings-options-button manage-mainview-settings-options--selected">View Orders</button>
-            <button class="manage-mainview-settings-options-button">Update Order</button>
-            <button class="manage-mainview-settings-options-button">Add Order</button>
-            <button class="manage-mainview-settings-options-button">Remove Order</button>
+            <button onclick="manageOrderSelectedOpt('View Orders');" class="manage-mainview-settings-options-button manage-mainview-settings-options--selected">View Orders</button>
+            <button onclick="manageOrderSelectedOpt('Update Order');" class="manage-mainview-settings-options-button">Update Order</button>
+            <button onclick="manageOrderSelectedOpt('Add Order');" class="manage-mainview-settings-options-button">Add Order</button>
+            <button onclick="manageOrderSelectedOpt('Remove Order');" class="manage-mainview-settings-options-button">Remove Order</button>
+            <button onclick="manageOrderSelectedOpt('Logs');" class="manage-mainview-settings-options-button">Logs</button>
           </div>
-          <div id="manage-mainview-settings-editable">
-            <div>
-              <h2>Available Lots</h2>
-              <p>Number of available lots: <span id="available-lots-count">0</span></p>
-            </div>
-            <div>
-              <h2>Reserved Lots</h2>
-              <p>Number of reserved lots: <span id="reserved-lots-count">0</span></p>
-            </div>
-            <div>
-              <h2>Rented Lots</h2>
-              <p>Number of rented lots: <span id="rented-lots-count">0</span></p>
-            </div>  
+          <div id="manage-mainview-settings-container">
+            <div id="manage-mainview-settings-header">View Orders</div>
+            <div id="manage-mainview-settings-editable">
+              <div class="view-orders">
+                <div class="view-orders-container">
+                  <h2 class="view-orders-container-header">Order Name</h2>
+                  <div class="view-orders-container-info">
+                    <div class="view-orders-container-info-left">
+                      <div class="view-orders-container-info-left-description">Description</div>
+                      <button class="view-orders-container-info-left-button">Order Status</button>
+                    </div>
+                    <div>
+                      <img src="" alt="rice">  
+                    </div>
+                  </div>
+                </div>
+                <div class="view-products-container">
+                  <h2 class="view-products-container-header">Order Name</h2>
+                  <div class="view-products-container-info">
+                    <div class="view-products-container-info-left">
+                      <div class="view-products-container-info-left-description">Description</div>
+                      <button class="view-products-container-info-left-button">Order Status</button>
+                    </div>
+                    <div>
+                      <img src="" alt="rice">  
+                    </div>
+                  </div>
+                </div>
+                <div class="view-products-container">
+                  <h2 class="view-products-container-header">Order Name</h2>
+                  <div class="view-products-container-info">
+                    <div class="view-products-container-info-left">
+                      <div class="view-products-container-info-left-description">Description</div>
+                      <button class="view-products-container-info-left-button">Order Status</button>
+                    </div>
+                    <div>
+                      <img src="" alt="rice">  
+                    </div>
+                  </div>
+                </div>
+                <div class="view-products-container">
+                  <h2 class="view-products-container-header">Order Name</h2>
+                  <div class="view-products-container-info">
+                    <div class="view-products-container-info-left">
+                      <div class="view-products-container-info-left-description">Description</div>
+                      <button class="view-products-container-info-left-button">Order Status</button>
+                    </div>
+                    <div>
+                      <img src="" alt="rice">  
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>   
           </div>
         </section>
       </div>
     </main>
+    <script src="../SCRIPTS/ma-manage.js"></script>
   </body>
 </html>

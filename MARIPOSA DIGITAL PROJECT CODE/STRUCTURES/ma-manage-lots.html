@@ -13,7 +13,7 @@
         <div class="nav-shortcut-links">
           <a class="nav-shortcut-links--design" href="ma-home-page.html">Home</a>
           <a class="nav-shortcut-links--design" href="ma-view-shipping.html">View Shipping</a>
-          <a class="nav-shortcut-links--design" href="ma-services.html">Settings</a>
+          <a class="nav-shortcut-links--design" href="ma-settings.html">Settings</a>
           <a class="nav-shortcut-links--design nav-shortcut-links--active" href="ma-manage-lots.html">Manage</a>
         </div>
       </div>
@@ -35,13 +35,12 @@
         <a href="ma-manage-products.html">Products</a>
         <a href="ma-manage-orders.html">Orders</a>
         <a href="ma-manage-accounts.html">Accounts</a>
-        <a href="ma-manage-staff.html">Staff</a>
       </aside>
       <div class="manage-mainview">
         <section class="manage-mainview-title">
           <header class="manage-mainview-title-container">
             <h1>Lot Management</h1>
-            <button>+Add Lot</button>
+            <button onclick="manageLotSelectedOpt('Add Lot');">+Add Lot</button>
           </header>
         </section>
         <section class="manage-mainview-settings">
@@ -50,57 +49,58 @@
             <button onclick="manageLotSelectedOpt('Add Lot');" class="manage-mainview-settings-options-button">Add Lot</button>
             <button onclick="manageLotSelectedOpt('Remove Lot');" class="manage-mainview-settings-options-button">Remove Lot</button>
             <button onclick="manageLotSelectedOpt('Lot Reservation');" class="manage-mainview-settings-options-button">Lot Reservation</button>
-            <button onclick="manageLotSelectedOpt('Contract Schedule');" class="manage-mainview-settings-options-button">Contract Schedule</button>  
+            <button onclick="manageLotSelectedOpt('Contract Schedule');" class="manage-mainview-settings-options-button">Contract Schedule</button> 
+            <button onclick="manageLotSelectedOpt('Logs');" class="manage-mainview-settings-options-button">Logs</button>  
           </div>
           <div id="manage-mainview-settings-container">
             <div id="manage-mainview-settings-header">View Lots</div>
             <div id="manage-mainview-settings-editable">
-              <div class="view-products">
-                <div class="view-products-container">
-                  <h2 class="view-products-container-header">Lot 1</h2>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <div class="view-products-container-info-left-description">Edit Description</div>
-                      <button class="view-products-container-info-left-button">Remove Product</button>
+              <div class="view-lots">
+                <div class="view-lots-container">
+                  <h2 class="view-lots-container-header">Lot 1</h2>
+                  <div class="view-lots-container-info">
+                    <div class="view-lots-container-info-left">
+                      <div class="view-lots-container-info-left-description">Description</div>
+                      <button class="view-lots-container-info-left-button">Edit Lot</button>
                     </div>
                     <div>
-                      <img src="" alt="rice">  
+                      <img src="" alt="lot1">  
                     </div>
                   </div>
                 </div>
-                <div class="view-products-container">
-                  <h2 class="view-products-container-header">Lot 2</h2>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <div class="view-products-container-info-left-description">Edit Description</div>
-                      <button class="view-products-container-info-left-button">Remove Product</button>
+                <div class="view-lots-container">
+                  <h2 class="view-lots-container-header">Lot 2</h2>
+                  <div class="view-lots-container-info">
+                    <div class="view-lots-container-info-left">
+                      <div class="view-lots-container-info-left-description">Description</div>
+                      <button class="view-lots-container-info-left-button">Edit Lot</button>
                     </div>
                     <div>
-                      <img src="" alt="rice">  
+                      <img src="" alt="lot1">  
                     </div>
                   </div>
                 </div>
-                <div class="view-products-container">
-                  <h2 class="view-products-container-header">Lot 3</h2>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <div class="view-products-container-info-left-description">Edit Description</div>
-                      <button class="view-products-container-info-left-button">Remove Product</button>
+                <div class="view-lots-container">
+                  <h2 class="view-lots-container-header">Lot 3</h2>
+                  <div class="view-lots-container-info">
+                    <div class="view-lots-container-info-left">
+                      <div class="view-lots-container-info-left-description">Description</div>
+                      <button class="view-lots-container-info-left-button">Edit Lot</button>
                     </div>
                     <div>
-                      <img src="" alt="rice">  
+                      <img src="" alt="lot1">  
                     </div>
                   </div>
                 </div>
-                <div class="view-products-container">
-                  <h2 class="view-products-container-header">Lot 4</h2>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <div class="view-products-container-info-left-description">Edit Description</div>
-                      <button class="view-products-container-info-left-button">Edit Lot</button>
+                <div class="view-lots-container">
+                  <h2 class="view-lots-container-header">Lot 4</h2>
+                  <div class="view-lots-container-info">
+                    <div class="view-lots-container-info-left">
+                      <div class="view-lots-container-info-left-description">Description</div>
+                      <button class="view-lots-container-info-left-button">Edit Lot</button>
                     </div>
                     <div>
-                      <img src="" alt="rice">  
+                      <img src="" alt="lot1">  
                     </div>
                   </div>
                 </div>
