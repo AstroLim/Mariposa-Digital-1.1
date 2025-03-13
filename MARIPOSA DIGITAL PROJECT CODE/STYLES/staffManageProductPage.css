@@ -1,0 +1,605 @@
+/* Applied to All HTML Tags */
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url(../RESOURCES/imgFiles/Client_Home-Page/Landing-Homepage\ Ricefield.png);
+    background-size: cover;
+}
+
+/*NAV*/
+.mainCont-nav{
+    width: 100%;
+    height: 12%;
+    display: flex;
+    flex-direction: row;
+    background: rgba( 255, 255, 255, 0.1 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 3.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.mainCont-nav > div > a ,
+.mainCont-nav > div > p{
+    text-decoration: none;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/*NAV - Left-Sec*/
+.nav-left-sec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 8%;
+}
+
+.Logo{
+    margin-left: 15%;
+    width: 65%;
+}
+
+/*NAV - Right-Sec*/
+.nav-right-sec{
+    width: 47.5%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 8%;
+    margin-right: 2.5%;
+}
+
+/*Main Content*/
+.MainSection{
+    width: 100%;
+    height: 88%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.MainSection-header{
+    width: 100%;
+    height: 15vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    background-color: #162416;
+    margin-top: 2.5%;
+}
+
+.header-box1{
+    width: 30%;
+    height: 50%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+.header-box-content1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+}
+
+/*Main Section | Main Content*/
+.MainSection{
+    width: 100%;
+    height: 88%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.MainSection-header{
+    width: 100%;
+    height: 15vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    background-color: #162416;
+    margin-top: 2.5%;
+}
+
+.header-box1{
+    width: 30%;
+    height: 50%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10%;
+}
+
+.MainSection-Content{
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.MainSection-Content-left-sec{
+    width: 35%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.productManagementBox{
+    width: 60%;
+    height: 70%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+}
+
+.productManagementBox-sec-top{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.productManagementBox-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.productManagementBox-sec-bot{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+}
+
+.productManagementBox-sec-bot > button{
+    width: 90%;
+    height: 12%;
+    background-color: #660001;
+    border-radius: 32px;
+    color: #F5F5F5;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/* DASHBOARD CSS */
+.MainSection-Content-right-sec{
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.right-sec-topContent{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5%;
+}
+
+.numberOfProducts-container{
+    width: 35%;
+    height: 75%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.numberOfProducts-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.numberOfProducts-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.numberOfProducts-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.statContainer{
+    width: 90%;
+    height: 20%;
+    background-color: #223a23da;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5%;
+}
+
+.statLabel, .stat{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1vw;  
+}
+
+.numberOfSales-container{
+    width: 35%;
+    height: 75%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.numberOfSales-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.numberOfSales-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.numberOfSales-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.right-sec-botContent{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 4.8%;
+}
+
+.productsAdded-container{
+    width: 22%;
+    height: 70%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.productsAdded-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+.productsAdded-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.7vw;  
+    margin-top: 5%;
+}
+
+.productsAdded-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.numberOfCanceledOrder-container{
+    width: 22%;
+    height: 70%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.numberOfCanceledOrder-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+.numberOfCanceledOrder-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.7vw;  
+    margin-top: 5%;
+}
+
+.numberOfCanceledOrder-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.productsRemoved-container{
+    width: 22%;
+    height: 70%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.productsRemoved-sec-top{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+.productsRemoved-sec-top > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.7vw;  
+    margin-top: 5%;
+}
+
+.productsRemoved-sec-bot{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ADD PRODUCT CSS */
+.addProductBox{
+    width: 55%;
+    height: 70%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+}
+
+.addProductBox > header{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.addProductBox > header > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2.2vw;  
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+.addProductBox > section{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: row;
+}
+
+.addProductBox-leftSec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5.7%;
+    margin-left: 12%;
+    margin-top: 5%;
+}
+
+.addProductBox-leftSec >label{
+    font-family: "Grenze", serif;
+    font-size: 1.3vw;
+    margin-left: 5%;
+    color: #F5F5F5;
+}
+
+.addProductBox-rightSec{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    margin-right: 10%;
+    margin-top: 5%;
+}
+
+.addProductBox-rightSec > input{
+    width:90%;
+    height: 12%;
+    border-radius: 23px;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    background-color: #223a23da;
+    position: relative;
+    left: 15%;
+    color: #FFFFFF;
+}
+
+.addProductBox > footer{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.footerBtn{
+    width: 35%;
+    height: 100%;
+    background-color:#ffffff;
+    border-radius: 70px;
+    font-family: "Grenze", serif;
+    font-size: 1.2vw;
+    margin-bottom: 13%;
+    margin-left: 12%;
+}
+
+/* MANAGE ORDER CSS */
+.manageOrderBox{
+    width: 45%;
+    height: 35%;
+    background-color: #B61718;
+    border-radius: 32px;
+    opacity: 90%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+}
+
+.manageOrderBox > header{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.manageOrderBox > header > h1{
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.5vw;  
+    margin-top: 3.5%;
+    margin-left: 5%;
+}
+
+.manageOrderBox > section{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: row;
+}
+
+.manageOrderBox-leftSec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    margin-left: 6%;
+}
+
+.manageOrderBox-leftSec > label {
+    font-family: "Grenze", serif;
+    font-size: 1.3vw;
+    color: #F5F5F5;
+}
+
+.manageOrderBox-rightSec{
+    width: 120%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    margin-right: 5%;
+}
+
+.manageOrderBox-rightSec > input{
+    width:100%;
+    height: 20%;
+    border-radius: 6px;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    background-color: #223a23da;
+    color: #FFFFFF;
+}
+
+.manageOrderBox > footer{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.viewPendingOrdersBtn{
+    width: 40%;
+    height: 170%;
+    background-color:#ffffff;
+    border-radius: 70px;
+    font-family: "Grenze", serif;
+    font-size: 1.2vw;
+    margin-bottom: 10%;
+    margin-left: 5%; 
+}
+
+
+
+/* MANAGE ORDER PAYMENT  CSS */
