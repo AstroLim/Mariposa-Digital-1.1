@@ -99,13 +99,22 @@ nav{
     height: 15%;
     display: flex;
     align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    
 }
 
 .registerBox-header > p{
     color: #FFFFFF;
     font-family: "Grenze", serif;
     font-size: 2.3vw;
-    margin-left: 10%;
+}
+
+.registerBox-header > span{
+    display: none;
+    color: darkred;
+    font-family: "Grenze", serif;
+    font-size: 1.3vw;
 }
 
 /* Main Section Register Box | Left Side-Main*/
@@ -115,6 +124,10 @@ nav{
     display: flex;
     flex-direction: column;
     gap: 5%;
+}
+
+.registerBox-main--invalid {
+    border: 1px solid darkred !important;
 }
 
 .registerBox-main > div{
@@ -167,6 +180,7 @@ nav{
     background-color:#850D0E;
     border-radius: 70px;
     color: #FFFFFF;
+    cursor: pointer;
 }
 
 .btnA3{
@@ -180,6 +194,7 @@ nav{
     background-color:#850D0E;
     border-radius: 70px;
     color: #FFFFFF;
+    cursor: pointer;
 }
 
 /* Main Section Register Box | Left Side-Footer*/
@@ -190,6 +205,13 @@ nav{
     flex-direction: row;
     align-items: start;
     justify-content: center;
+}
+
+.registerBox-footer a {
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1.3vw;
+    text-decoration: none;
 }
 
 .registerBox-footer > p {

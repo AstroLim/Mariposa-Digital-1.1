@@ -97,6 +97,7 @@ nav{
     flex-direction: row;
     justify-content: start;
     align-items: center;
+    
 }
 
 .loginBox > header > p{
@@ -104,6 +105,13 @@ nav{
     font-family: "Grenze", serif;
     font-size: 3.5vw;
     margin-left: 12%;
+    display: flex;
+}
+
+#login-message {
+    display: none;
+    text-align: center;
+    color: rgb(163, 163, 163);
 }
 
 .loginBox > main{
@@ -154,6 +162,10 @@ nav{
     border: 3px solid #F5F5F5;
     border-radius: 23px;
     color: #ffffff;
+}
+
+.loginBox-main--invalid {
+    border: 1px solid darkred !important;
 }
 
 .loginBox > section{
