@@ -1,0 +1,168 @@
+/* Applied to All HTML Tags */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url(./RESOURCES/imgFiles/Landing-Page/Landing-Homepage-Ricefield.png);
+    background-size: cover;
+}
+
+/* Navigation Bar */
+nav {
+    width: 100%;
+    height: 12vh;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Navigation Links */
+.nav-link {
+    margin-left: 15px;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    text-decoration: none;
+}
+
+/* Placeholder Name */
+.placeholder-name {
+    margin-right: 15px;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    color: #660001;
+    text-decoration: none;
+}
+
+/* Left Section of Navigation */
+.nav-left-sec {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 3%;
+}
+
+/* Right Section of Navigation */
+.nav-right-sec {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 3%;
+}
+
+/* Logo */
+.Logo {
+    margin-left: 15%;
+    width: 70%;
+    max-width: 250px;
+    height: auto;
+}
+
+/* Green Bar */
+.green-bar {
+    width: 100%;
+    height: 70px;
+    background-color: green;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    color: white;
+    font-family: "Grenze", serif;
+    font-size: 1.5vw; /* Slightly larger font size */
+}
+
+.green-bar span {
+    flex: 1;
+}
+
+.green-bar .right {
+    text-align: right;
+}
+
+/* Main Section */
+section {
+    width: 100%;
+    height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Box Container */
+.box-container {
+    display: flex;
+    width: 90%; /* Adjusted width to leave some margin on the sides */
+    height: 80%; /* Adjusted height to leave some margin on top and bottom */
+    gap: 40px; /* Increased gap between left and right boxes */
+    align-items: flex-start; /* Align boxes to the top */
+    justify-content: center; /* Center boxes horizontally */
+}
+
+/* Large Box */
+.large-box {
+    font-size: 1.5vw;
+    width: 450px; /* Set width of the left box */
+    height: auto; /* Set height to auto to accommodate content */
+    background-color: red; /* Set background color to red */
+    border-radius: 20px; /* Set rounded edges */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: white;
+    font-family: "Grenze", serif;
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between buttons */
+    margin-top: 20px; /* Space above buttons */
+}
+
+/* Lot Details */
+.lot-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between fields */
+    margin-top: 20px; /* Space above fields */
+    width: 100%; /* Full width */
+}
+
+/* Input Fields */
+input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%; /* Full width */
+}
+
+/* Rounded Buttons */
+.rounded-button {
+    font-size: 1vw;
+    padding: 10px 20px;
+    margin: 20px 0;
+    border: none;
+    border-radius: 20px; /* Rounded edges */
+    background-color: white; /* Button background color */
+    color: red; /* Button text color */
+    font-family: "Grenze", serif;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}

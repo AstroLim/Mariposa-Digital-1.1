@@ -249,8 +249,8 @@ body {
 }
 
 .view-lots-container-info-left-description {
-  background-color: rgba(80, 123, 88, 1);
-  color: rgba(27, 24, 16, 1);
+  background-color: #2D5F4D;
+  color: rgb(255, 255, 255);
   padding: 10px 20px;
   box-sizing: border-box;
   text-align: center;
@@ -624,8 +624,8 @@ body {
 }
 
 .view-products-container-info-left-description {
-  background-color: rgba(80, 123, 88, 1);
-  color: rgba(27, 24, 16, 1);
+  background-color: #2D5F4D;
+  color: white;
   padding: 10px 20px;
   box-sizing: border-box;
   text-align: center;

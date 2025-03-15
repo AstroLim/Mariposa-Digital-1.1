@@ -94,7 +94,18 @@ body {
 }
 
 #sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 230px;
+}
+
+.sidebar-logout {
+  padding: 15px;
+  background-color: #2D5F4D;
+  border: none;
+  cursor: pointer;
+  color: white;
 }
 
 .sidebar-logo {

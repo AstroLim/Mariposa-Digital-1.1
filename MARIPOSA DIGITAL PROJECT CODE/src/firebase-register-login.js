@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, deleteUser  } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,46 +25,64 @@ const auth = getAuth(app);
 try {
   const registerButton = document.querySelector('.sec-registerBtn');
   registerButton.addEventListener('click', (e) => {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const firstName = document.getElementById('fName').value;
+    const lastName = document.getElementById('lName').value;
+    const phone = document.getElementById('mobNumber').value;
 
-  alert('Registering user...');
+    if (!username || !email || !password || !firstName || !lastName || !phone) {
+      throw new Error('Please fill in all fields.');
+    }
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      try {
-        sendEmailVerification(user);  
-      } catch (e) {
-        deleteUser(user).then(() => {
-          console.log('User deleted');
-        }).catch((error) => {
-          console.log(error);
-        });
-      }
-      
-      window.localStorage.setItem('emailForSignIn', email);
-      console.log(user);
-      alert(`Successfully registered user
-Please check your email for verification link.`);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode, errorMessage);
-      let registerMessage = document.getElementById('register-message');
-      registerMessage.innerText = errorMessage.replace('Firebase:', '');
-      registerMessage.style.display = 'block';
-      document.querySelectorAll('.registerBox-main input').forEach(input => {
-        if (!input.classList.contains('registerBox-main--invalid')) {
-          input.classList.add('registerBox-main--invalid');
+    alert('Registering user...');
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        try {
+          sendEmailVerification(user); 
+          set(ref(db, 'users/' + user.uid), {
+            username: username,
+            email: email,
+            firstName: firstName,
+            lastName: lastName,
+            phone: phone,
+            registrationTimestamp: Date.now(),
+          }); 
+        } catch (e) {
+          deleteUser(user).then(() => {
+            console.log('User deleted');
+          }).catch((error) => {
+            console.log(error);
+          });
         }
+        
+        window.localStorage.setItem('emailForSignIn', email);
+        console.log(user);
+        alert(`Successfully registered user
+  Please check your email for verification link.`);
       })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        let registerMessage = document.getElementById('register-message');
+        registerMessage.innerText = errorMessage.replace('Firebase:', '');
+        registerMessage.style.display = 'block';
+        document.querySelectorAll('.registerBox-main input').forEach(input => {
+          if (!input.classList.contains('registerBox-main--invalid')) {
+            input.classList.add('registerBox-main--invalid');
+          }
+        })
 
-    });
+      });
   }); 
-} catch (error) {};
+} catch (error) {
+  alert(error.message);
+};
 
 
 try {
