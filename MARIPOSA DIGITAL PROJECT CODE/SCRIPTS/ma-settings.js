@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth} from "firebase/auth";
-import { getDatabase, onValue , ref} from "firebase/database";
+import { getAuth, signOut} from "firebase/auth";
+import { getDatabase} from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,11 +27,25 @@ const user = JSON.parse(localStorage.getItem('user'));
 const uid = localStorage.getItem('uid');
 
 if (!user || !uid) {
+  document.body.innerHTML = '';
   alert('Please log in to access this page.');
   window.location.href = 'landingPage.html';
 } else if (user.accessLevel !== 'admin') {
+  document.body.innerHTML = '';
   alert('You do not have permission to access this page.');
   window.location.href = 'landingPage.html';
 }
 
 document.querySelector('.nav-user-container div').textContent = `${user.lastName}, ${user.firstName}`;
+
+document.querySelector('.sidebar-logout').addEventListener('click', () => {
+  signOut(auth).then(() => {
+    alert('You are now logged out.');
+    localStorage.removeItem('user');
+    localStorage.removeItem('uid');
+    window.location.href = 'landingPage.html';
+  }).catch((error) => {
+    console.error(error);
+    alert(`An error occurred while logging out. Please try again.`);
+  });
+});
