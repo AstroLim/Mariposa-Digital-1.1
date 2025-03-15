@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, deleteUser  } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, onValue , ref, set } from "firebase/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -21,6 +21,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase();
 
 try {
   const registerButton = document.querySelector('.sec-registerBtn');
@@ -33,6 +34,7 @@ try {
     const phone = document.getElementById('mobNumber').value;
 
     if (!username || !email || !password || !firstName || !lastName || !phone) {
+      alert('Please enter all fields.');
       throw new Error('Please fill in all fields.');
     }
 
@@ -51,6 +53,7 @@ try {
             lastName: lastName,
             phone: phone,
             registrationTimestamp: Date.now(),
+            accessLevel: 'user'
           }); 
         } catch (e) {
           deleteUser(user).then(() => {
@@ -58,12 +61,19 @@ try {
           }).catch((error) => {
             console.log(error);
           });
+          alert('Error registering user. Please try again.');
+          return
         }
         
         window.localStorage.setItem('emailForSignIn', email);
         console.log(user);
         alert(`Successfully registered user
   Please check your email for verification link.`);
+        document.querySelectorAll('.registerBox-main input').forEach(input => {
+          if (input.classList.contains('registerBox-main--invalid')) {
+            input.classList.remove('registerBox-main--invalid');
+          }
+        })
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -80,9 +90,7 @@ try {
 
       });
   }); 
-} catch (error) {
-  alert(error.message);
-};
+} catch (error) {};
 
 
 try {
@@ -101,6 +109,20 @@ try {
         const user = userCredential.user;
         if (user.emailVerified) {
           alert('Login successful!');
+          onValue(ref(db, 'users/' + user.uid), (snapshot) => {
+            const data = snapshot.val();
+            localStorage.setItem('user', JSON.stringify(data));
+            localStorage.setItem('uid', user.uid);
+
+            // Use this to access user data to other pages
+            // const user = JSON.parse(localStorage.getItem('user'));
+            // const uid = localStorage.getItem('uid');
+
+            directPage(data.accessLevel);
+          }, {
+            onlyOnce: true
+          });
+          // window.location.href = 'clientHomePage.html';
         } else {
           alert('Please verify your email address before logging in.');
         }
@@ -120,3 +142,17 @@ try {
       });
   });
 } catch (error) {};
+
+const directPage = (accessLevel) => {
+  if (accessLevel === 'admin') {
+    window.location.href = 'ma-home-page.html';
+  } else if (accessLevel === 'staff') {
+    window.location.href = 'staffHomePage.html';
+  } else if (accessLevel === 'courier') {
+    window.location.href = 'courierHomePage.html';
+  } else if (accessLevel === 'user') {
+    window.location.href = 'clientHomePage.html';
+  } else {
+    alert('Invalid access level. Please contact the administrator.');
+  }
+}
