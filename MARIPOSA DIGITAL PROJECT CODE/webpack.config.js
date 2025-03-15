@@ -5,7 +5,10 @@ module.exports = {
   // Multiple entry points
   entry: {
     'firebase-register-login': './src/firebase-register-login.js',
-    'firebase-load-user': './src/firebase-load-user.js', // Add more entry points as needed
+    'ma-home-page': './SCRIPTS/ma-home-page.js', 
+    'ma-view-shipping': './SCRIPTS/ma-view-shipping.js', 
+    'ma-settings': './SCRIPTS/ma-settings.js',
+    'ma-manage': './SCRIPTS/ma-manage.js',
   },
   // Output configuration
   output: {
