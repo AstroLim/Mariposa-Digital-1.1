@@ -183,9 +183,8 @@ body {
 }
 
 .settings-mainview-content-container {
-  display: flex;
-  flex-direction: row;;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
   align-items: center;
   padding: 20px;
   width: 100%;
@@ -196,8 +195,6 @@ body {
 }
 
 .settings-mainview-content-container .input-container {
-  position: absolute;
-  left: 40%;
   padding: 10px 20px;
   margin: 10px;
   border-radius: 20px;
@@ -219,4 +216,60 @@ body {
   background-color: #8e1414;
   color: white;
   cursor: pointer;
+}
+
+.input-show {
+  cursor: pointer;
+}
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1000; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%; /* Could be more or less, depending on screen size */
+}
+
+.modal-content input {
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 20px;
+  border: 1px solid grey;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+  background-color: #2D5F4D;
+  color: white;
+}
+
+.modal-buttons button:last-child {
+  background-color: #8e1414;
+  color: white;
 }

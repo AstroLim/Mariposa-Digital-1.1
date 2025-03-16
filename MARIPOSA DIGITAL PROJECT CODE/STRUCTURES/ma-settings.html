@@ -55,6 +55,39 @@
         </div>
 
         <div class="settings-mainview-content-container">
+          <h4>Email</h4>
+          <div class="input-container">
+            <input class="input-email" type="text" placeholder="email">
+            <input class="input-submit" type="submit" value="Apply">
+          </div>
+        </div>
+
+        <div class="settings-mainview-content-container">
+          <h4>Password</h4>
+          <div class="input-container">
+            <input class="input-password" type="password" placeholder="password">
+            <input class="input-submit" type="submit" value="Apply">
+            <input class="input-show" type="submit" value="Show" id="editPassword">
+          </div>
+        </div>
+
+        <div class="settings-mainview-content-container">
+          <h4>First Name</h4>
+          <div class="input-container">
+            <input class="input-firstName" type="text" placeholder="First Name">
+            <input class="input-submit" type="submit" value="Apply">
+          </div>
+        </div>
+
+        <div class="settings-mainview-content-container">
+          <h4>Last Name</h4>
+          <div class="input-container">
+            <input class="input-lastName" type="text" placeholder="Last Name">
+            <input class="input-submit" type="submit" value="Apply">
+          </div>
+        </div>
+
+        <div class="settings-mainview-content-container">
           <h4>Phone Number</h4>
           <div class="input-container">
             <input class="input-phone" type="text" placeholder="phone">
@@ -65,14 +98,31 @@
         <div class="settings-mainview-content-container">
           <h4>Profile Picture</h4>
           <div class="input-container">
-            <img src="" alt="pfp">
-            <input class="input-phone" type="file" placeholder="Edit">
-            <input class="input-submit" type="submit" value="Apply">
-            <input class="input-delete" type="submit" value="Delete">
+            <div>
+              <img src="" alt="pfp">
+              <input class="input-file" type="file" placeholder="Edit">
+            </div>
+            <div>
+              <input class="input-submit" type="submit" value="Apply">
+              <input class="input-delete" type="submit" value="Delete">  
+            </div>
           </div>
         </div>
+
       </section>
     </section>
+    
+    <div id="passwordModal" class="modal">
+      <div class="modal-content">
+        <h4>For your security, you must re-enter your password to continue</h4>
+        <input type="password" id="passwordInput" placeholder="Enter your password">
+        <div class="modal-buttons">
+          <button id="cancelButton">Cancel</button>
+          <button id="submitButton">Submit</button>
+        </div>
+      </div>
+    </div>
+
   </main>
   <script src="../dist/ma-settings.bundle.js"></script>
 </body>
