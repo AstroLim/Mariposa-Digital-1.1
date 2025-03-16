@@ -596,7 +596,7 @@ const manageAccountsSelectedOpt = (selected) => {
   if (selected === 'View Accounts') {
     let viewUsersDisplay = '';
 
-    onValue(ref(db, 'users'), (snapshot) => {
+    get(ref(db, 'users')).then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const childData = childSnapshot.val();
         viewUsersDisplay += `
@@ -630,7 +630,7 @@ const manageAccountsSelectedOpt = (selected) => {
     interfaceElement.innerHTML = `
       <div class="add-user">
         <h2>Add User</h2>
-        <form id="edit-user-form">
+        <form onsubmit="return false" id="edit-user-form">
           <div class="add-user-form-group">
             <label for="user-name">User Name:</label>
             <input id="user-name" type="text" placeholder="Enter user name">
@@ -664,7 +664,7 @@ const manageAccountsSelectedOpt = (selected) => {
             <label for="user-phone">Phone Number:</label>
             <input id="user-phone" type="phone" placeholder="Enter user phone number">
           </div>
-          <button onClick="addUser(event); event.preventDefault();">Add User</button>
+          <button type="button" onClick="addUser(event); event.preventDefault();">Add User</button>
         </form>
       </div>
     `
@@ -672,12 +672,12 @@ const manageAccountsSelectedOpt = (selected) => {
     interfaceElement.innerHTML = `
       <div class="remove-user">
         <h2>Remove User</h2>
-        <form id="remove-user-form">
+        <form onsubmit="return false" id="remove-user-form">
           <div class="remove-user-form-group">
             <label for="user-id">User ID:</label>
             <input id="user-id" type="text" placeholder="Enter user ID">
           </div>
-          <button onClick="removeUser(event); event.preventDefault();" type="submit">Remove User</button>
+          <button type="button" onClick="removeUser(event); event.preventDefault();" type="submit">Remove User</button>
         </form>
       </div>
     `
@@ -685,11 +685,11 @@ const manageAccountsSelectedOpt = (selected) => {
     interfaceElement.innerHTML = `
       <div class="edit-user">
         <h2>Edit User</h2>
-        <form id="edit-user-form">
+        <form onsubmit="return false" id="edit-user-form">
           <div class="edit-user-form-group">
             <label for="user-uid">User ID:</label>
             <input id="user-uid" type="text" placeholder="Enter user name">
-            <button onclick="event.preventDefault(); loadUser();" class="load-user">Load User</button>
+            <button type="button" onClick="loadUser(event); event.preventDefault();" class="load-user">Load User</button>
           </div>
           <div class="edit-user-form-group">
             <label for="user-name">User Name:</label>
@@ -724,7 +724,7 @@ const manageAccountsSelectedOpt = (selected) => {
             <label for="user-phone">Phone Number:</label>
             <input id="user-phone" type="phone" placeholder="Enter user phone number">
           </div>
-          <button id="edit-user-button" onClick="editUser(event); event.preventDefault();">Edit User</button>
+          <button type="button" id="edit-user-button" onClick="editUser(event); event.preventDefault();">Edit User</button>
         </form>
       </div>
     `
@@ -735,13 +735,13 @@ const manageAccountsSelectedOpt = (selected) => {
     document.getElementById('user-role').disabled = true;
     document.getElementById('edit-user-button').disabled = true;
     document.getElementById('user-email').disabled = true;
-    document.getElementById('edit-pass').disabled = true;
+    document.getElementById('user-pass').disabled = true;
 
   } else if (selected === 'Logs') {
 
     let logHTML;
 
-    onValue(ref(db, 'logs/users'), (snapshot) => {
+    get(ref(db, 'logs/users')).then((snapshot) => {
       snapshot.forEach(logs => {
         const log = logs.val();
         logHTML += `
@@ -837,7 +837,7 @@ const addUser = (event) => {
     });
 }
 
-const loadUser = async () => {
+const loadUser = async (event) => {
   event.preventDefault();
   const userUID = document.getElementById('user-uid').value;
   try {
