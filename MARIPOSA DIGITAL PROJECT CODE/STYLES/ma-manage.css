@@ -1204,13 +1204,20 @@ body {
 }
 
 #edit-user-form button {
-  width: 100%;
   padding: 10px;
   background-color: darkred;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+#edit-user-form .load-user {
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  left: 50%;
 }
 
 #edit-user-form button:hover {
@@ -1261,11 +1268,18 @@ body {
 
 .account-logs-log-entry {
   display: grid;
+  gap: 20px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fff;
+}
+
+.account-logs-log-entry p{
+  word-wrap: break-word; 
+  word-break: break-all;
+  white-space: normal;
 }
 /* End of Account Logs CSS */
 

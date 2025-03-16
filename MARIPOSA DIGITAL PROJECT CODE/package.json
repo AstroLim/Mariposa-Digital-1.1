@@ -1,6 +1,11 @@
 {
   "dependencies": {
-    "firebase": "^11.4.0"
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "firebase": "^11.4.0",
+    "firebase-admin": "^13.2.0",
+    "jspdf": "^1.5.3"
   },
   "devDependencies": {
     "webpack": "^5.98.0",
@@ -10,4 +15,3 @@
     "build": "webpack --mode=development"
   }
 }
-

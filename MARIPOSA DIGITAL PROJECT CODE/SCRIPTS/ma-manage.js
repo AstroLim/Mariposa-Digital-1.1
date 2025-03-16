@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth} from "firebase/auth";
-import { getDatabase} from "firebase/database";
+import { getAuth, createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser} from "firebase/auth";
+import { getDatabase, onValue, ref, set, update, get, child, push} from "firebase/database";
+import jsPDF from "jspdf";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -593,45 +594,43 @@ const manageAccountsSelectedOpt = (selected) => {
   })
 
   if (selected === 'View Accounts') {
-    interfaceElement.innerHTML = `
-      <div class="view-users">
-        <div class="view-users-search">
-          <input type="text" placeholder="Search for users...">
-          <button>Search</button>
-        </div>
-        <div class="user-card">
-          <div class="user-info">
-            <h3>John Doe</h3>
-            <p>Email: john.doe@example.com</p>
-            <p>Role: Admin</p>
-            <p>User ID: <span>N/A</span></p>
+    let viewUsersDisplay = '';
+
+    onValue(ref(db, 'users'), (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const childData = childSnapshot.val();
+        viewUsersDisplay += `
+          <div class="user-card">
+            <div class="user-info">
+              <h3>${childData.lastName}, ${childData.firstName}</h3>
+              <p>Email: ${childData.email}</p>
+              <p>Role: ${childData.accessLevel}</p>
+              <p>User ID: <span>${childSnapshot.key}</span></p>
+              <p>Phone: ${childData.phone}</p>
+            </div>
+            <div class="user-actions">
+              <button onclick="">Edit</button>
+              <button>Remove</button>
+            </div>
           </div>
-          <div class="user-actions">
-            <button onclick="">Edit</button>
-            <button>Remove</button>
+        `
+        });
+        interfaceElement.innerHTML = `
+          <div class="view-users">
+            <div class="view-users-search">
+              <input type="text" placeholder="Search for users...">
+              <button>Search</button>
+            </div>
+            ${viewUsersDisplay}
           </div>
-        </div>
-        <div class="user-card">
-          <div class="user-info">
-            <h3>Jane Smith</h3>
-            <p>Email: jane.smith@example.com</p>
-            <p>Role: User</p>
-            <p>User ID: <span>N/A</span></p>
-          </div>
-          <div class="user-actions">
-            <button>Edit</button>
-            <button>Remove</button>
-          </div>
-        </div>
-        <!-- TBC -->
-      </div>
-    `
+        `
+      }
+    );
   } else if (selected === 'Add User') {
     interfaceElement.innerHTML = `
       <div class="add-user">
         <h2>Add User</h2>
-        <form id="add-user-form">
-          <div>Account ID: <span>N/A</span></div>
+        <form id="edit-user-form">
           <div class="add-user-form-group">
             <label for="user-name">User Name:</label>
             <input id="user-name" type="text" placeholder="Enter user name">
@@ -641,15 +640,31 @@ const manageAccountsSelectedOpt = (selected) => {
             <input id="user-email" type="email" placeholder="Enter user email">
           </div>
           <div class="add-user-form-group">
+            <label for="user-pass">Password:</label>
+            <input id="user-pass" type="text" placeholder="Enter user password">
+          </div>
+          <div class="add-user-form-group">
+            <label for="user-firstName">First Name:</label>
+            <input id="user-firstName" type="text" placeholder="Enter user first name">
+          </div>
+          <div class="add-user-form-group">
+            <label for="user-lastName">Last Name:</label>
+            <input id="user-lastName" type="text" placeholder="Enter user last name">
+          </div>
+          <div class="add-user-form-group">
             <label for="user-role">Role:</label>
             <select id="user-role">
               <option value="Admin">Admin</option>
-              <option value="User">Staff</option>
-              <option value="User">Courier</option>
+              <option value="Staff">Staff</option>
+              <option value="Courier">Courier</option>
               <option value="User">User</option>
             </select>
           </div>
-          <button type="submit">Add User</button>
+          <div class="add-user-form-group">
+            <label for="user-phone">Phone Number:</label>
+            <input id="user-phone" type="phone" placeholder="Enter user phone number">
+          </div>
+          <button onClick="addUser(event); event.preventDefault();">Add User</button>
         </form>
       </div>
     `
@@ -662,7 +677,7 @@ const manageAccountsSelectedOpt = (selected) => {
             <label for="user-id">User ID:</label>
             <input id="user-id" type="text" placeholder="Enter user ID">
           </div>
-          <button type="submit">Remove User</button>
+          <button onClick="removeUser(event); event.preventDefault();" type="submit">Remove User</button>
         </form>
       </div>
     `
@@ -672,53 +687,84 @@ const manageAccountsSelectedOpt = (selected) => {
         <h2>Edit User</h2>
         <form id="edit-user-form">
           <div class="edit-user-form-group">
-            <label for="edit-user-id">User ID:</label>
-            <input id="edit-user-id" type="text" placeholder="Existing user">
+            <label for="user-uid">User ID:</label>
+            <input id="user-uid" type="text" placeholder="Enter user name">
+            <button onclick="event.preventDefault(); loadUser();" class="load-user">Load User</button>
           </div>
           <div class="edit-user-form-group">
-            <label for="edit-user-name">User Name:</label>
-            <input id="edit-user-name" type="text" placeholder="Enter user name">
+            <label for="user-name">User Name:</label>
+            <input id="user-name" type="text" placeholder="Enter user name">
+          </div>
+          <div class="add-user-form-group">
+            <label for="user-email">Email</label>
+            <input id="user-email" type="email" placeholder="Enter user email">
+          </div>
+          <div class="add-user-form-group">
+            <label for="user-pass">Password</label>
+            <input id="user-pass" type="text" placeholder="Enter user password">
           </div>
           <div class="edit-user-form-group">
-            <label for="edit-user-email">Email:</label>
-            <input id="edit-user-email" type="email" placeholder="Enter user email">
+            <label for="user-firstName">First Name:</label>
+            <input id="user-firstName" type="text" placeholder="Enter user first name">
           </div>
           <div class="edit-user-form-group">
-            <label for="edit-user-role">Role:</label>
-            <select id="edit-user-role">
+            <label for="user-lastName">Last Name:</label>
+            <input id="user-lastName" type="text" placeholder="Enter user last name">
+          </div>
+          <div class="edit-user-form-group">
+            <label for="user-role">Role:</label>
+            <select id="user-role">
               <option value="Admin">Admin</option>
               <option value="Staff">Staff</option>
               <option value="Courier">Courier</option>
               <option value="User">User</option>
             </select>
           </div>
-          <button type="submit">Edit User</button>
+          <div class="edit-user-form-group">
+            <label for="user-phone">Phone Number:</label>
+            <input id="user-phone" type="phone" placeholder="Enter user phone number">
+          </div>
+          <button id="edit-user-button" onClick="editUser(event); event.preventDefault();">Edit User</button>
         </form>
       </div>
     `
+    document.getElementById('user-name').disabled = true;
+    document.getElementById('user-firstName').disabled = true;
+    document.getElementById('user-lastName').disabled = true;
+    document.getElementById('user-phone').disabled = true;
+    document.getElementById('user-role').disabled = true;
+    document.getElementById('edit-user-button').disabled = true;
+    document.getElementById('user-email').disabled = true;
+    document.getElementById('edit-pass').disabled = true;
+
   } else if (selected === 'Logs') {
-    interfaceElement.innerHTML = `
+
+    let logHTML;
+
+    onValue(ref(db, 'logs/users'), (snapshot) => {
+      snapshot.forEach(logs => {
+        const log = logs.val();
+        logHTML += `
+          <div class="account-logs-log-entry">
+            <p><strong>Date:</strong> ${log.date}</p>
+            <p><strong>Action:</strong> ${log.action}</p>
+            <p><strong>User:</strong> ${log.userID}</p>
+            <p><strong>By UserID:</strong>${log.by}</p>
+          </div>
+        `
+      })
+      interfaceElement.innerHTML = `
       <div class="account-logs">
         <div class="account-logs-header">
           <label for="log-date">Filter by Date:</label>
           <input id="log-date" type="date">
-          <button onclick="downloadAccountLogs()">Download Logs</button>
+          <button onclick="downloadAccountLogs(event); event.preventDefault();">Download Logs</button>
         </div>
-        <div class="account-logs-content">
-          <div class="account-logs-log-entry">
-            <p><strong>Date:</strong> 2025-03-14</p>
-            <p><strong>Action:</strong> User John Doe added</p>
-            <p><strong>User:</strong> Admin</p>
-          </div>
-          <div class="account-logs-log-entry">
-            <p><strong>Date:</strong> 2025-03-13</p>
-            <p><strong>Action:</strong> User Jane Smith removed</p>
-            <p><strong>User:</strong> Admin</p>
-          </div>
-          <!-- Add more log entries as needed -->
+        ${logHTML}
         </div>
       </div>
     `
+    });
   }
 }
 
@@ -726,3 +772,265 @@ window.manageLotSelectedOpt = manageLotSelectedOpt;
 window.manageProductSelectedOpt = manageProductSelectedOpt;
 window.manageOrderSelectedOpt = manageOrderSelectedOpt;
 window.manageAccountsSelectedOpt = manageAccountsSelectedOpt;
+
+const page = document.querySelector('.sidebar-option--selected').textContent;
+if (page === 'Lots') {
+  manageLotSelectedOpt('View Lots');
+} else if (page === 'Products') {
+  manageProductSelectedOpt('View Products');
+} else if (page === 'Orders') {
+  manageOrderSelectedOpt('View Orders');
+} else if (page === 'Accounts') {
+  manageAccountsSelectedOpt('View Accounts');
+}
+
+
+const addUser = (event) => {
+  event.preventDefault();
+
+  const username = document.getElementById('user-name').value;
+  const email = document.getElementById('user-email').value;
+  const password = document.getElementById('user-pass').value;
+  const firstName = document.getElementById('user-firstName').value;
+  const lastName = document.getElementById('user-lastName').value;
+  const phone = document.getElementById('user-phone').value
+  const role = document.getElementById('user-role').value;
+  
+  if (!firstName || !lastName || !phone || !email || !password || !role) {
+    alert('Please fill in all fields');
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      const date = new Date(Date.now())
+      set(ref(db, 'users/' + user.uid), {
+        accessLevel: role,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        registrationTimestamp: date.toUTCString(),
+        username: username
+      })
+      await get(ref(db, 'logs'))
+        .then(snapshot => {
+          const date = new Date(Date.now())
+          push(ref(db, 'logs/users/'), {
+            action: 'User ' + username + ' added',
+            date: date.toUTCString(),
+            userID: user.uid,
+            by: uid
+          })
+        });
+      alert('User added successfully');
+      event.preventDefault();
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      alert(errorMessage);
+      // ..
+    });
+}
+
+const loadUser = async () => {
+  event.preventDefault();
+  const userUID = document.getElementById('user-uid').value;
+  try {
+    const response = await fetch(`http://localhost:3000/getUser?uid=${userUID}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      const { userRecord, userData } = result;
+      document.getElementById('user-name').disabled = false;
+      document.getElementById('user-firstName').disabled = false;
+      document.getElementById('user-lastName').disabled = false;
+      document.getElementById('user-phone').disabled = false;
+      document.getElementById('user-role').disabled = false;
+      document.getElementById('edit-user-button').disabled = false;
+      document.getElementById('user-email').disabled = false;
+      document.getElementById('user-pass').disabled = false;
+
+      document.getElementById('user-name').placeholder = userData.username;
+      document.getElementById('user-firstName').placeholder = userData.firstName;
+      document.getElementById('user-lastName').placeholder = userData.lastName;
+      document.getElementById('user-phone').placeholder = userData.phone;
+      document.getElementById('user-email').placeholder = userRecord.email;
+    } else {
+      document.getElementById('user-name').placeholder = 'Username';
+      document.getElementById('user-firstName').placeholder = 'First Name';
+      document.getElementById('user-lastName').placeholder = 'Last Name';
+      document.getElementById('user-phone').placeholder = 'Phone Number';
+      document.getElementById('edit-user-button').placeholder = 'Edit User';
+      document.getElementById('user-email').placeholder = 'Email';
+      document.getElementById('edit-pass').placeholder = 'Password';
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    alert('Error loading user: ' + error.message);
+  }
+}
+
+const editUser = async (event) => {
+  event.preventDefault();
+  const userUID = document.getElementById('user-uid').value;
+  const username = document.getElementById('user-name').value;
+  const firstName = document.getElementById('user-firstName').value;
+  const lastName = document.getElementById('user-lastName').value;
+  const phone = document.getElementById('user-phone').value
+  const role = document.getElementById('user-role').value;
+  const email = document.getElementById('user-email').value;
+  const password = document.getElementById('user-pass').value;
+
+  if (!userUID) {
+    alert('Please fill in the User ID field');
+    return;
+  }
+  try {
+    const userSnapshot = await get(child(ref(db), `users/${userUID}`));
+    if (!userSnapshot.exists()) {
+      alert('User does not exist');
+      return;
+    } 
+    if (!username && !firstName && !lastName && !phone && !role) {
+      alert('Please fill in at least one of the fields');
+      return;
+    }
+
+
+
+    const updates = {};
+    if (firstName) updates.firstName = firstName;
+    if (lastName) updates.lastName = lastName;
+    if (phone) updates.phone = phone;
+    if (role) updates.accessLevel = role;
+    if (username) updates.username = username;
+    if (email) updates.email = email;
+
+    if (password) {
+      await fetch('http://localhost:3000/changePassword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ uid: userUID, password: password })
+      })
+    }
+
+    await update(ref(db, 'users/' + userUID), updates);
+    const currentUsername = (await get(ref(db, 'users/' + userUID + '/username'))).val();
+
+    const date = new Date(Date.now())
+    push(ref(db, 'logs/users/'), {
+      action: 'User ' + currentUsername + ' edited',
+      date: date.toUTCString(),
+      userID: userUID,
+      by: uid
+    })
+    alert('User updated successfully');
+    event.preventDefault();
+  } catch (error) {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert(errorMessage);
+  }
+}
+
+const removeUser = async (event) => {
+  event.preventDefault();
+  const userUID = document.getElementById('user-id').value;
+  if (!userUID) {
+    alert('Please fill in the User ID field');
+    return;
+  }
+
+  try {
+    const username = (await get(ref(db, 'users/' + userUID + '/username'))).val();
+    const response = await fetch('http://localhost:3000/deleteUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ uid: userUID })
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      const date = new Date(Date.now())
+      push(ref(db, 'logs/users/'), {
+        action: 'User ' + username + ' removed',
+        date: date.toUTCString(),
+        userID: userUID,
+        by: uid
+      })
+      alert(result.message);
+      event.preventDefault();
+    } else {
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    alert('Error removing user: ' + error.message);
+  }
+};
+
+const downloadAccountLogs = async (event) => {
+  event.preventDefault();
+  const logsRef = ref(db, 'logs/users');
+  const logsSnapshot = await get(logsRef);
+  const logs = logsSnapshot.val();
+
+  if (!logs) {
+    alert('No logs found');
+    return;
+  }
+
+  const doc = new jsPDF();
+
+  const now = new Date();
+  const month = now.toLocaleString('default', { month: 'long' });
+  const year = now.getFullYear();
+  const downloadDate = now.toLocaleDateString();
+
+  // Add a title
+  doc.setFontSize(18);
+  doc.text(`Account Logs - ${month} ${year}`, 105, 10, null, null, 'center');
+
+  // Add a horizontal line
+  doc.setLineWidth(0.5);
+  doc.line(10, 15, 200, 15);
+
+  // Set font size for the logs
+  doc.setFontSize(12);
+
+  let y = 20; // Starting y position for the text
+  Object.entries(logs).forEach(([key, log]) => {
+    doc.text(`Date: ${new Date(log.date).toLocaleString()}`, 10, y);
+    y += 10;
+    doc.text(`Action: ${log.action}`, 10, y);
+    y += 10;
+    doc.text(`User: ${log.userID}`, 10, y);
+    y += 10;
+    doc.text(`By UserID: ${log.by}`, 10, y);
+    y += 20; // Add extra space between logs
+
+    // Add a horizontal line between logs
+    doc.line(10, y - 10, 200, y - 10);
+  });
+
+  doc.save(`account_logs(${month} ${year}).pdf`);
+};
+
+window.downloadAccountLogs = downloadAccountLogs;
+window.addUser = addUser;
+window.editUser = editUser;
+window.loadUser = loadUser;
+window.removeUser = removeUser;

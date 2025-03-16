@@ -35,7 +35,7 @@ try {
 
     if (!username || !email || !password || !firstName || !lastName || !phone) {
       alert('Please enter all fields.');
-      throw new Error('Please fill in all fields.');
+      return;
     }
 
     alert('Registering user...');
@@ -46,13 +46,14 @@ try {
         const user = userCredential.user;
         try {
           sendEmailVerification(user); 
+          const date = new Date(Date.now())
           set(ref(db, 'users/' + user.uid), {
             username: username,
             email: email,
             firstName: firstName,
             lastName: lastName,
             phone: phone,
-            registrationTimestamp: Date.now(),
+            registrationTimestamp: date.toUTCString(),
             accessLevel: 'user'
           }); 
         } catch (e) {
@@ -65,7 +66,6 @@ try {
           return
         }
         
-        window.localStorage.setItem('emailForSignIn', email);
         console.log(user);
         alert(`Successfully registered user
   Please check your email for verification link.`);
