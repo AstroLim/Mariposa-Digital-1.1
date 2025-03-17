@@ -251,7 +251,7 @@ const manageLotSelectedOpt = (selected) => {
           <div class="lot-logs-header">
             <label for="log-date">Filter by Date:</label>
             <input id="log-date" type="date">
-            <button onclick="downloadLogs()">Download Logs</button>
+            <button onclick="downloadLotLogs();">Download Logs</button>
           </div>
           <div class="lot-logs-content">
             ${lotLogsDisplay}
@@ -1133,7 +1133,6 @@ const removeLot = async (event) => {
 }
 
 const downloadLotLogs = async (event) => {
-  event.preventDefault();
   const logsRef = ref(db, 'logs/lots');
   const logsSnapshot = await get(logsRef);
   const logs = logsSnapshot.val();
