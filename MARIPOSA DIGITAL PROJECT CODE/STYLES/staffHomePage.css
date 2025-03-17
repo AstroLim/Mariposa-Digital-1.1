@@ -28,7 +28,7 @@
 }
 
 .mainCont-nav > div > a ,
-.mainCont-nav > div > p{
+.mainCont-nav > div > div > p{
     text-decoration: none;
     color: #660001;
     font-family: "Grenze", serif;

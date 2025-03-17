@@ -1,12 +1,12 @@
 /* Applied to All HTML Tags */
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 /* Main Container */
-.Main-Container{
+.Main-Container {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -16,14 +16,14 @@
 }
 
 /* Navigation Bar*/
-a, p{
+a, p {
     text-decoration: none;
     color: #660001;
     font-family: "Grenze", serif;
     font-size: 1vw;
 }
 
-nav{
+nav {
     width: 100%;
     height: 12%;
     background-color: #ffffff;
@@ -31,34 +31,34 @@ nav{
     flex-direction: row;
 }
 
-.nav-left-sec{
+.nav-left-sec {
     width: 50%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     gap: 3%;
 }
 
-.Logo{
+.Logo {
     margin-left: 15%;
     width: 65%;
 }
 
-.nav-right-sec{
+.nav-right-sec {
     width: 50%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
     gap: 3%;
 }
 
-.settingsA3{
+.settingsA3 {
     margin-right: 5%;
 }
 
-.MainSection{
+.MainSection {
     width: 100%;
     height: 88%;
     background-color: #FFFFFF;
@@ -67,7 +67,7 @@ nav{
     align-items: center;
 }
 
-.MainSection-header{
+.MainSection-header {
     width: 100%;
     height: 17vh;
     display: flex;
@@ -75,24 +75,24 @@ nav{
     background-color: #162416;
 }
 
-.header-box-leftSec{
-    width: 120%;
+.header-box-leftSec {
+    width: 50%; /* Adjusted width */
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
-.header-box-rightSec{
-    width: 80%;
+.header-box-rightSec {
+    width: 50%; /* Adjusted width */
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
-.header-box1{
-    width: 30%;
+.header-box1 {
+    width: 40%;
     height: 40%;
     background-color: #223a23da;
     border-radius: 22px;
@@ -102,7 +102,7 @@ nav{
     margin-left: 10%;
 }
 
-.header-box2{
+.header-box2 {
     width: 30%;
     height: 40%;
     display: flex;
@@ -111,26 +111,26 @@ nav{
     margin-right: 10%;
 }
 
-.header-box-content1{
+.header-box-content1 {
     color: #FFFFFF;
     font-family: "Grenze", serif;
-    font-size: 2vw;  
+    font-size: 2vw;
 }
 
-.header-box-content2{
+.header-box-content2 {
     color: #FFFFFF;
     font-family: "Grenze", serif;
-    font-size: 1.5vw;  
+    font-size: 1.5vw;
 }
 
 /* VIEWPORT-1 | MainSection-Rows*/
-.MainSection-Row{
+.MainSection-Row {
     width: 100%;
     height: 71vh;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start; /* Changed to flex-start */
     justify-content: center;
     gap: 3%;
     padding-top: 3%;
@@ -138,9 +138,9 @@ nav{
 }
 
 /* VIEWPORT-1 | MainSection-Rows-Divs*/
-.MainSection-Row > div{
+.order-container {
     width: 20%;
-    height: 55%;
+    height: 65%;
     background-color: #B61718;
     border-radius: 32px;
     opacity: 90%;
@@ -149,78 +149,81 @@ nav{
 }
 
 /* VIEWPORT-1 | Main Section-Rows-Divs-SecTop*/
-.order-sec-top{
+.order-sec-top {
     width: 100%;
-    height: 40%;
+    height: 30%;
     display: flex;
-    align-items: start;
-    justify-content: start;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
-.order-sec-top > h1{
+.order-sec-top > h1 {
     color: #FFFFFF;
     font-family: "Grenze", serif;
-    font-size: 2.2vw;  
+    font-size: 2.2vw;
     margin-top: 5%;
     margin-left: 5%;
 }
 
 /* VIEWPORT-1 | Main Section-Rows-Divs-SecBot*/
-.order-sec-bot{
+.order-sec-bot {
     width: 100%;
     height: 60%;
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    gap: 30%;
+    justify-content: flex-start;
+    gap: 10px; /* Reduced gap */
+    padding: 0 10px; /* Added padding */
 }
 
-.order-sec-bot > div{
+.order-sec-bot > div {
     width: 100%;
-    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 4%;
 }
 
-.order-sec-bot > div > div > label{
+.order-sec-bot > div > label {
     color: #FFFFFF;
     font-family: "Grenze", serif;
-    font-size: 1.3vw; 
-    margin-left: 10%;
+    font-size: 1.1vw; /* Reduced font size */
+    margin-bottom: 5px; /* Added margin */
 }
 
-.order-sec-bot > div > div > input{
-   float: right;
-   margin-right: 50% ;
-   position: relative;
-   top: 35%;
-}
-
-.viewAddress{
-    width: 40%;
-    height: 75%;
-    margin-left: 5%;
+.order-sec-bot > div > input[type="radio"] {
+    margin-right: 5px; 
     position: relative;
-    top: 10%;
+    bottom: 18%;/* Reduced margin */
 }
 
-.order-sec-bot-btn{
-    width: 100%;
-    height: 100%;
-    background-color: #660001;
-    border-radius: 32px;
+.order-sec-bot-btn {
     color: #F5F5F5;
     font-family: "Grenze", serif;
     font-size: 1vw;
+    cursor: pointer; /* Added cursor */
 }
 
 /* VIEWPORT-1 | Main Section-Rows-Divs-SecBotIMG*/
-.orderPic{
-    background-color: #223A23;
+.orderPic {
+    background-color: transparent;
     width: 30%;
-    height: 100%;
-    position: relative;
-    bottom: 20%;
-    left: 60%;
+    height: auto; /* Changed to auto */
+    max-height: 100px; /* Added max-height */
+    position: absolute; /* Changed to absolute */
+    bottom: 10px; /* Adjusted bottom */
+    right: 10px; /* Adjusted right */
+}
+
+.order-address {
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    margin-top: 5px;
+}
+
+.order-sec-bot > div > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
 }

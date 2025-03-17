@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #660001;
+}
+
+/* Navigation Bar */
+nav {
+    width: 100%;
+    height: 12%;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-left-sec {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+.Logo {
+    margin-left: 15%;
+    width: 65%;
+}
+
+.nav-right-sec {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}
+
+.btnA2 {
+    width: 25%;
+    height: 40%;
+    margin-right: 10%;
+}
+
+.nav-right-sec-btn {
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+    background-color: #850D0E;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    border-radius: 70px;
+}
+
+/* Main Section */
+.Main-Section {
+    width: 100%;
+    height: 88%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+.editAccInfoBox {
+    width: 40%;
+    height: 95%;
+    background-color: #EACF9B;
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
+    padding: 2%;
+}
+
+.editAccInfoBox-header {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    align-items: center;
+}
+
+.editAccInfoBox-header > p {
+    font-family: "Grenze", serif;
+    font-size: 2.3vw;
+    margin-left: 10%;
+}
+
+.editAccInfoBox-main {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+}
+
+.editAccInfoBox-main > div {
+    width: 100%;
+    height: 60%;
+}
+
+.editAccInfoBox-main > div > div {
+    width: 100%;
+    height: 25%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.editAccInfoBox-main > div > div > label {
+    font-family: "Grenze", serif;
+    font-size: 1.3vw;
+    margin-left: 5%;
+}
+
+.editAccInfoBox-main > div > div > input {
+    width: 60%;
+    padding: 5px;
+    border-radius: 10px;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    border: white solid 3px;
+    background-color: transparent;
+}
+
+footer {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 15%;
+}
+
+footer > button {
+    width: 30%;
+    height: 100%;
+    background-color: #ffffff;
+    border-radius: 70px;
+    font-family: "Grenze", serif;
+    font-size: 1.2vw;
+}
+
+.truckImg {
+    width: 45.9%;
+    position: absolute;
+    right: 14.1%;
+}

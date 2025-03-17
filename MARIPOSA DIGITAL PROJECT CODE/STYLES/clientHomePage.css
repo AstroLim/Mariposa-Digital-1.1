@@ -8,7 +8,7 @@
 /* Main Container */
 .Main-Container{
     width: 100%;
-    height: 260vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -34,7 +34,7 @@
 }
 
 .ViewPort-1-nav > div > a ,
-.ViewPort-1-nav > div > p{
+.ViewPort-1-nav > div > div > p{
     text-decoration: none;
     color: #660001;
     font-family: "Grenze", serif;
@@ -122,7 +122,7 @@
     justify-content: start;
 }
 
-.showNowA8{
+.aboutUsA6{
     width: 20%;
     height: 20%;
     margin-left: 5%;
@@ -275,270 +275,5 @@
     left: 78%;
 }
 
-/* VIEWPORT 2*/
-.ViewPort-2{
-    width: 100%;
-    height: 100vh;
-    background-color: #fffaf0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
-hr{
-    width: 90%;
-    height: 3px;
-    position: relative;
-    top: 2%;
-    background-color: #660001;
-}
-
-
-/* VIEWPORT 2 | Header*/
-.ViewPort-2-header{
-    margin-top: 2%;
-    width: 100%;
-    height: 11%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-box1{
-    width: 15%;
-    height: 90%;
-    background-color: #B61718;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-box-content1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2vw;  
-}
-
-/* VIEWPORT 2 | Main Section*/
-.ViewPort-2-MainSection{
-    width: 100%;
-    height: 85vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
-    gap: 3%;
-    padding-top: 8%;
-    padding-bottom: 8%;
-}
-
-/* VIEWPORT 2 | Main Section-Rows*/
-.MainSection2-Row{
-    width: 80%;
-    height: 45%;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 3%;
-    min-height: 0;
-}
-
-/* VIEWPORT 2 | Main Section-Rows-Divs*/
-.MainSection2-Row > div{
-    width: 30%;
-    height: 100%;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-}
-
-/* VIEWPORT 2 | Main Section-Rows-Divs-SecTop*/
-.lot-sec-top{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.lot-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2.5vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-/* VIEWPORT 2 | Main Section-Rows-Divs-SecBot*/
-.lot-sec-bot{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-}
-
-/* VIEWPORT 2 | Main Section-Rows-Divs-SecBotBTN*/
-.viewlot{
-    width: 40%;
-    height: 90%;
-    margin-left: 5%;
-}
-
-.lot-sec-bot-btn{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    top: 120%;
-    background-color: #660001;
-    border-radius: 76px;
-    color: #F5F5F5;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-}
-
-/* VIEWPORT 2 | Main Section-Rows-Divs-SecBotIMG*/
-.lotPic{
-    background-color: #223A23;
-    width: 30%;
-    height: 90%;
-    position: relative;
-    bottom: 10%;
-    left: 60%;
-}
-
-/* VIEWPORT 3 */
-.ViewPort-3{
-    width: 100%;
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #223A23;
-} 
-
-/* VIEWPORT 3 | Header*/
-.ViewPort-3-header{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    bottom: 10%;
-}
-
-.header-box3{
-    width: 15%;
-    height: 90%;
-    background-color: #013221;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.header-box-content2{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2vw;  
-}
-
-/* VIEWPORT 3 | Main Section*/
-.ViewPort-3-MainSection{
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
-    gap: 5%;
-}
-
-/* VIEWPORT 3 | Main Section-Rows*/
-.MainSection3-Row{
-    width: 80%;
-    height: 55%;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 3%;
-    min-height: 0;
-}
-
-/* VIEWPORT 3 | Main Section-Rows-Divs*/
-.MainSection3-Row > div{
-    width: 20%;
-    height: 100%;
-    background-color: #013221;
-    border-radius: 32px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-}
-
-
-
-/* VIEWPORT 3 | Main Section-Rows-Divs-SecTop*/
-.Rice-sec-top{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.Rice-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2.5vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-/* VIEWPORT 3 | Main Section-Rows-Divs-SecBot*/
-.Rice-sec-bot{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-}
-
-/* VIEWPORT 3 | Main Section-Rows-Divs-SecBotBTN*/
-.description{
-    width: 40%;
-    height: 90%;
-    margin-left: 5%;
-}
-
-.rice-sec-bot-btn{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    top: 120%;
-    background-color: #00AC70;
-    border-radius: 76px;
-    color: #F5F5F5;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-}
-
-.ricePic{
-    background-color: #223A23;
-    width: 30%;
-    height: 90%;
-    position: relative;
-    bottom: 10%;
-    left: 60%;
-}
 

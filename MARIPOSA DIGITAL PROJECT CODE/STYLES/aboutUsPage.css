@@ -1,0 +1,80 @@
+/* Applied to All HTML Tags */
+*{
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.about-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: url('../RESOURCES/imgFiles/Landing-Page/Landing-Homepage\ Ricefield.png') no-repeat center center/cover;
+}
+
+.ViewPort-1-nav{
+    width: 100%;
+    height: 12%;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+}
+
+.ViewPort-1-nav > div > button{
+    text-decoration: none;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+    background-color: transparent;
+    border: none;
+}
+
+/* VIEWPORT 1 | NAV - Left-Sec*/
+.nav-left-sec{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 3%;
+}
+
+.Logo{
+    margin-left: 15%;
+    width: 65%;
+}
+
+/* VIEWPORT 1 | NAV - Right-Sec*/
+.nav-right-sec{
+    width: 47.5%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 3%;
+    margin-right: 2.5%;
+}
+
+/* About Section */
+.about-section {
+    margin: auto;
+    text-align: center;
+    color: #ffffff;
+    font-family: "Grenze", serif;
+}
+
+.about-section h1 {
+    font-size: 3vw;
+    margin-bottom: 20px;
+}
+
+.about-section p {
+    font-size: 1.5vw;
+    width: 60%;
+    margin: 0 auto;
+}

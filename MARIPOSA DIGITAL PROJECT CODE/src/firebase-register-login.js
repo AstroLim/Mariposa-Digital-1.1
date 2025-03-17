@@ -56,6 +56,27 @@ try {
             registrationTimestamp: date.toUTCString(),
             accessLevel: 'user'
           }); 
+          let newUser = new Object();
+          let listOfContractSigningDates = []
+    localStorage.setItem("strListOfContractSigningDates", JSON.stringify(listOfContractSigningDates));
+          newUser.username = username.value;
+          newUser.password = password.value;
+          newUser.email = email.value;
+          newUser.firstname = firstName.value;
+          newUser.lastname = lastName.value;
+          newUser.mobilenumber = phone.value;
+          newUser.clientCart = [];
+          newUser.reservedLots = [];
+          newUser.checkoutProducts = [];
+          newUser.lotContractSigningDates = [];
+          newUser.pendingOrders = [];
+
+          let registeredUsers = JSON.parse(localStorage.getItem("strRegisteredUsers"));
+
+          if (!registeredUsers) {
+              registeredUsers = [];
+          }
+          registeredUsers.push(newUser);
         } catch (e) {
           deleteUser(user).then(() => {
             console.log('User deleted');
@@ -109,6 +130,16 @@ try {
         const user = userCredential.user;
         if (user.emailVerified) {
           alert('Login successful!');
+          let registeredUsers = JSON.parse(localStorage.getItem("strRegisteredUsers"));
+          const user = {
+            courierID:1,
+            username:"Lander Suarez",
+            password: "12345",
+            email: "suarez@gmail.com",
+            firstname:"Lander",
+            lastname: "Suarez",
+            mobilenumber: "01896445342",
+          }
           onValue(ref(db, 'users/' + user.uid), (snapshot) => {
             const data = snapshot.val();
             localStorage.setItem('user', JSON.stringify(data));
@@ -117,6 +148,7 @@ try {
             // Use this to access user data to other pages
             // const user = JSON.parse(localStorage.getItem('user'));
             // const uid = localStorage.getItem('uid');
+            
 
             directPage(data.accessLevel);
           }, {

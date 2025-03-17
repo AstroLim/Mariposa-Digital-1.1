@@ -1,0 +1,172 @@
+/* Applied to All HTML Tags */
+*{
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.Main-Container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* VIEWPORT 1 */
+.ViewPort-1 {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #EACF9B;
+}
+
+/* Navigation */
+.ViewPort-1-nav {
+    width: 100%;
+    height: 12%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3%;
+}
+
+.ViewPort-1-nav > div > a,
+.ViewPort-1-nav > div > div > p {
+    text-decoration: none;
+    color: #660001;
+    font-family: "Grenze", serif;
+    font-size: 1vw;
+}
+
+/* Left Section of Navigation */
+.nav-left-sec {
+    display: flex;
+    align-items: center;
+    gap: 3%;
+    width: 50%;
+    justify-content: start;
+}
+
+.Logo {
+    width: 60%;
+}
+
+/* Right Section of Navigation */
+.nav-right-sec {
+    display: flex;
+    align-items: end;
+    gap: 3%;
+    width: 50%;
+    justify-content: end;
+}
+
+/* Main Section */
+.MainSection {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5%;
+}
+
+/* Header Section */
+.MainSection-header {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5%;
+}
+
+.header-box {
+    width: 20%;
+    max-width: 300px;
+    height: 10%;
+    background-color: #B61718;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-box-content1 {
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 2vw;
+    text-align: center;
+}
+
+/* Main Content Section */
+.MainSection-mainCont {
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3%;
+    justify-content: center;
+    padding: 2% 0;
+    overflow-y: auto;
+}
+
+/* Lot Card */
+.lot-card {
+    width: 20%;
+    background: #a51515;
+    color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    margin-bottom: 2%;
+}
+
+/* Dropdown and Button */
+select {
+    padding: 8px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 100%;
+}
+
+button {
+    background: #3c1c1c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #5a2a2a;
+}
+
+/* Lot Image */
+.lot-image {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .MainSection-mainCont {
+        gap: 5%;
+    }
+
+    .lot-card {
+        width: 100%;
+    }
+
+    .header-box {
+        width: 60%;
+    }
+}
