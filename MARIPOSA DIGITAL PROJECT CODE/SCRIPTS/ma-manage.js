@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser} from "firebase/auth";
-import { getDatabase, onValue, ref, set, update, get, child, push} from "firebase/database";
+import { getDatabase, onValue, ref, set, update, get, child, push, remove} from "firebase/database";
 import jsPDF from "jspdf";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -54,57 +54,34 @@ const manageLotSelectedOpt = (selected) => {
   })
 
   if (selected === 'View Lots') {
-    interfaceElement.innerHTML = `
-    <div class="view-lots">
-      <div class="view-lots-container">
-        <h2 class="view-lots-container-header">Lot 1</h2>
-        <div class="view-lots-container-info">
-          <div class="view-lots-container-info-left">
-            <div class="view-lots-container-info-left-description">Description</div>
-            <button class="view-lots-container-info-left-button">Edit Lot</button>
+    let viewLotsDisplay = '';
+
+    get(ref(db, '/lots')).then((snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const childData = childSnapshot.val();
+        viewLotsDisplay += `
+          <div class="view-lots-container">
+            <h2 class="view-lots-container-header">Lot: ${childData.lotNumber}</h2>
+            <div class="view-lots-container-info">
+              <div class="view-lots-container-info-left">
+                <p>Price: ${childData.lotPrice}</p>
+                <div class="view-lots-container-info-left-description">Size: ${childData.lotSize}</div>
+                <button class="view-lots-container-info-left-button">Edit Lot</button>
+              </div>
+              <div>
+                <img src="" alt="${childData.lotImages}">  
+              </div>
+            </div>
           </div>
-          <div>
-            <img src="" alt="lot1">  
+        `
+        interfaceElement.innerHTML = `
+          <div class="view-lots">
+            ${viewLotsDisplay}
           </div>
-        </div>
-      </div>
-      <div class="view-lots-container">
-        <h2 class="view-lots-container-header">Lot 2</h2>
-        <div class="view-lots-container-info">
-          <div class="view-lots-container-info-left">
-            <div class="view-lots-container-info-left-description">Description</div>
-            <button class="view-lots-container-info-left-button">Edit Lot</button>
-          </div>
-          <div>
-            <img src="" alt="lot1">  
-          </div>
-        </div>
-      </div>
-      <div class="view-lots-container">
-        <h2 class="view-lots-container-header">Lot 3</h2>
-        <div class="view-lots-container-info">
-          <div class="view-lots-container-info-left">
-            <div class="view-lots-container-info-left-description">Description</div>
-            <button class="view-lots-container-info-left-button">Edit Lot</button>
-          </div>
-          <div>
-            <img src="" alt="lot1">  
-          </div>
-        </div>
-      </div>
-      <div class="view-lots-container">
-        <h2 class="view-lots-container-header">Lot 4</h2>
-        <div class="view-lots-container-info">
-          <div class="view-lots-container-info-left">
-            <div class="view-lots-container-info-left-description">Description</div>
-            <button class="view-lots-container-info-left-button">Edit Lot</button>
-          </div>
-          <div>
-            <img src="" alt="lot1">  
-          </div>
-        </div>
-      </div>
-    </div>`;
+        `
+      })
+    });
+
   } else if (selected === 'Add Lot') {
     interfaceElement.innerHTML = `
     <div class="add-lot">
@@ -126,7 +103,7 @@ const manageLotSelectedOpt = (selected) => {
             <textarea id="lot-description" name="lot-description"></textarea>
             <label for="lot-image">Lot Image:</label>
             <input type="file" id="lot-image" name="lot-image">
-            <button>Add Lot</button>
+            <button onclick="addLot(event);">Add Lot</button>
           </div>
         </div>
       </div>
@@ -140,7 +117,7 @@ const manageLotSelectedOpt = (selected) => {
         <label for="lot-number">Lot Number: </label>
         <input type="text" id="lot-number" class="remove-lot-form-control">
       </div>
-      <button class="remove-lot-button">Remove Lot</button>
+      <button onclick="removeLot(event);" class="remove-lot-button">Remove Lot</button>
     </div>
     `
   } else if (selected === 'Lot Reservation') {
@@ -256,30 +233,32 @@ const manageLotSelectedOpt = (selected) => {
       </div>
     `
   } else if (selected === 'Logs') {
-    interfaceElement.innerHTML = `
-      <div class="lot-logs">
-        <div class="lot-logs-header">
-          <label for="log-date">Filter by Date:</label>
-          <input id="log-date" type="date">
-          <button onclick="downloadLogs()">Download Logs</button>
-        </div>
-        <div class="lot-logs-content">
+    let lotLogsDisplay =  '';
+
+    get(ref(db, 'logs/lots')).then((snapshot) => {
+      snapshot.forEach((lots) => {
+        lotLogsDisplay += `
           <div class="log-entry">
-            <p><strong>Lot Log ID: </strong><span>N/A</span></p>
-            <p><strong>Date:</strong> 2025-03-14</p>
-            <p><strong>Action:</strong> Lot 1 added</p>
-            <p><strong>User:</strong> John Doe</p>
+            <p><strong>Lot Log ID: </strong><span>${lots.key}</span></p>
+            <p><strong>Date:</strong>${lots.val().date}</p>
+            <p><strong>Action:</strong>${lots.val().action}</p>
+            <p><strong>By UserID:</strong>${lots.val().by}</p>
           </div>
-          <div class="log-entry">
-            <p><strong>Lot Log ID: </strong><span>N/A</span></p>
-            <p><strong>Date:</strong> 2025-03-13</p>
-            <p><strong>Action:</strong> Lot 2 removed</p>
-            <p><strong>User:</strong> Jane Smith</p>
+        `
+      })
+      interfaceElement.innerHTML = `
+        <div class="lot-logs">
+          <div class="lot-logs-header">
+            <label for="log-date">Filter by Date:</label>
+            <input id="log-date" type="date">
+            <button onclick="downloadLogs()">Download Logs</button>
           </div>
-          <!-- Add more log entries as needed -->
+          <div class="lot-logs-content">
+            ${lotLogsDisplay}
+          </div>
         </div>
-      </div>
-    `
+      `
+    })
   }
 }
 
@@ -298,58 +277,33 @@ const manageProductSelectedOpt = (selected) => {
   })
 
   if (selected === 'View Products') {
-    interfaceElement.innerHTML = `
-      <div class="view-products">
-        <div class="view-products-container">
-          <h2 class="view-products-container-header">Rice 1</h2>
-          <div class="view-products-container-info">
-            <div class="view-products-container-info-left">
-              <button class="view-products-container-info-left-description">Edit Description</button>
-              <button class="view-products-container-info-left-button">Remove Product</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
+    let viewProductsDisplay = '';
+
+    get(ref(db, 'products')).then((snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const childData = childSnapshot.val();
+        viewProductsDisplay += `
+          <div class="view-products-container">
+                  <h2 class="view-products-container-header">${childData.productName}</h2>
+                  <p>Price: ${childData.pricePerSack}</p>
+                  <div class="view-products-container-info">
+                    <div class="view-products-container-info-left">
+                      <button class="view-products-container-info-left-description">${childData.productDescription}</button>
+                      <button class="view-products-container-info-left-button">Remove Product</button>
+                    </div>
+                    <div>
+                      <img src="" alt="rice">  
+                    </div>
+                  </div>
+                </div>
+        `
+        interfaceElement.innerHTML = `
+          <div class="view-products">
+            ${viewProductsDisplay}
           </div>
-        </div>
-        <div class="view-products-container">
-          <h2 class="view-products-container-header">Rice 2</h2>
-          <div class="view-products-container-info">
-            <div class="view-products-container-info-left">
-              <button class="view-products-container-info-left-description">Edit Description</button>
-              <button class="view-products-container-info-left-button">Remove Product</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
-          </div>
-        </div>
-        <div class="view-products-container">
-          <h2 class="view-products-container-header">Rice 3</h2>
-          <div class="view-products-container-info">
-            <div class="view-products-container-info-left">
-              <button class="view-products-container-info-left-description">Edit Description</button>
-              <button class="view-products-container-info-left-button">Remove Product</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
-          </div>
-        </div>
-        <div class="view-products-container">
-          <h2 class="view-products-container-header">Rice 4</h2>
-          <div class="view-products-container-info">
-            <div class="view-products-container-info-left">
-              <button class="view-products-container-info-left-description">Edit Description</button>
-              <button class="view-products-container-info-left-button">Remove Product</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
-          </div>
-        </div>
-      </div>
-    `
+        `
+        });
+    })
   } else if (selected === 'Add Products') {
     interfaceElement.innerHTML = `
       <div class="add-products">
@@ -362,7 +316,7 @@ const manageProductSelectedOpt = (selected) => {
           <input id="product-description" type="text">
           <label for="product-img">Product IMG</label>
           <input id="product-img" type="file">
-          <button>Add Product</button>
+          <button onclick="addProduct(event);">Add Product</button>
         </div>
       </div>
     `
@@ -374,7 +328,7 @@ const manageProductSelectedOpt = (selected) => {
           <label for="product-number">Product Number: </label>
           <input type="text" id="product-number" class="remove-product-form-control">
         </div>
-        <button class="remove-product-button">Remove Product</button>
+        <button onclick="removeProduct(event);" class="remove-product-button">Remove Product</button>
       </div>
     `
   } else if (selected === 'Logs') {
@@ -1034,3 +988,195 @@ window.addUser = addUser;
 window.editUser = editUser;
 window.loadUser = loadUser;
 window.removeUser = removeUser;
+
+const addProduct = async (event) => {
+  event.preventDefault();
+  const productName = document.getElementById('product-name').value;
+  const productPrice = document.getElementById('product-price').value;
+  const productDescription = document.getElementById('product-description').value;
+
+  if (!productName || !productPrice || !productDescription) {
+    alert('Please fill in all fields');
+    return;
+  }
+
+  const storageRef = ref(db, 'products/');
+  
+  push(storageRef, {
+    productName: productName,
+    pricePerSack: productPrice,
+    productDescription: productDescription,
+    productImages: 123123
+  }).then(() => {
+    alert('Product added successfully');
+    push(ref(db, 'logs/products'), {
+      action: 'Product ' + productName + ' removed',
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+  }).catch((error) => {
+    alert('Error adding product: ' + error.message);
+  });
+}
+
+const removeProduct = async (event) => {
+  event.preventDefault();
+  const productNumber = document.getElementById('product-number').value;
+  if (!productNumber) {
+    alert('Please fill in the Product Number field');
+    return;
+  }
+
+  const product = await get(ref(db, 'products/' + productNumber));
+
+  if (!product.exists()) {
+    alert('Product does not exist');
+    return;
+  }
+
+  remove(ref(db, 'products/' + productNumber)).then(() => {
+    alert('Product removed successfully');
+  }).catch((error) => {
+    alert('Error removing product: ' + error.message);
+  });
+};
+
+const downloadProductLogs = async (event) => {}
+
+window.addProduct = addProduct;
+window.removeProduct = removeProduct;
+
+
+const addLot = async (event) => {
+  event.preventDefault();
+  const lotNum = document.getElementById('lot-name').value;
+  const lotPrice = document.getElementById('lot-price').value;
+  const lotDescription = document.getElementById('lot-description').value;
+  const lotSize = document.getElementById('lot-size').value;
+  const lotStatus = document.getElementById('lot-status').value;
+
+  if (!lotNum || !lotPrice || !lotDescription || !lotSize || !lotStatus) {
+    alert('Please fill in all fields');
+    return;
+  }
+
+  let isLotFound = false;
+
+  await get(ref(db, 'lots/')).then(async (snapshot) => {
+    snapshot.forEach((item) => {
+      if (item.val().lotNumber === lotNum) {
+        alert('Lot already exists');
+        isLotFound = true;
+        return;
+      }
+    })
+  });
+  if (!isLotFound) {
+    await push(ref(db, '/lots'), {
+      lotImages: 123123,
+      lotNumber: lotNum,
+      lotPrice: lotPrice,
+      lotDescription: lotDescription,
+      lotSize: lotSize,
+    }).then(() => {
+      alert('Lot added successfully');
+      push(ref(db, 'logs/lots'), {
+        action: 'Lot ' + lotNum + ' added',
+        date: new Date(Date.now()).toUTCString(),
+        by: uid
+      });
+    }).catch((error) => {
+      alert('Error adding lot: ' + error.message);
+    });
+  };
+}
+
+const removeLot = async (event) => {
+  event.preventDefault();
+  const lotNum = document.getElementById('lot-number').value;
+  if (!lotNum) {
+    alert('Please fill in the Lot Number field');
+    return;
+  }
+
+  let isLotFound = false;
+
+  await get(ref(db, 'lots/')).then((snapshot) => {
+    snapshot.forEach((item) => {
+      if (item.val().lotNumber === lotNum) {
+          isLotFound = true;
+      }
+    })
+  });
+
+  if (isLotFound) {
+    get(ref(db, 'lots/')).then((snapshot) => {
+      snapshot.forEach((item) => {
+        if (item.val().lotNumber === lotNum) {
+          remove(ref(db, 'lots/' + item.key)).then(() => {
+            alert('Lot removed successfully');
+            push(ref(db, 'logs/lots'), {
+              action: 'Lot ' + lotNum + ' removed',
+              date: new Date(Date.now()).toUTCString(),
+              by: uid
+            });
+          }).catch((error) => {
+            alert('Error removing lot: ' + error.message);
+          });
+        }
+      })
+    });
+    return;
+  } else {
+    alert('Lot not found');
+  }
+}
+
+const downloadLotLogs = async (event) => {
+  event.preventDefault();
+  const logsRef = ref(db, 'logs/lots');
+  const logsSnapshot = await get(logsRef);
+  const logs = logsSnapshot.val();
+
+  if (!logs) {
+    alert('No logs found');
+    return;
+  }
+
+  const doc = new jsPDF();
+
+  const now = new Date();
+  const month = now.toLocaleString('default', { month: 'long' });
+  const year = now.getFullYear();
+  const downloadDate = now.toLocaleDateString();
+
+  // Add a title
+  doc.setFontSize(18);
+  doc.text(`Lot Logs - ${month} ${year}`, 105, 10, null, null, 'center');
+
+  // Add a horizontal line
+  doc.setLineWidth(0.5);
+  doc.line(10, 15, 200, 15);
+
+  // Set font size for the logs
+  doc.setFontSize(12);
+
+  let y = 20; // Starting y position for the text
+  Object.entries(logs).forEach(([key, log]) => {
+    doc.text(`Date: ${new Date(log.date).toLocaleString()}`, 10, y);
+    y += 10;
+    doc.text(`Action: ${log.action}`, 10, y);
+    y += 10;
+    doc.text(`By UserID: ${log.by}`, 10, y);
+    y += 20; // Add extra space between logs
+
+    // Add a horizontal line between logs
+    doc.line(10, y - 10, 200, y - 10);
+  });
+
+  doc.save(`lot_logs(${month} ${year}).pdf`);
+}
+
+window.addLot = addLot;
+window.removeLot = removeLot;
+window.downloadLotLogs = downloadLotLogs;

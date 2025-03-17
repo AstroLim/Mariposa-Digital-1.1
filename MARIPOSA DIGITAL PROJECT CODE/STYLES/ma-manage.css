@@ -560,11 +560,18 @@ body {
 
 .log-entry {
   display: grid;
+  gap: 20px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fff;
+}
+
+.log-entry p {
+  word-wrap: break-word; 
+  word-break: break-all;
+  white-space: normal;
 }
 /* End of Lot Logs CSS */
 

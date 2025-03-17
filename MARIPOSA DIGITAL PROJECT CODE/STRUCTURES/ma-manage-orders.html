@@ -53,55 +53,27 @@
           <div id="manage-mainview-settings-container">
             <div id="manage-mainview-settings-header">View Orders</div>
             <div id="manage-mainview-settings-editable">
-              <div class="view-orders">
-                <div class="view-orders-container">
-                  <h2 class="view-orders-container-header">Order Name</h2>
-                  <div class="view-orders-container-info">
-                    <div class="view-orders-container-info-left">
-                      <div class="view-orders-container-info-left-description">Description</div>
-                      <button class="view-orders-container-info-left-button">Order Status</button>
-                    </div>
-                    <div>
-                      <img src="" alt="rice">  
-                    </div>
+              <div class="add-order">
+                <h2>Add Order</h2>
+                <form class="add-order-form">
+                  <div class="order-form-group">
+                    <label for="customer-name">Customer Name:</label>
+                    <input id="customer-name" type="text" placeholder="Enter customer name">
                   </div>
-                </div>
-                <div class="view-products-container">
-                  <h2 class="view-products-container-header">Order Name</h2>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <div class="view-products-container-info-left-description">Description</div>
-                      <button class="view-products-container-info-left-button">Order Status</button>
-                    </div>
-                    <div>
-                      <img src="" alt="rice">  
-                    </div>
+                  <div class="order-form-group">
+                    <label for="product-id">Product ID:</label>
+                    <input id="product-id" type="text" placeholder="Enter product ID">
                   </div>
-                </div>
-                <div class="view-products-container">
-                  <h2 class="view-products-container-header">Order Name</h2>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <div class="view-products-container-info-left-description">Description</div>
-                      <button class="view-products-container-info-left-button">Order Status</button>
-                    </div>
-                    <div>
-                      <img src="" alt="rice">  
-                    </div>
+                  <div class="order-form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input id="quantity" type="number" placeholder="Enter quantity">
                   </div>
-                </div>
-                <div class="view-products-container">
-                  <h2 class="view-products-container-header">Order Name</h2>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <div class="view-products-container-info-left-description">Description</div>
-                      <button class="view-products-container-info-left-button">Order Status</button>
-                    </div>
-                    <div>
-                      <img src="" alt="rice">  
-                    </div>
+                  <div class="order-form-group">
+                    <label for="order-date">Order Date:</label>
+                    <input id="order-date" type="date">
                   </div>
-                </div>
+                  <button onclick="addOrder" type="button">Add Order</button>
+                </form>
               </div>
             </div>   
           </div>
