@@ -18,6 +18,7 @@ module.exports = {
     'clientEAIPage' : './SCRIPTS/clientEAIPage.js',
 
     'staffManageProductui': './SCRIPTS/staffManageProductui.js',
+    'staffEAIPage': './SCRIPTS/staffEAIPage.js',
   },
   // Output configuration
   output: {

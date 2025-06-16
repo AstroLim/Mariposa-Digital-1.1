@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 body {
-    background: #f6f7fb;
+    background: #f6fbf9;
     font-family: 'Arimo', 'Segoe UI', Arial, sans-serif;
     color: #23272f;
     min-height: 100vh;
@@ -66,7 +66,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f6f7fb;
+    background: #0b1c0f;
     padding: 2rem 0;
 }
 .eai-card {
