@@ -12,7 +12,7 @@ function logoutClient(){
     localStorage.removeItem("strLoginAccount")
     let accountLogin = ""
     localStorage.setItem("strLoginAccount", accountLogin)
-    window.location.replace("http://127.0.0.1:5500/STRUCTURES/landingPage.html")
+    window.location.replace("../structures/landingPage.html")
 }
 
 function updateAccountInfo(){
