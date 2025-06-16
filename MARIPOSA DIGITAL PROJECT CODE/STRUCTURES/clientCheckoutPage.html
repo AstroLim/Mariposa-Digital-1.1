@@ -11,57 +11,89 @@
     <script src="../dist/clientCheckoutPage.bundle.js" defer></script>
 </head>
 <body>
-    <div class="Main Container">
-        <nav>
-            <div class="nav-left-sec">
-                    <a href="clientHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
-                    <a href="clientHomePage.html" class="hommeA2">Home</a>
-                    <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
-                    <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
-                    <a href="aboutUsPage.html" class="aboutUsA5">About Us</a>
-            </div>
-
-            <div class="nav-right-sec">
-                <a href="clientCartPage.html" class="cartA6">Cart</a>
-                <div class="userName"></div>
-                <a href="clientEAIPage.html" class="settingsA7">Settings</a>
-            </div>
-        </nav>
-
-        <section class="MainSection">
-            <header class="MainSection-header">
-                    <div class="header-box-leftSec">
-                        <div class="header-box1"><h1 class="header-box-content">Your Cart</h1></div>
+    <!-- Only the nav section shown -->
+    <nav class="main-nav">
+        <div class="nav-left-sec">
+            <a href="clientHomePage.html" class="logoA1">
+                <img src="../RESOURCES/imgFiles/Logo.png" class="Logo" alt="Logo">
+            </a>
+            <a href="clientHomePage.html" class="hommeA2">Home</a>
+            <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
+            <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
+            <a href="aboutUsPage.html" class="aboutUsA5">About Us</a>
+        </div>
+        <div class="nav-right-sec">
+            <a href="clientCartPage.html" class="cartA6">Cart</a>
+            <div class="userName"></div>
+            <a href="clientEAIPage.html" class="settingsA7">Settings</a>
+        </div>
+    </nav>
+    <main class="checkout-main">
+        <div class="checkout-columns">
+            <!-- Column 1: Review Order -->
+            <div class="checkout-col">
+                <div class="checkout-box">
+                    <h2>1. Review Your Order</h2>
+                    <div class="review-order-list">
+                        <!-- JS will render cart items here -->
                     </div>
-
-                    <div class="header-box-rightSec">
-                         <a href="clientCartPage.html" class="header-box2"><h1 class="header-box-content">Back</h1></a>
-                    </div>
-            </header>
-
-            <main class="MainSection-mainCont">
-                <div class="mainCont-leftSec">
-                    <div class="paymentMethod-container">
-                        <div class="pmc-sec-top">
-                            <h1>Select Payment Method</h1>
-                        </div>
-    
-                        <div class="pmc-sec-bot">
-                            <button class="gCash">GCASH</button>
-                            <button class="debitCard">DEBIT CARD</button>
-                            <button class="COD">Cash On Delivery</button>
-                        </div>
+                    <div class="delivery-method">
+                        <label>
+                            <input type="radio" name="delivery" checked>
+                            <span>FREE</span> Regular Delivery (3-7 business days)
+                        </label>
                     </div>
                 </div>
-
-                <div class="mainCont-rightSec">
-                    <!-- Content Loaded Here -->
-
-                    
+            </div>
+            <!-- Column 2: Address -->
+            <div class="checkout-col">
+                <div class="checkout-box">
+                    <h2>2. Delivery Address</h2>
+                    <form id="address-form" autocomplete="on">
+                        <input type="text" name="fullname" placeholder="Full Name" required>
+                        <input type="text" name="address" placeholder="Street Address" required>
+                        <input type="text" name="city" placeholder="City" required>
+                        <input type="text" name="province" placeholder="Province" required>
+                        <input type="text" name="zip" placeholder="ZIP Code" required>
+                        <input type="text" name="phone" placeholder="Phone Number" required>
+                        <label class="save-billing">
+                            <input type="checkbox" name="saveBilling" checked>
+                            Same billing address
+                        </label>
+                    </form>
                 </div>
-
-            </main>
-        </section>
-    </div>
+            </div>
+            <!-- Column 3: Payment + Summary -->
+            <div class="checkout-col">
+                <div class="checkout-box">
+                    <h2>3. Select Payment Method</h2>
+                    <div class="pmc-sec-bot">
+                        <button type="button" class="gCash" title="Pay with GCash">
+                            <img src="../RESOURCES/imgFiles/gcash-icon.svg" alt="GCash" class="pm-icon">GCASH
+                        </button>
+                        <button type="button" class="debitCard" title="Pay with Debit Card">
+                            <img src="../RESOURCES/imgFiles/debit-icon.svg" alt="Debit Card" class="pm-icon">DEBIT CARD
+                        </button>
+                        <button type="button" class="COD" title="Cash On Delivery">
+                            <img src="../RESOURCES/imgFiles/cod-icon.svg" alt="COD" class="pm-icon">COD
+                        </button>
+                    </div>
+                </div>
+                <div class="checkout-box order-summary-box">
+                    <h2>Order Summary</h2>
+                    <div class="order-summary-details">
+                        <!-- JS will render order summary here -->
+                    </div>
+                </div>
+                <div class="checkout-box">
+                    <label class="email-optin">
+                        <input type="checkbox" id="emailOptIn">
+                        Email me about new products and offers
+                    </label>
+                    <button class="complete-order-btn" id="completeOrderBtn">Complete Order</button>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>

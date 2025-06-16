@@ -49,7 +49,8 @@ onAuthStateChanged(auth, async (firebaseUser) => {
 
 // Load cart from Firebase
 async function loadClientCart() {
-  const section = document.querySelector(".MainSection-mainCont");
+  const section = document.querySelector(".cart-items-list");
+  if (!section) return; // Prevents error if element is missing
   section.innerHTML = "<p>Loading cart...</p>";
 
   const cartRef = ref(db, `cart/${uid}`);
@@ -77,12 +78,17 @@ async function loadClientCart() {
   section.innerHTML = "";
   cartItems.forEach((item, i) => {
     section.innerHTML += `
-      <div class="lot-box">
-        <img src="${item.image || 'default-image.jpg'}" alt="${item.productName}">
-        <h3>${item.productName}</h3>
-        <p>Description: ${item.productDescription || item.description}</p>
-        <p>Price: ₱<span id="price-${i}">${item.pricePerSack * item.weight * item.quantity}</span></p>
-        <div style="display: flex; gap: 20px;">
+      <div class="cart-item-box">
+        <img src="${item.image || 'default-image.jpg'}" alt="${item.productName}" class="cart-item-img">
+        <div class="cart-item-details">
+          <div class="cart-item-title">${item.productName}</div>
+          <div class="cart-item-desc">${item.productDescription || item.description}</div>
+          <div class="cart-item-meta">₱${item.pricePerKilo || item.pricePerSack} per kg &middot; ${item.weight} kg &middot; Qty: ${item.quantity}</div>
+          <div class="cart-item-meta"><strong>Total: ₱${(item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity}</strong></div>
+        </div>
+        <div class="cart-item-actions">
+          <button class="cart-action-btn removeFromCartBTN" data-index="${i}">Remove</button>
+          <button class="cart-action-btn removeOneBTN" data-index="${i}">Remove 1</button>
           <label>
             Weight:
             <select class="weight-selector" data-index="${i}">
@@ -96,10 +102,6 @@ async function loadClientCart() {
             Quantity:
             <input type="number" min="1" class="quantity-input" data-index="${i}" value="${item.quantity}">
           </label>
-        </div>
-        <div class="button-container">
-          <button class="removeFromCartBTN" data-index="${i}">Remove</button>
-          <button class="removeOneBTN" data-index="${i}">Remove 1</button>
         </div>
       </div>
     `;

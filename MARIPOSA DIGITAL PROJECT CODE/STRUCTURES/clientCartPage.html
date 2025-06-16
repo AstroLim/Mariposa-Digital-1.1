@@ -11,39 +11,32 @@
     <script src="../dist/clientCartPage.bundle.js" defer></script>
 </head>
 <body>
-    <div class="Main Container">
-        <nav>
-            <div class="nav-left-sec">
-                    <a href="clientHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
-                    <a href="clientHomePage.html" class="hommeA2">Home</a>
-                    <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
-                    <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
-                    <a href="aboutUsPage.html" class="aboutUsA5">About Us</a>
-            </div>
-
-            <div class="nav-right-sec">
-                <a href="clientCartPage.html" class="cartA6">Cart</a>
-                <div class="userName"></div>
-                <a href="clientEAIPage.html" class="settingsA7">Settings</a>
-            </div>
-        </nav>
-
-        <section class="MainSection">
-            <header class="MainSection-header">
-                <div class="header-box">
-                    <h1 class="header-box-content1">Your Cart</h1>
-                </div>
-
-                <div class="header-box2">
-                    <a href="clientCheckoutPage.html" class="header-box-content2">Proceed To Checkout</a>
-                </div>
+    <nav>
+        <div class="nav-left-sec">
+            <a href="clientHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
+            <a href="clientHomePage.html" class="hommeA2">Home</a>
+            <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
+            <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
+            <a href="aboutUsPage.html" class="aboutUsA5">About Us</a>
+        </div>
+        <div class="nav-right-sec">
+            <a href="clientCartPage.html" class="cartA6">Cart</a>
+            <div class="userName"></div>
+            <a href="clientEAIPage.html" class="settingsA7">Settings</a>
+        </div>
+    </nav>
+    <main class="cart-main">
+        <div class="cart-card">
+            <header class="cart-header">
+                <h1>Your Cart</h1>
+                <a href="clientCheckoutPage.html" class="checkout-btn">Proceed To Checkout</a>
             </header>
-
-            <main class="MainSection-mainCont">
-                <!-- Content Loaded Here-->
-                
-            </main>
-        </section>
-    </div>
+            <section class="cart-items-section">
+                <div class="cart-items-list">
+                    <!-- Cart items will be loaded here by JS -->
+                </div>
+            </section>
+        </div>
+    </main>
 </body>
 </html>

@@ -47,9 +47,9 @@ onAuthStateChanged(auth, async (firebaseUser) => {
   loadCheckoutCart();
 });
 
-// Load cart from Firebase and display as read-only
 async function loadCheckoutCart() {
-  const section = document.querySelector(".mainCont-rightSec");
+  const section = document.querySelector(".review-order-list");
+  if (!section) return; // Prevents error if element is missing
   section.innerHTML = "<p>Loading checkout...</p>";
 
   const cartRef = ref(db, `cart/${uid}`);
@@ -60,6 +60,9 @@ async function loadCheckoutCart() {
 
   if (!snap.exists()) {
     section.innerHTML = `<p>Your cart is empty. <a href="clientViewProductsPage.html">Go shopping</a></p>`;
+    // Also clear summary if empty
+    const summarySection = document.querySelector(".order-summary-details");
+    if (summarySection) summarySection.innerHTML = "";
     return;
   }
 
@@ -70,14 +73,16 @@ async function loadCheckoutCart() {
 
   if (cartItems.length === 0) {
     section.innerHTML = `<p>Your cart is empty. <a href="clientViewProductsPage.html">Go shopping</a></p>`;
+    const summarySection = document.querySelector(".order-summary-details");
+    if (summarySection) summarySection.innerHTML = "";
     return;
   }
 
-  let total = 0;
-  section.innerHTML = `<h2>Checkout</h2>`;
+  let subtotal = 0;
+  section.innerHTML = ``;
   cartItems.forEach((item, i) => {
     const price = (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
-    total += price;
+    subtotal += price;
     section.innerHTML += `
       <div class="lot-box">
         <img src="${item.image || '../RESOURCES/imgFiles/lot1.jpg'}" alt="${item.productName}">
@@ -87,7 +92,7 @@ async function loadCheckoutCart() {
             <p><strong>Description:</strong> ${item.productDescription || item.description}</p>
           </div>
           <div class="details">
-            <p><strong>Price:</strong> ₱${price}</p>
+            <p><strong>Price:</strong> ₱${price.toLocaleString()}</p>
             <p><strong>Weight:</strong> ${item.weight} kg</p>
             <p><strong>Quantity:</strong> ${item.quantity}</p>
           </div>
@@ -96,9 +101,32 @@ async function loadCheckoutCart() {
     `;
   });
 
-  document.querySelectorAll(".payment-method").forEach(btn => {
-    btn.addEventListener("click", handlePaymentMethod);
-  });
+  // Render order summary
+  const summarySection = document.querySelector(".order-summary-details");
+  if (summarySection) {
+    const shipping = 0;
+    const tax = 0;
+    const total = subtotal + shipping + tax;
+
+    summarySection.innerHTML = `
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₱${subtotal.toLocaleString()}</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span>FREE</span>
+      </div>
+      <div class="summary-row">
+        <span>Tax</span>
+        <span>₱${tax.toLocaleString()}</span>
+      </div>
+      <div class="summary-row total">
+        <span>Order Total</span>
+        <span>₱${total.toLocaleString()}</span>
+      </div>
+    `;
+  }
 }
 
 // Handle payment method selection
