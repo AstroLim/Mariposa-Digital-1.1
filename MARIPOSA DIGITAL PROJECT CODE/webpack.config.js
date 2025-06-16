@@ -9,8 +9,10 @@ module.exports = {
     'ma-view-shipping': './SCRIPTS/ma-view-shipping.js', 
     'ma-settings': './SCRIPTS/ma-settings.js',
     'ma-manage': './SCRIPTS/ma-manage.js',
+
     'clientViewProductsPage': './SCRIPTS/clientViewProductsPage.js',
     'clientCartPage': './SCRIPTS/clientCartPage.js',
+    'clientCheckoutPage': './SCRIPTS/clientCheckoutPage.js',
   },
   // Output configuration
   output: {
