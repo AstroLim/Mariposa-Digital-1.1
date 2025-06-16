@@ -1,250 +1,266 @@
-// Retrieving the currently logged-in user from localStorage
-let accountLogin = JSON.parse(localStorage.getItem("strLoginAccount"));
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, get, push, update, remove } from "firebase/database";
 
-// Displaying the username dynamically
-if (accountLogin) { 
-    document.querySelector(".userName").innerHTML = `<p>${accountLogin.username}</p>`;
+// Firebase config (same as ma-manage.js)
+const firebaseConfig = {
+  apiKey: "AIzaSyAeBsyXVezC_JEe0X4CWbH43rM0Vx3CtSs",
+  authDomain: "mariposa-digital-fb.firebaseapp.com",
+  databaseURL: "https://mariposa-digital-fb-default-rtdb.firebaseio.com",
+  projectId: "mariposa-digital-fb",
+  storageBucket: "mariposa-digital-fb.firebasestorage.app",
+  messagingSenderId: "638381416350",
+  appId: "1:638381416350:web:b8144202dea97b283a808f",
+  measurementId: "G-E8S6TD7XK0"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// User display
+const user = JSON.parse(localStorage.getItem("user"));
+if (user && document.querySelector(".userName")) {
+    document.querySelector(".userName").textContent = user.username || "";
 }
 
-//Sample Data
-let pendingOrders = [
-    {
-        orderId: 1,
-        itemName: "Maia Rice",
-        buyerEmail: "evan@gmail.com",
-        amountDue: 730,
-        quantity: 146,
-        address: "123 venturanza St, tarlac City, Phillipines"
-    },
-    {
-        orderId: 2,
-        itemName: "Bulaklak Rice",
-        buyerEmail: "lander@gmail.com",
-        amountDue: 350,
-        quantity: 1,
-        address: "123 venturanza St, tarlac City, Phillipines"
-    }
-];
+// Sidebar navigation
+const sidebarOptions = document.querySelectorAll(".sidebar-option");
+const mainHeaderTitle = document.getElementById("main-header-title");
+const mainContentSection = document.getElementById("main-content-section");
 
-localStorage.setItem("pendingOrders", JSON.stringify(pendingOrders));
+// Initial load
+window.addEventListener("DOMContentLoaded", () => {
+    loadViewProducts();
+});
 
-// Retrieving product lists from localStorage or initializing them
-let listOfProducts = JSON.parse(localStorage.getItem("strListOfProducts")) || [];
-let listofProductsSold = JSON.parse(localStorage.getItem("strListofProductsSold")) || [];
-let listofProductsAdded = JSON.parse(localStorage.getItem("strListofProductsAdded")) || [];
-let listofCancelledOrders = JSON.parse(localStorage.getItem("strListofCancelledOrders")) || [];
-let listofProductsRemoved = JSON.parse(localStorage.getItem("strListofProductsRemoved")) || [];
+// Sidebar click events
+sidebarOptions.forEach(btn => {
+    btn.addEventListener("click", () => {
+        sidebarOptions.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const option = btn.getAttribute("data-option");
+        if (option === "view") {
+            mainHeaderTitle.textContent = "View Products";
+            loadViewProducts();
+        } else if (option === "add") {
+            mainHeaderTitle.textContent = "Add Product";
+            loadAddProduct();
+        } else if (option === "edit") {
+            mainHeaderTitle.textContent = "Edit Product";
+            loadEditProduct();
+        } else if (option === "remove") {
+            mainHeaderTitle.textContent = "Remove Product";
+            loadRemoveProduct();
+        }
+    });
+});
 
-// Function to update the dashboard data
-toggleDashboard();
-
-function toggleDashboard() {
-    document.querySelector(".numberOfProducts-sec-bot > div > p").textContent = listOfProducts.length;
-    document.querySelector(".numberOfSales-sec-bot > div > p").textContent = listofProductsSold.length;
-    document.querySelector(".productsAdded-sec-bot > div > p").textContent = listofProductsAdded.length;
-    document.querySelector(".numberOfCanceledOrder-sec-bot > div > p").textContent = listofCancelledOrders.length;
-    document.querySelector(".productsRemoved-sec-bot > div > p").textContent = listofProductsRemoved.length;
-}
-
-// Function to add a product
-function addProduct() {
-    let productName = document.querySelector("#productName").value.trim();
-    let productPricePerKilo = parseFloat(document.querySelector("#pricePerKilo").value);
-    let productDescription = document.querySelector("#productDescription").value.trim();
-
-    if (!productName || isNaN(productPricePerKilo) || !productDescription) {
-        alert("Please fill in all product details correctly.");
-        return;
-    }
-
-    let newProduct = {
-        productID: listOfProducts.length + 1,
-        name: productName,
-        price: productPricePerKilo,
-        description: productDescription,
-        weight: "",
-        quantity: 0
-    };
-
-    listOfProducts.push(newProduct);
-    localStorage.setItem("strListOfProducts", JSON.stringify(listOfProducts));
-
-    alert("New Product has been added.");
-    toggleDashboard();
-}
-
-
-function addProductui(){
-    let productManagementBoxSecBot = document.querySelector('.productManagementBox-sec-bot')
-    let rightSec = document.querySelector('.MainSection-Content-right-sec')
-
-    productManagementBoxSecBot.innerHTML = `<button class="addProductBtn" onclick="addProductui()">Add Product</button>
-                                            <button class="manageOrderBtn" onclick="manageOrder()">Manage Order</button>
-                                            <button class="backBtn" onclick="back()">Back</button>`
-
-    rightSec.innerHTML = `  <div class="addProductBox">
-                                <header>
-                                    <h1>Product Description</h1>
-                                </header>
-
-                                <section>
-                                    <div class="addProductBox-leftSec">
-                                        <label for="">Product Name:</label>
-                                        <label for="">Price Per Kilo:</label>
-                                        <label for="">Description:</label>
-                                        <label for="">Insert Images:</label>
-                                    </div>
-                                    <div class="addProductBox-rightSec">
-                                        <input type="text" class="" id="productName">
-                                        <input type="number" class="" id="pricePerKilo">
-                                        <input type="text" class="" id="productDescription">
-                                        <input type="text" class="" id="productImages">
-                                    </div>
-                                </section>
-
-                                <footer>
-                                    <button class="footerBtn" onclick="addProduct()">Confirm Add Products</button>
-                                </footer>
-                            </div>`
-
-}
-
-function manageOrder(){
-    let productManagementBoxSecBot = document.querySelector('.productManagementBox-sec-bot')
-    let rightSec = document.querySelector('.MainSection-Content-right-sec')
-
-    productManagementBoxSecBot.innerHTML = `<button class="addProductBtn" onclick="addProductui()">Add Product</button>
-                                            <button class="manageOrderBtn" onclick="manageOrder()">Manage Order</button>
-                                            <button class="backBtn" onclick="back()">Back</button>`
-
-    rightSec.innerHTML = `  <div class="manageOrderBox">
-                                <header>
-                                    <h1>Manage Client Order</h1>
-                                </header>
-
-                                <section>
-                                    <div class="manageOrderBox-leftSec">
-                                        <label for="clientId">Client Email:</label>
-                                    </div>
-
-                                    <div class="manageOrderBox-rightSec">
-                                        <input type="text" class="clientEmail" id="clientEmail">
-                                    </div>
-                                </section>
-
-                                <footer>
-                                    <button class="viewPendingOrdersBtn" id="viewPendingOrdersBtn" onclick="viewPendingOrders()">View Pending Orders</button>
-                                </footer>
-                                <main></main>
-                            </div>`
-}
-
-function viewPendingOrders(){
-    let main = document.querySelector('.manageOrderBox > main');
-    main.innerHTML = ''; // Clear previous content
-
-    let pendingOrders = JSON.parse(localStorage.getItem("pendingOrders")) || [];
-
-    if (pendingOrders.length === 0) {
-        main.innerHTML = '<p>No pending orders.</p>';
-        return;
-    }
-
-    pendingOrders.forEach(order => {
-        let orderDiv = document.createElement('div');
-        orderDiv.innerHTML = `
-            <header>
-                ${order.itemName}
-            </header>
-            <section>
-                <p>Buyer: ${order.buyerEmail}</p>
-                <p>Amount Due: ${order.amountDue}</p>
-                <p>Quantity: ${order.quantity}</p>
-                <p>Address: ${order.address}</p>
-            </section>
-            <button class="removePendingOrder" onclick="removePendingOrder(${order.orderId})">Remove Pending Order</button>
-        `;
-        main.appendChild(orderDiv);
+// View Products
+function loadViewProducts() {
+    mainContentSection.innerHTML = `<div id="product-list"></div>`;
+    const productList = document.getElementById("product-list");
+    get(ref(db, "products")).then(snapshot => {
+        if (!snapshot.exists()) {
+            productList.innerHTML = "<p>No products found.</p>";
+            return;
+        }
+        let html = "";
+        snapshot.forEach(child => {
+            const prod = child.val();
+            html += `
+                <div class="product-card">
+                    <img class="product-image" src="${prod.productImages || '../RESOURCES/imgFiles/Logo.png'}" alt="Product">
+                    <div class="product-details">
+                        <h3>${prod.productName || "No Name"}</h3>
+                        <p>Price: ₱${prod.pricePerSack || "N/A"}</p>
+                        <p>${prod.productDescription || ""}</p>
+                        <div class="product-actions">
+                            <button onclick="editProductPrompt('${child.key}')">Edit</button>
+                            <button onclick="removeProductPrompt('${child.key}')">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        productList.innerHTML = html;
     });
 }
 
-function removePendingOrder(orderId) {
-    let pendingOrders = JSON.parse(localStorage.getItem("pendingOrders")) || [];
-    let updatedOrders = pendingOrders.filter(order => order.orderId !== orderId);
+// Add Product
+function loadAddProduct() {
+    mainContentSection.innerHTML = `
+        <form class="form-section" id="add-product-form">
+            <h2>Add New Product</h2>
+            <div class="form-group">
+                <label for="add-product-name">Product Name</label>
+                <input id="add-product-name" type="text" required>
+            </div>
+            <div class="form-group">
+                <label for="add-product-price">Price Per Sack</label>
+                <input id="add-product-price" type="number" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="add-product-description">Description</label>
+                <textarea id="add-product-description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="add-product-image">Image URL</label>
+                <input id="add-product-image" type="text" placeholder="Paste image URL or leave blank for default">
+            </div>
+            <div class="form-actions">
+                <button type="submit">Add Product</button>
+            </div>
+        </form>
+    `;
+    document.getElementById("add-product-form").onsubmit = async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("add-product-name").value.trim();
+        const price = document.getElementById("add-product-price").value.trim();
+        const desc = document.getElementById("add-product-description").value.trim();
+        const img = document.getElementById("add-product-image").value.trim();
+        if (!name || !price || !desc) {
+            alert("Please fill in all required fields.");
+            return;
+        }
+        await push(ref(db, "products"), {
+            productName: name,
+            pricePerSack: price,
+            productDescription: desc,
+            productImages: img
+        });
+        alert("Product added!");
+        loadViewProducts();
+        sidebarOptions.forEach(b => b.classList.remove("active"));
+        sidebarOptions[0].classList.add("active");
+        mainHeaderTitle.textContent = "View Products";
+    };
+}
 
-    if (updatedOrders.length === pendingOrders.length) {
-        alert("Order not found.");
-        return;
+// Edit Product
+function loadEditProduct(prodId = "") {
+    mainContentSection.innerHTML = `
+        <form class="form-section" id="edit-product-search-form">
+            <h2>Edit Product</h2>
+            <div class="form-group">
+                <label for="edit-product-id">Enter Product ID</label>
+                <input id="edit-product-id" type="text" required value="${prodId}">
+            </div>
+            <div class="form-actions">
+                <button type="submit">Load Product</button>
+            </div>
+        </form>
+        <div id="edit-product-form-container"></div>
+    `;
+
+    // If prodId is provided, auto-load the product
+    if (prodId) {
+        loadEditProductForm(prodId);
     }
 
-    localStorage.setItem("pendingOrders", JSON.stringify(updatedOrders));
-    alert("Pending order removed.");
-    viewPendingOrders(); // Refresh the list
+    document.getElementById("edit-product-search-form").onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById("edit-product-id").value.trim();
+        loadEditProductForm(id);
+    };
 }
 
-
-function back(){
-    let productManagementBoxSecBot = document.querySelector('.productManagementBox-sec-bot')
-    let rightSec = document.querySelector('.MainSection-Content-right-sec')
-
-    productManagementBoxSecBot.innerHTML = `<button class="addProductBtn" onclick="addProductui()">Add Product</button>
-                                            <button class="manageOrderBtn" onclick="manageOrder()">Manage Order</button>`
-
-    rightSec.innerHTML = `  <div class="right-sec-topContent">
-                                <div class="numberOfProducts-container">
-                                        <div class="numberOfProducts-sec-top">
-                                            <h1>Number Of Products</h1>
-                                        </div>
-                    
-                                        <div class="numberOfProducts-sec-bot">
-                                            <div class="statContainer"><h1 class="statLabel">Total:</h1><p class="stat">100</p></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="numberOfSales-container">
-                                        <div class="numberOfSales-sec-top">
-                                            <h1>Products Sold:</h1>
-                                        </div>
-                    
-                                        <div class="numberOfSales-sec-bot">
-                                            <div class="statContainer"><h1 class="statLabel">Products Sold:</h1><p class="stat">100</p></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="right-sec-botContent">
-                                    <div class="productsAdded-container">
-                                        <div class="productsAdded-sec-top">
-                                            <h1>Products Added</h1>
-                                        </div>
-                    
-                                        <div class="productsAdded-sec-bot">
-                                            <div class="statContainer"><h1 class="statLabel">Added Products:</h1><p class="stat">100</p></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="numberOfCanceledOrder-container">
-                                        <div class="numberOfCanceledOrder-sec-top">
-                                            <h1>Cancelled Orders</h1>
-                                        </div>
-                    
-                                        <div class="numberOfCanceledOrder-sec-bot">
-                                            <div class="statContainer"><h1 class="statLabel">Cancelled Orders:</h1><p class="stat">100</p></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="productsRemoved-container">
-                                        <div class="productsRemoved-sec-top">
-                                            <h1>Products Removed</h1>
-                                        </div>
-                    
-                                        <div class="productsRemoved-sec-bot">
-                                            <div class="statContainer"><h1 class="statLabel">Removed Products:</h1><p class="stat">100</p></div>
-                                    </div>
-                                </div>
-                            </div>`
-
-    toggleDashboard();
+// Helper to load the edit form for a product
+async function loadEditProductForm(prodId) {
+    const prodRef = ref(db, `products/${prodId}`);
+    const snap = await get(prodRef);
+    if (!snap.exists()) {
+        alert("Product not found.");
+        return;
+    }
+    const prod = snap.val();
+    document.getElementById("edit-product-form-container").innerHTML = `
+        <form class="form-section" id="edit-product-form">
+            <h2>Edit Product Details</h2>
+            <div class="form-group">
+                <label>Product Name</label>
+                <input id="edit-product-name" type="text" value="${prod.productName || ""}" required>
+            </div>
+            <div class="form-group">
+                <label>Price Per Sack</label>
+                <input id="edit-product-price" type="number" min="0" value="${prod.pricePerSack || ""}" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="edit-product-description" rows="3" required>${prod.productDescription || ""}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Image URL</label>
+                <input id="edit-product-image" type="text" value="${prod.productImages || ""}">
+            </div>
+            <div class="form-actions">
+                <button type="submit">Save Changes</button>
+            </div>
+        </form>
+    `;
+    document.getElementById("edit-product-form").onsubmit = async (ev) => {
+        ev.preventDefault();
+        const name = document.getElementById("edit-product-name").value.trim();
+        const price = document.getElementById("edit-product-price").value.trim();
+        const desc = document.getElementById("edit-product-description").value.trim();
+        const img = document.getElementById("edit-product-image").value.trim();
+        await update(prodRef, {
+            productName: name,
+            pricePerSack: price,
+            productDescription: desc,
+            productImages: img
+        });
+        alert("Product updated!");
+        loadViewProducts();
+        sidebarOptions.forEach(b => b.classList.remove("active"));
+        sidebarOptions[0].classList.add("active");
+        mainHeaderTitle.textContent = "View Products";
+    };
 }
 
+// Remove Product
+function loadRemoveProduct() {
+    mainContentSection.innerHTML = `
+        <form class="form-section" id="remove-product-form">
+            <h2>Remove Product</h2>
+            <div class="form-group">
+                <label for="remove-product-id">Enter Product ID</label>
+                <input id="remove-product-id" type="text" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit">Remove Product</button>
+            </div>
+        </form>
+    `;
+    document.getElementById("remove-product-form").onsubmit = async (e) => {
+        e.preventDefault();
+        const prodId = document.getElementById("remove-product-id").value.trim();
+        const prodRef = ref(db, `products/${prodId}`);
+        const snap = await get(prodRef);
+        if (!snap.exists()) {
+            alert("Product not found.");
+            return;
+        }
+        await remove(prodRef);
+        alert("Product removed!");
+        loadViewProducts();
+        sidebarOptions.forEach(b => b.classList.remove("active"));
+        sidebarOptions[0].classList.add("active");
+        mainHeaderTitle.textContent = "View Products";
+    };
+}
 
+// Edit/Remove from product card
+window.editProductPrompt = (prodId) => {
+    sidebarOptions.forEach(b => b.classList.remove("active"));
+    sidebarOptions[2].classList.add("active");
+    mainHeaderTitle.textContent = "Edit Product";
+    loadEditProduct(prodId); // Pass the ID
+};
+window.removeProductPrompt = async (prodId) => {
+    if (confirm("Are you sure you want to remove this product?")) {
+        await remove(ref(db, `products/${prodId}`));
+        alert("Product removed!");
+        loadViewProducts();
+        sidebarOptions.forEach(b => b.classList.remove("active"));
+        sidebarOptions[0].classList.add("active");
+        mainHeaderTitle.textContent = "View Products";
+    }
+};

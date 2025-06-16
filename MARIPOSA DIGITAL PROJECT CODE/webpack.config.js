@@ -16,6 +16,8 @@ module.exports = {
     'clientViewLotPage' : './SCRIPTS/clientViewLotPage.js',
     'clientViewReservedLots' : './SCRIPTS/clientViewReservedLots.js',
     'clientEAIPage' : './SCRIPTS/clientEAIPage.js',
+
+    'staffManageProductui': './SCRIPTS/staffManageProductui.js',
   },
   // Output configuration
   output: {
