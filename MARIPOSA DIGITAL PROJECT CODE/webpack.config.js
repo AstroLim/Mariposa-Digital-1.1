@@ -10,6 +10,7 @@ module.exports = {
     'ma-settings': './SCRIPTS/ma-settings.js',
     'ma-manage': './SCRIPTS/ma-manage.js',
     'clientViewProductsPage': './SCRIPTS/clientViewProductsPage.js',
+    'clientCartPage': './SCRIPTS/clientCartPage.js',
   },
   // Output configuration
   output: {
