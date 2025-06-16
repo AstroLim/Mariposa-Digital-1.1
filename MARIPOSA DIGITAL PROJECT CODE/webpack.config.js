@@ -13,6 +13,9 @@ module.exports = {
     'clientViewProductsPage': './SCRIPTS/clientViewProductsPage.js',
     'clientCartPage': './SCRIPTS/clientCartPage.js',
     'clientCheckoutPage': './SCRIPTS/clientCheckoutPage.js',
+    'clientViewLotPage' : './SCRIPTS/clientViewLotPage.js',
+    'clientViewReservedLots' : './SCRIPTS/clientViewReservedLots.js',
+    'clientEAIPage' : './SCRIPTS/clientEAIPage.js',
   },
   // Output configuration
   output: {

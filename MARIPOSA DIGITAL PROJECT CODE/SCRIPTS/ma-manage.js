@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser, sendEmailVerification} from "firebase/auth";
 import { getDatabase, onValue, ref, set, update, get, child, push, remove} from "firebase/database";
 import jsPDF from "jspdf";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -769,6 +769,9 @@ const addUser = (event) => {
         registrationTimestamp: date.toUTCString(),
         username: username
       })
+
+      sendEmailVerification(user);
+
       await get(ref(db, 'logs'))
         .then(snapshot => {
           const date = new Date(Date.now())

@@ -3,43 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client View Reserved Lot Page</title>
+    <title>Your Reserved Lots</title>
     <link rel="stylesheet" href="../STYLES/clientViewReservedLots.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jua&family=Noto+Serif+Hentaigana:wght@200..900&display=swap" rel="stylesheet">
-    <script src="../SCRIPTS/clientViewReservedLots.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Grenze:wght@400;700&display=swap" rel="stylesheet">
+    <script src="../dist/clientViewReservedLots.bundle.js" defer></script>
 </head>
 <body>
-    <div class="Main Container">
-        <nav>
-            <div class="nav-left-sec">
-                    <a href="clientHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
-                    <a href="clientHomePage.html" class="hommeA2">Home</a>
-                    <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
-                    <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
-                    <a href="aboutUsPage.html" class="aboutUsA5">About Us</a>
-            </div>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="clientHomePage.html" class="navbar-logo">
+                <img src="../RESOURCES/imgFiles/Logo.png" alt="Logo">
+            </a>
+            <a href="clientHomePage.html" class="navbar-link">Home</a>
+            <a href="clientViewReservedLots.html" class="navbar-link active">Your Lots</a>
+            <a href="clientViewOrders.html" class="navbar-link">Your Orders</a>
+            <a href="aboutUsPage.html" class="navbar-link">About Us</a>
+        </div>
+        <div class="navbar-right">
+            <a href="clientCartPage.html" class="navbar-link">Cart</a>
+            <span class="navbar-user userName">Lim, Evan Vincent B.</span>
+            <a href="clientEAIPage.html" class="navbar-link">Settings</a>
+        </div>
+    </nav>
 
-            <div class="nav-right-sec">
-                <a href="clientCartPage.html" class="cartA6">Cart</a>
-                <p class="userName">Lim, Evan Vincent B.</p>
-                <a href="clientEAIPage.html" class="settingsA7">Settings</a>
-            </div>
-        </nav>
+    <header class="page-header">
+        <h1>Your Reserved Lots</h1>
+    </header>
 
-        <section class="MainSection">
-            <header class="MainSection-header">
-                <div class="header-box">
-                    <h1 class="header-box-content1">Your Reserved Lots</h1>
-                </div>
-            </header>
-
-            <main class="MainSection-mainCont">
-             <!-- Content Loaded Here-->
-                
-            </main>
-        </section>
-    </div>
+    <main class="lots-grid" id="lots-list">
+        <!-- Reserved lot cards will be injected here by JS -->
+    </main>
 </body>
 </html>

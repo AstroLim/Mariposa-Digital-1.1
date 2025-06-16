@@ -1,219 +1,234 @@
-/* Applied to All HTML Tags */
-*{
-    margin: 0px;
-    padding: 0px;
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
-
-/* Main Container */
-.Main-Container{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+body {
+    background: #f6f7fb;
+    font-family: 'Arimo', 'Segoe UI', Arial, sans-serif;
+    color: #23272f;
+    min-height: 100vh;
 }
 
-nav{
+/* Navbar */
+.navbar {
     width: 100%;
-    height: 12%;
-    background-color: transparent;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.06);
     display: flex;
-    flex-direction: row;
-    background-color: #FFFFFF;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2.5vw;
+    min-height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
-
-nav > div > a ,
-nav > div > p{
+.navbar-left, .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+}
+.navbar-logo img {
+    height: 38px;
+    width: auto;
+    margin-right: 1vw;
+}
+.navbar-link {
     text-decoration: none;
-    color: #660001;
+    color: #2d2d2d;
     font-family: "Grenze", serif;
-    font-size: 1vw;
+    font-size: 1.08rem;
+    font-weight: 500;
+    padding: 0.3rem 0.7rem;
+    border-radius: 7px;
+    transition: background 0.16s, color 0.16s;
 }
-
-/*NAV -Left-Sec*/
-.nav-left-sec{
-    width: 50%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: start;
-    gap: 3%;
+.navbar-link.active,
+.navbar-link:hover {
+    background: #f3e9e9;
+    color: #B61718;
 }
-
-.Logo{
-    margin-left: 15%;
-    width: 65%;
-}
-
-/*NAV - Right-Sec*/
-.nav-right-sec{
-    width: 50%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: end;
-    gap: 3%;
-    margin-right: 2.5%;
-}
-
-/*MainSection*/
-.MainSection{
-    width: 100%;
-    height: 88%;
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/*MainSection | Header*/
-.MainSection-header{
-    width: 100%;
-    height: 17vh;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    background-color: #162416;
-}
-
-.header-box{
-    width: 20%;
-    height: 40%;
-    background-color: #223a23da;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 10%;
-}
-
-.header-box-content1{
-    color: #FFFFFF;
+.navbar-user {
     font-family: "Grenze", serif;
-    font-size: 2vw;  
+    font-size: 1.08rem;
+    color: #555;
+    background: #f3f3f3;
+    padding: 0.3rem 0.9rem;
+    border-radius: 7px;
+    margin-right: 0.5vw;
 }
 
-.MainSection-mainCont{
+/* Page Header */
+.page-header {
     width: 100%;
-    height: 73vh;
+    background: #fff;
+    padding: 2.5rem 0 1.5rem 0;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     justify-content: center;
-    overflow-y: auto;
-    gap: 3%;
+    align-items: center;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.04);
+    margin-bottom: 1.5rem;
+}
+.page-header h1 {
+    font-family: "Grenze", serif;
+    font-size: 2.2rem;
+    color: #B61718;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
-/* VIEWPORT-1 | MainSection-Rows-Divs*/
+/* Lots Grid */
+.lots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2.2rem 2.5vw;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2vw 3rem 2vw;
+    min-height: 60vh;
+}
+
+/* Lot Card */
 .lot-container {
-    width: 25%;
-    height: 50%;
-    background-color: #B61718;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(30,41,59,0.10), 0 1.5px 6px rgba(30,41,59,0.03);
     display: flex;
     flex-direction: column;
-    border: 2px solid #000;
-    border-radius: 16px;
     overflow: hidden;
+    border: 1.5px solid #ececec;
+    transition: box-shadow 0.18s, transform 0.18s, background 0.18s;
+    min-width: 0;
+    position: relative;
+}
+.lot-container:hover {
+    background: #f6f5fa;
+    box-shadow: 0 12px 36px rgba(30,41,59,0.14), 0 4px 16px rgba(30,41,59,0.09);
+    transform: translateY(-4px) scale(1.018);
 }
 
 /* Lot Image */
 .lot-image {
     width: 100%;
-    height: 40%;
+    height: 180px;
+    background: #fafbfc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
-
 .lot-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-bottom: 1px solid #eee;
 }
 
 /* Lot Details */
 .lot-details {
-    padding: 20px;
-    background-color: transparent;
+    padding: 1.3rem 1.3rem 1.1rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    background: transparent;
+    flex: 1;
 }
-
-/* Lot Title */
 .lot-details h2 {
     font-family: "Grenze", serif;
-    color: #FFFFFF;
-    font-size: 2vw;
-    margin-bottom: 10px;
+    color: #B61718;
+    font-size: 1.18rem;
+    margin-bottom: 0.2rem;
+    font-weight: 700;
 }
-
-/* Lot Information */
 .lot-info {
     display: flex;
-    justify-content: space-between;
-    gap: 2%;
+    flex-direction: column;
+    gap: 0.18rem;
     font-family: "Grenze", serif;
-    color: #FFFFFF;
-    margin-bottom: 20px;
+    color: #222;
+    font-size: 1rem;
+    margin-bottom: 0.7rem;
 }
-
 .lot-info p {
-    margin: 5px 0;
-    margin-top: 10px ;
+    margin: 0;
+    line-height: 1.5;
 }
 
 /* Lot Actions (Buttons) */
 .lot-actions {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    gap: 40px;
-    margin-top: 10px;
-
+    justify-content: flex-end;
+    gap: 0.7rem;
+    margin-top: 0.7rem;
 }
-
 button {
-    padding: 10px 20px;
+    padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 8px;
     font-family: "Grenze", serif;
-    font-size: 1vw;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background 0.3s;;
+    transition: background 0.18s, transform 0.13s;
+    font-weight: 600;
 }
-
 .cancelReservation {
-    background-color: #660001;
-    color: white;
+    background: #B61718;
+    color: #fff;
+    box-shadow: 0 1px 4px rgba(182,23,24,0.08);
+}
+.cancelReservation:hover {
+    background: #223a23;
+    color: #fff;
+    transform: translateY(-1px) scale(1.03);
 }
 
-.setDate {
-    background-color: #660001;
-    color: #FFFFFF;
-}
-
-.setDate:hover, .cancelReservation:hover {
-    background-color: #8c0303;
+/* Empty State */
+.lots-grid:empty::after {
+    content: "You have no reserved lots.";
+    display: block;
+    color: #888;
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 3rem auto;
+    font-family: "Grenze", serif;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .header-box {
-        width: 40%;
+@media (max-width: 900px) {
+    .page-header {
+        padding: 1.5rem 0 1rem 0;
     }
-
-    .header-box-content1 {
-        font-size: 4vw;
+    .page-header h1 {
+        font-size: 1.5rem;
     }
-
-    .lot-container {
-        display: flex;
-        flex-direction: column;
-        width: 90%; 
-        max-width: 1200px; 
-        border: 2px solid #000;
-        border-radius: 16px;
-        overflow: hidden;
-        margin-top: 2%;
+    .lots-grid {
+        gap: 1.5rem 2vw;
+        padding: 0 1vw 2rem 1vw;
     }
-
-    button {
-        font-size: 2vw;
+    .lot-image {
+        height: 140px;
     }
 }
-
+@media (max-width: 600px) {
+    .navbar-left, .navbar-right {
+        gap: 1vw;
+    }
+    .lots-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem 0;
+        padding: 0 0.5vw 2rem 0.5vw;
+    }
+    .lot-image {
+        height: 100px;
+    }
+    .lot-details {
+        padding: 0.9rem 0.7rem 0.7rem 0.7rem;
+    }
+    button {
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+    }
+}

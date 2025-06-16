@@ -147,7 +147,7 @@ try {
           });
           // window.location.href = 'clientHomePage.html';
         } else {
-          alert('Please verify your email address before logging in.');
+          showEmailNotVerifiedModal(user);
         }
       })
       .catch((error) => {
@@ -166,16 +166,50 @@ try {
   });
 } catch (error) {};
 
+function showEmailNotVerifiedModal(user) {
+  const modal = document.getElementById('emailNotVerifiedModal');
+  const closeBtn = document.getElementById('closeEmailModalBtn');
+  const resendBtn = document.getElementById('resendVerificationBtn');
+  const feedback = document.getElementById('resend-feedback');
+  modal.style.display = 'flex';
+  feedback.innerText = '';
+
+  closeBtn.onclick = () => {
+    modal.style.display = 'none';
+  };
+
+  resendBtn.onclick = () => {
+    resendBtn.disabled = true;
+    feedback.style.color = 'black';
+    feedback.innerText = 'Sending...';
+    import("firebase/auth").then(({ sendEmailVerification }) => {
+      sendEmailVerification(user)
+        .then(() => {
+          feedback.style.color = 'green';
+          feedback.innerText = 'Verification email sent!';
+          resendBtn.disabled = false;
+        })
+        .catch(() => {
+          feedback.style.color = 'red';
+          feedback.innerText = 'Failed to send verification email.';
+          resendBtn.disabled = false;
+        });
+    });
+  };
+}
+
 const directPage = (accessLevel) => {
-  if (accessLevel === 'admin') {
+  if (accessLevel.toLowerCase() === 'admin') {
     window.location.href = 'ma-home-page.html';
-  } else if (accessLevel === 'staff') {
+  } else if (accessLevel.toLowerCase() === 'staff') {
     window.location.href = 'staffHomePage.html';
-  } else if (accessLevel === 'courier') {
+  } else if (accessLevel.toLowerCase() === 'courier') {
     window.location.href = 'courierHomePage.html';
-  } else if (accessLevel === 'user') {
+  } else if (accessLevel.toLowerCase() === 'user') {
     window.location.href = 'clientHomePage.html';
   } else {
     alert('Invalid access level. Please contact the administrator.');
   }
 }
+
+

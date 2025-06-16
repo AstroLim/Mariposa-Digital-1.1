@@ -1,101 +1,147 @@
-let accountLogin = JSON.parse(localStorage.getItem("strLoginAccount"));
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, get, push } from "firebase/database";
 
-// Making Client Home Page Username Content Dynamic based on who's logged in
-if (accountLogin) { 
-    const accountLoginName = `${accountLogin.username}`;
-    document.querySelector(".userName").innerHTML = `<p>${accountLoginName}</p>`;
+// Firebase config (same as checkout page)
+const firebaseConfig = {
+  apiKey: "AIzaSyAeBsyXVezC_JEe0X4CWbH43rM0Vx3CtSs",
+  authDomain: "mariposa-digital-fb.firebaseapp.com",
+  databaseURL: "https://mariposa-digital-fb-default-rtdb.firebaseio.com",
+  projectId: "mariposa-digital-fb",
+  storageBucket: "mariposa-digital-fb.firebasestorage.app",
+  messagingSenderId: "638381416350",
+  appId: "1:638381416350:web:b8144202dea97b283a808f",
+  measurementId: "G-E8S6TD7XK0"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const user = JSON.parse(localStorage.getItem('user'));
+const uid = localStorage.getItem('uid');
+let selectedLot = null;
+
+// Access check
+if (!user || !uid) {
+  document.body.innerHTML = '';
+  alert('Please log in to access this page.');
+  window.location.href = 'landingPage.html';
+} else if (user.accessLevel !== 'user') {
+  document.body.innerHTML = '';
+  alert('You do not have permission to access this page.');
+  window.location.href = 'landingPage.html';
+} else {
+  // Set username in header if needed
+  if (user.username && document.querySelector(".userName")) {
+    document.querySelector(".userName").innerHTML = `<p>${user.username}</p>`;
+  }
+  // Load available lots
+  loadLots();
 }
 
-let storedLots = JSON.parse(localStorage.getItem("strListOfLots"))
+// Modal setup (make sure these elements exist in your HTML)
+const modal = document.getElementById('contract-modal');
+const closeModal = document.getElementById('close-modal');
+const contractDateInput = document.getElementById('contract-date');
+const confirmBtn = document.getElementById('confirm-contract-btn');
 
-if(!storedLots){
-    alert("No Lots Available, Add new Lots")
+// Show modal
+function showModal(lot) {
+  selectedLot = lot;
+  contractDateInput.value = '';
+  modal.style.display = 'flex';
 }
 
-// Function that loads currently available lots
+// Hide modal
+if (closeModal) {
+  closeModal.onclick = () => { modal.style.display = 'none'; };
+}
+window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+if (confirmBtn) {
+  confirmBtn.onclick = async () => {
+    if (!contractDateInput.value) {
+      alert('Please select a contract signing date.');
+      return;
+    }
+    if (!user || !uid || !selectedLot) return;
+
+    // Prepare reservation data
+    const reservation = {
+      ...selectedLot,
+      uid: uid,
+      contractSigningDate: contractDateInput.value,
+      reservedAt: new Date().toISOString()
+    };
+
+    // Push to reserveLots
+    const reserveRef = ref(db, 'reserveLots');
+    await push(reserveRef, reservation);
+
+    // Update lot status to 'reserved'
+    const lotRef = ref(db, `lots/${selectedLot.lotKey}`);
+    const { update } = await import("firebase/database");
+    await update(lotRef, { status: "reserved", reservedBy: uid });
+
+    alert('Lot reserved successfully!');
+    modal.style.display = 'none';
+    loadLots();
+  };
+}
+
+// Load lots from database
 function loadLots() {
-    let section = document.querySelector(".MainSection-mainCont");
-    let storedLots = JSON.parse(localStorage.getItem("strListOfLots"));
+  const section = document.getElementById("lots-list");
+  if (!section) return;
+  section.innerHTML = "<p>Loading lots...</p>";
 
-    // Filter out reserved lots
-    let availableLots = storedLots.filter(lot => lot.status === "Available");
+  const lotsRef = ref(db, 'lots');
+  get(lotsRef).then(snapshot => {
+    if (!snapshot.exists()) {
+      section.innerHTML = "<p>No available lots at the moment.</p>";
+      return;
+    }
+    const lotsObj = snapshot.val();
+    // Only show lots where status is missing or exactly "available" (case-insensitive, trimmed)
+    const availableLots = Object.entries(lotsObj)
+        .filter(([key, lot]) => {
+            const status = (lot.status || "").toString().trim().toLowerCase();
+            return status === "" || status === "available";
+        });
+    
+    Object.entries(lotsObj).forEach(([key, lot]) => {
+        console.log(`Lot ${key} status: "${(lot.status || "").toString().trim().toLowerCase()}"`);
+    });
 
     if (availableLots.length === 0) {
-        section.innerHTML = `<p>No available lots at the moment.</p>`;
-        return;
+      section.innerHTML = `<p>No available lots at the moment.</p>`;
+      return;
     }
 
     section.innerHTML = ""; // Clear section before loading lots
-    availableLots.forEach((lot) => {
-        section.innerHTML += `
-            <div class="lot-card">
-                <h2>${lot.name}</h2>
-                <p>${lot.description}</p>
-                <p>Size: ${lot.size}</p>
-                <p>Price: ${lot.price}</p>
-                <label>
-                    <select id="lot${lot.lotNumber}-duration" onchange="updateSelection('lot${lot.lotNumber}')">
-                        <option value="1 Year">1 Year</option>
-                        <option value="3 Years">3 Years</option>
-                        <option value="5 Years">5 Years</option>
-                    </select>
-                </label>
-                <p id="lot${lot.lotNumber}-selection">Selected: 1 Year</p>
-                <button onclick="reserveLot(${lot.lotNumber})" class="reserveLotBTN">Reserve Lot</button>
-                <img src="images/lot${lot.lotNumber}.png" alt="${lot.name} Pic" class="lot-image">
-            </div>`;
+    availableLots.forEach(([key, lot]) => {
+      const images = Array.isArray(lot.lotImages) ? lot.lotImages : [];
+      section.innerHTML += `
+        <div class="lot-card">
+          <h2>Lot #${lot.lotNumber}</h2>
+          <p>${lot.lotDescription}</p>
+          <p>Size: ${lot.lotSize}</p>
+          <p>Price: ₱${typeof lot.lotPrice === "number" ? lot.lotPrice.toLocaleString() : "N/A"}</p>
+          <div class="lot-images">
+            ${images.map(img => `<img src="${img}" alt="Lot Image" class="lot-image">`).join('')}
+          </div>
+          <button class="reserveLotBTN" data-key="${key}">Reserve Lot</button>
+        </div>
+      `;
     });
+
+    // Add event listeners for reserve buttons
+    document.querySelectorAll('.reserveLotBTN').forEach(btn => {
+      btn.onclick = () => {
+        const lotKey = btn.getAttribute('data-key');
+        const lot = lotsObj[lotKey];
+        showModal({ ...lot, lotKey });
+      };
+    });
+  });
 }
-
-// Function to update the selection text when a user selects a contract duration
-function updateSelection(lot) {
-    let duration = document.getElementById(`${lot}-duration`).value;
-    document.getElementById(`${lot}-selection`).textContent = `Selected: ${duration}`;
-}
-
-// Function to reserve a lot and remove it from the available list
-function reserveLot(lotNumber) {
-    let accountLogin = JSON.parse(localStorage.getItem("strLoginAccount"));
-    let registeredUsers = JSON.parse(localStorage.getItem("strRegisteredUsers"));
-    let listOfLots = JSON.parse(localStorage.getItem("strListOfLots"));
-
-    if (!accountLogin) {
-        alert("Please log in to be able to reserve a lot.");
-        return;
-    }
-
-    let selectedLot = listOfLots.find(lot => lot.lotNumber === lotNumber);
-    if (!selectedLot) {
-        alert("Lot not found.");
-        return;
-    }
-    
-    // Get the selected duration using the lotNumber in the element's id
-    let duration = document.getElementById(`lot${selectedLot.lotNumber}-duration`).value;
-
-    // Update lot details
-    selectedLot.contractDuration = duration;
-    selectedLot.status = "Reserved";
-    selectedLot.lotOwner = `${accountLogin.firstname} ${accountLogin.lastname}`;
-
-    // Find the logged-in user and add the reserved lot
-    let user = registeredUsers.find(user => user.email === accountLogin.email);
-    if (user) {
-        if (!user.reservedLots) {
-            user.reservedLots = [];
-        }
-        user.reservedLots.push(selectedLot);
-    }
-
-    // Update local storage
-    localStorage.setItem("strListOfLots", JSON.stringify(listOfLots));
-    localStorage.setItem("strRegisteredUsers", JSON.stringify(registeredUsers));
-
-    alert(`${selectedLot.name} has been reserved for ${duration}.`);
-
-    // Reload the available lots
-    loadLots();
-}
-
-// Calling the loadLots function on page load
-loadLots();

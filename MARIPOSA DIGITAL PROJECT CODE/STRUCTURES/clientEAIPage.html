@@ -3,101 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client Edit Account Information Page</title>
+    <title>Edit Account Information</title>
     <link rel="stylesheet" href="../STYLES/clientEAIPage.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Grenze:wght@400;700&display=swap" rel="stylesheet">
-    <script src="../SCRIPTS/clientEAIPage.js" defer></script>
+    <script src="../dist/clientEAIPage.bundle.js" defer></script>
 </head>
 <body>
-    <div class="Main-Container">
-        <nav>
-            <div class="nav-left-sec">
-                <a href="clientHomePage.html" class="btnA1">
-                    <img src="../RESOURCES/imgFiles/Logo.png" class="Logo" alt="Company Logo">
-                </a>
-            </div>
-            <div class="nav-right-sec">
-                <div class="userName"></div>
-                <a href="clientHomePage.html" class="btnA2">
-                    <button class="nav-right-sec-btn">Go Back</button>
-                </a>
-            </div>
-        </nav>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="clientHomePage.html" class="navbar-logo">
+                <img src="../RESOURCES/imgFiles/Logo.png" alt="Logo">
+            </a>
+            <a href="clientHomePage.html" class="navbar-link">Home</a>
+            <a href="clientViewReservedLots.html" class="navbar-link">Your Lots</a>
+            <a href="clientViewOrders.html" class="navbar-link">Your Orders</a>
+            <a href="aboutUsPage.html" class="navbar-link">About Us</a>
+        </div>
+        <div class="navbar-right">
+            <a href="clientCartPage.html" class="navbar-link">Cart</a>
+            <span class="navbar-user userName"></span>
+            <a href="clientEAIPage.html" class="navbar-link active">Settings</a>
+        </div>
+    </nav>
 
-        <section class="Main-Section">
-            <div class="editAccInfoBox">
-                <header class="editAccInfoBox-header">
-                    <p>Edit Account Information</p>
-                </header>
-
-                <main class="editAccInfoBox-main">
-                    <form>
-                        <div class="input-group">
-                            <label for="username">Username:</label>
-                            <input type="text" id="username">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="password">Password:</label>
-                            <input type="password" id="password">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="text">Email:</label>
-                            <input type="email" id="email">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="firstname">First Name:</label>
-                            <input type="text" id="firstname">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="lastname">Last Name:</label>
-                            <input type="text" id="lastname">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="mobilenumber">Mobile Number:</label>
-                            <input type="text" id="mobilenumber">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="dateofbirth">Date of Birth:</label>
-                            <input type="date" id="dateofbirth">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="sex">Sex:</label>
-                            <select id="sex">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="address">Address:</label>
-                            <input type="text" id="address">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="country">Country:</label>
-                            <input type="text" id="country">
-                        </div>
-                    </form>
-                </main> 
-
-                <footer>
-                    <button class="logout" onclick="logoutClient()">Logout</button>
-                    <button class="save" onclick="updateAccountInfo()">Save</button>
-                </footer>
-            </div>
-
-            <!-- Client Image -->
-            <img src="" alt="Client Image" class="clientImg">
+    <main class="eai-main">
+        <section class="eai-card">
+            <h1>Edit Account Information</h1>
+            <form id="editAccountForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstname">First Name</label>
+                    <input id="firstname" name="firstname" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name</label>
+                    <input id="lastname" name="lastname" type="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="mobilenumber">Phone Number</label>
+                    <input id="mobilenumber" name="mobilenumber" type="tel" required pattern="[0-9]{10,15}">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" name="email" type="email" required>
+                    <button type="button" id="sendReverification" class="reverify-btn" style="display:none;">Send Reverification</button>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Save Changes</button>
+                    <button type="button" class="logout-btn" onclick="logoutClient()">Logout</button>
+                </div>
+            </form>
         </section>
-    </div>
+    </main>
 </body>
 </html>
