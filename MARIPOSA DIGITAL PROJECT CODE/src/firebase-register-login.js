@@ -131,15 +131,6 @@ try {
         if (user.emailVerified) {
           alert('Login successful!');
           let registeredUsers = JSON.parse(localStorage.getItem("strRegisteredUsers"));
-          const user = {
-            courierID:1,
-            username:"Lander Suarez",
-            password: "12345",
-            email: "suarez@gmail.com",
-            firstname:"Lander",
-            lastname: "Suarez",
-            mobilenumber: "01896445342",
-          }
           onValue(ref(db, 'users/' + user.uid), (snapshot) => {
             const data = snapshot.val();
             localStorage.setItem('user', JSON.stringify(data));
