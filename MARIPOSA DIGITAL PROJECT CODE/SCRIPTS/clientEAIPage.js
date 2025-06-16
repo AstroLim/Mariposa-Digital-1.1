@@ -46,9 +46,9 @@ window.logoutClient = logoutClient;
 window.addEventListener("DOMContentLoaded", () => {
   if (!user) return;
   document.querySelector("#username").value = user.username || "";
-  document.querySelector("#firstname").value = user.firstname || "";
-  document.querySelector("#lastname").value = user.lastname || "";
-  document.querySelector("#mobilenumber").value = user.mobilenumber || "";
+  document.querySelector("#firstname").value = user.firstName || "";
+  document.querySelector("#lastname").value = user.lastName || "";
+  document.querySelector("#mobilenumber").value = user.phone || "";
   document.querySelector("#email").value = user.email || "";
 });
 
