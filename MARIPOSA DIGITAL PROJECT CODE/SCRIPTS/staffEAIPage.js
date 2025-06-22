@@ -16,10 +16,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+
+
 const staffUid = localStorage.getItem('uid');
+const user = JSON.parse(localStorage.getItem('user'));
+
 if (!staffUid) {
   document.body.innerHTML = '';
   alert('Please log in to access this page.');
+  window.location.href = 'landingPage.html';
+} else if (user.accessLevel.toLowerCase() !== 'staff') {
+  document.body.innerHTML = '';
+  alert('You do not have permission to access this page.');
   window.location.href = 'landingPage.html';
 }
 

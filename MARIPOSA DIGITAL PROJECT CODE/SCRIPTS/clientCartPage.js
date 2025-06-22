@@ -36,7 +36,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
   // Check access level
   const userSnap = await get(ref(db, `users/${uid}`));
   const userData = userSnap.val();
-  if (!userData || userData.accessLevel !== 'user') {
+  if (!userData || userData.accessLevel.toLowerCase() !== 'user') {
     document.body.innerHTML = '';
     alert('You do not have permission to access this page.');
     window.location.href = 'landingPage.html';

@@ -21,7 +21,18 @@ const auth = getAuth(app);
 const db = getDatabase();
 
 // Get uid from localStorage (still needed for logging actions)
-const uid = localStorage.getItem('uid') || 'anonymous'; // Fallback to 'anonymous' if uid is not set
+const user = JSON.parse(localStorage.getItem('user'));
+const uid = localStorage.getItem('uid');
+
+if (!user || !uid) {
+  document.body.innerHTML = '';
+  alert('Please log in to access this page.');
+  window.location.href = 'landingPage.html';
+} else if (user.accessLevel.toLowerCase() !== 'staff') {
+  document.body.innerHTML = '';
+  alert('You do not have permission to access this page.');
+  window.location.href = 'landingPage.html';
+}
 
 // Function to update the dashboard data
 async function toggleDashboard() {

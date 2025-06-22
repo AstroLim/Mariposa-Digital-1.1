@@ -30,7 +30,7 @@ if (!user || !uid) {
   document.body.innerHTML = '';
   alert('Please log in to access this page.');
   window.location.href = 'landingPage.html';
-} else if (user.accessLevel !== 'admin') {
+} else if (user.accessLevel.toLowerCase() !== 'admin') {
   document.body.innerHTML = '';
   alert('You do not have permission to access this page.');
   window.location.href = 'landingPage.html';
