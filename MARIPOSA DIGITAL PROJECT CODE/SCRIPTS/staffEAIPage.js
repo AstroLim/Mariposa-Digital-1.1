@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, update } from "firebase/database";
+import { getAuth, sendEmailVerification, updateEmail } from "firebase/auth";
 
 // Firebase config (same as reserved lots)
 const firebaseConfig = {
@@ -14,6 +15,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
 
 
@@ -70,31 +72,27 @@ let originalEmail = "";
 // Call loadStaffData on DOMContentLoaded
 window.addEventListener("DOMContentLoaded", loadStaffData);
 
-// Show reverification button if email is changed
-const emailInput = document.getElementById("email");
-const sendReverificationBtn = document.getElementById("sendReverification");
+// // Show reverification button if email is changed
+// const emailInput = document.getElementById("email");
+// const sendReverificationBtn = document.getElementById("sendReverification");
 
-emailInput.addEventListener("input", () => {
-  if (emailInput.value.trim() !== "" && emailInput.value.trim() !== originalEmail) {
-    sendReverificationBtn.style.display = "inline-block";
-  } else {
-    sendReverificationBtn.style.display = "none";
-  }
-});
+// emailInput.addEventListener("input", () => {
+//   if (emailInput.value.trim() !== "" && emailInput.value.trim() !== originalEmail) {
+//     sendReverificationBtn.style.display = "inline-block";
+//   } else {
+//     sendReverificationBtn.style.display = "none";
+//   }
+// });
 
-// Dummy reverification handler (replace with your actual logic)
-sendReverificationBtn.addEventListener("click", () => {
-  alert("A reverification email has been sent to " + (emailInput.value.trim() || originalEmail));
-  sendReverificationBtn.style.display = "none";
-});
+// // Dummy reverification handler (replace with your actual logic)
+// sendReverificationBtn.addEventListener("click", () => {
+//   alert("A reverification email has been sent to " + (emailInput.value.trim() || originalEmail));
+//   sendReverificationBtn.style.display = "none";
+// });
 
 // Update account info in Firebase
 document.getElementById("editAccountForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  if (!staffUid) {
-    alert("User not logged in.");
-    return;
-  }
 
   // Only update fields that are filled in
   const updatedData = {};
@@ -116,6 +114,8 @@ document.getElementById("editAccountForm").addEventListener("submit", async (e) 
   }
 
   try {
+    await updateEmail(auth.currentUser, email);
+    await sendEmailVerification(auth.currentUser);
     const staffRef = ref(db, `users/${staffUid}`);
     await update(staffRef, updatedData);
 

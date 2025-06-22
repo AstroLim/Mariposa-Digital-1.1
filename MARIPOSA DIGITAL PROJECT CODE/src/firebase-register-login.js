@@ -130,7 +130,7 @@ try {
         const user = userCredential.user;
         if (user.emailVerified) {
           alert('Login successful!');
-          let registeredUsers = JSON.parse(localStorage.getItem("strRegisteredUsers"));
+
           onValue(ref(db, 'users/' + user.uid), (snapshot) => {
             const data = snapshot.val();
             localStorage.setItem('user', JSON.stringify(data));
