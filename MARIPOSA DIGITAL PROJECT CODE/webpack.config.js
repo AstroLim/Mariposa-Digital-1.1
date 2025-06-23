@@ -16,9 +16,14 @@ module.exports = {
     'clientViewLotPage' : './SCRIPTS/clientViewLotPage.js',
     'clientViewReservedLots' : './SCRIPTS/clientViewReservedLots.js',
     'clientEAIPage' : './SCRIPTS/clientEAIPage.js',
+    'clientViewOrders' : './SCRIPTS/clientViewOrders.js',
 
     'staffManageProductui': './SCRIPTS/staffManageProductui.js',
     'staffEAIPage': './SCRIPTS/staffEAIPage.js',
+
+    'courierViewLoad' : './SCRIPTS/courierLoadPage.js',
+    'courierViewLoadPage': './SCRIPTS/courierLoadPage.js',
+    'courierManageLoadPage': './SCRIPTS/courierManageLoadPage.js',
   },
   // Output configuration
   output: {

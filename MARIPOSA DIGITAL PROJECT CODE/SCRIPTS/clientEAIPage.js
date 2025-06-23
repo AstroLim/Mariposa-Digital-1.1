@@ -40,7 +40,7 @@ if (user && user.username && document.querySelector(".userName")) {
 function logoutClient() {
   localStorage.removeItem("user");
   localStorage.removeItem("uid");
-  window.location.replace("clientLoginPage.html");
+  window.location.replace("landingPage.html");
 }
 window.logoutClient = logoutClient;
 

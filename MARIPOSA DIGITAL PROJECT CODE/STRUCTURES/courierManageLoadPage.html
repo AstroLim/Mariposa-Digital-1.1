@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Load</title>
+    <link rel="stylesheet" href="../STYLES/courierManageLoadPage.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Grenze:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="manage-load-container">
+        <h1>Manage Order</h1>
+        <div id="order-details"></div>
+        <form id="status-form">
+            <label for="status">Update Status:</label>
+            <select id="status" name="status">
+                <option value="Pick-Up">Pick-Up</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Delivery Soon">Delivery Soon</option>
+                <option value="Delivered">Delivered</option>
+            </select>
+            <button type="submit">Update</button>
+        </form>
+        <div id="feedback"></div>
+        <a href="courierViewLoadPage.html" class="back-btn">Back to Loads</a>
+    </div>
+    <script type="module" src="../dist/courierManageLoadPage.bundle.js"></script>
+</body>
+</html>

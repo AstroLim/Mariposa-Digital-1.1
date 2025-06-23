@@ -1,0 +1,74 @@
+body {
+    background: #f6f6f6;
+    font-family: "Grenze", serif;
+    margin: 0;
+    padding: 0;
+}
+.manage-load-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(30,41,59,0.10);
+    padding: 2rem 2.5rem;
+    text-align: center;
+}
+.manage-load-container h1 {
+    color: #B61718;
+    margin-bottom: 1.5rem;
+}
+#order-details {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+#order-details p {
+    margin: 0.3em 0;
+    color: #223a23;
+}
+form {
+    margin-bottom: 1.2rem;
+}
+label {
+    font-weight: 600;
+    color: #223a23;
+}
+select {
+    margin: 0 0.5em;
+    padding: 0.3em 0.7em;
+    border-radius: 6px;
+    border: 1px solid #B61718;
+    font-size: 1em;
+}
+button[type="submit"] {
+    background: #1e7d34;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4em 1.2em;
+    font-size: 1em;
+    font-family: "Grenze", serif;
+    cursor: pointer;
+    margin-left: 0.5em;
+    transition: background 0.2s;
+}
+button[type="submit"]:hover {
+    background: #B61718;
+}
+#feedback {
+    margin-top: 1em;
+    font-weight: 600;
+}
+.back-btn {
+    display: inline-block;
+    margin-top: 1.5em;
+    color: #fff;
+    background: #B61718;
+    padding: 0.5em 1.2em;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.back-btn:hover {
+    background: #1e7d34;
+}

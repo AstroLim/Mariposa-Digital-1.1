@@ -277,6 +277,12 @@ nav {
     color: #B61718;
 }
 
+.pmc-sec-bot button.selected {
+    background: #B61718;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(34,58,35,0.10);
+}
+
 @media (max-width: 900px) {
     .main-nav {
         flex-direction: column;

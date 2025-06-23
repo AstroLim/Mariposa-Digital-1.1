@@ -10,92 +10,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jua&family=Noto+Serif+Hentaigana:wght@200..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="Main Container">
+    <div class="Main-Container">
         <nav>
             <div class="nav-left-sec">
-                    <a href="clientHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
-                    <a href="clientHomePage.html" class="hommeA2">Home</a>
-                    <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
-                    <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
-                    <a href="aboutUsPage.html" class="aboutUsA5">About Us</a>
+                <a href="clientHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
+                <a href="clientHomePage.html" class="hommeA2">Home</a>
+                <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
+                <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
+                <a href="aboutUsPage.html" class="aboutUsA5">About Us</a>
             </div>
-
             <div class="nav-right-sec">
                 <a href="clientCartPage.html" class="cartA6">Cart</a>
-                <p class="userName">Lim, Evan Vincent B.</p>
+                <p class="userName"></p>
                 <a href="clientEAIPage.html" class="settingsA7">Settings</a>
             </div>
         </nav>
-
         <section class="MainSection">
             <header class="MainSection-header">
                 <div class="header-box">
-                    <h1 class="header-box-content1">Your Pending Orders</h1>
+                    <h1 class="header-box-content1">Your Orders</h1>
                 </div>
             </header>
-
             <main class="MainSection-mainCont">
-                <div class="MainSection-Row">
-                    <div class="order-container">
-                        <div class="order-sec-top">
-                            <h1>Order Name</h1>
-                        </div>
-    
-                        <div class="order-sec-bot">
-                            <a href="" class="description"><button class="order-sec-bot-btn">Description</button></a>
-                            <button class="orderStatus">Order Status</button>
-                        </div>
-    
-                        <img src="" class="orderPic" alt="order1 Pic">
-                    </div>
-
-
-                    <div class="order-container">
-                        <div class="order-sec-top">
-                            <h1>Order Name</h1>
-                        </div>
-    
-                        <div class="order-sec-bot">
-                            <a href="" class="description"><button class="order-sec-bot-btn">Description</button></a>
-                            <button class="orderStatus">Order Status</button>
-                        </div>
-    
-                        <img src="" class="orderPic" alt="order2 Pic">
-                    </div>
-
-
-                    <div class="order-container">
-                        <div class="order-sec-top">
-                            <h1>Order Name</h1>
-                        </div>
-    
-                        <div class="order-sec-bot">
-                            <a href="" class="description"><button class="order-sec-bot-btn">Description</button></a>
-                            <button class="orderStatus">Order Status</button>
-                        </div>
-    
-                        <img src="" class="orderPic" alt="order3 Pic">
-                    </div>
-
-
-                    <div class="order-container">
-                        <div class="order-sec-top">
-                            <h1>Order Name</h1>
-                        </div>
-    
-                        <div class="order-sec-bot">
-                            <a href="" class="description"><button class="order-sec-bot-btn">Description</button></a>
-                            <button class="orderStatus">Order Status</button>
-                        </div>
-    
-                        <img src="" class="orderPic" alt="order4 Pic">
-                    </div>
+                <div class="orders-list" id="orders-list">
+                    <!-- Orders will be loaded here -->
                 </div>
-
-                <!-- MainSection Further Added Rows Under Here-->
-                
             </main>
         </section>
     </div>
+    <script type="module" src="../dist/clientViewOrders.bundle.js"></script>
 </body>
 </html>

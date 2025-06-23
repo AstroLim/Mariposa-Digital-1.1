@@ -1,161 +1,168 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Main Container */
-.Main-Container{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #660001;
+.Main-Container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #660001;
 }
 
 /* Navigation Bar */
-nav{
-    width: 100%;
-    height: 12%;
-    background-color: #FFFFFF;
-    display: flex;
-    flex-direction: row;
+nav {
+  width: 100%;
+  height: 12%;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: row;
 }
 
-.nav-left-sec{
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
+.nav-left-sec {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
-.Logo{
-    margin-left: 15%;
-    width: 65%;
+.Logo {
+  margin-left: 15%;
+  width: 65%;
 }
 
-.nav-right-sec{
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    align-items:center;
+.nav-right-sec {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-.btnA2{
-    width: 25%;
-    height: 40%;
-    margin-right: 10%;
+.btnA2 {
+  width: 25%;
+  height: 40%;
+  margin-right: 10%;
 }
 
-.nav-right-sec-btn{
-    width: 100%;
-    height: 100%;
-    color: #ffffff;
-    background-color: #850D0E;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-    border-radius: 70px;
+.nav-right-sec-btn {
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  background-color: #850D0E;
+  font-family: "Grenze", serif;
+  font-size: 1vw;
+  border-radius: 70px;
+  border: none;
 }
 
 /* Main Section */
-.Main-Section{
-    width: 100%;
-    height: 88%;
-    background-color: transparent;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
+.Main-Section {
+  width: 100%;
+  height: 88%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
 }
 
-.editAccInfoBox{
-    width: 35%;
-    height: 85%;
-    background-color:#EACF9B;
-    border-radius: 32px;
-    display: flex;
-    flex-direction: column;
-    margin-left:5% ;
+/* Edit Account Info Box */
+.editAccInfoBox {
+  width: 35%;
+  height: 85%;
+  background-color: #EACF9B;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  padding: 2% 3%;
 }
 
-/* Main Section editAccInfo Box | Header*/
-.editAccInfoBox-header{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: center;
+/* Header */
+.editAccInfoBox-header {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
 }
 
-.editAccInfoBox-header > p{
-    font-family: "Grenze", serif;
-    font-size: 2.3vw;
-    margin-left: 10%;
+.editAccInfoBox-header > p {
+  font-family: "Grenze", serif;
+  font-size: 2vw;
 }
 
-/* Main Section editAccInfo Box | Main*/
-.editAccInfoBox-main{
-    width: 100%;
-    height: 60%;
-    display: flex;
-    flex-direction: column;
-    gap: 5%;
+/* Main */
+.editAccInfoBox-main {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
-.editAccInfoBox-main > div {
-    width: 100%;
-    height: 60%;
+.editAccInfoBox-main > div > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
 }
 
-.editAccInfoBox-main > div > div{
-    width: 100%;
-    height: 25%;
-    display: flex;
-    flex-direction: row;
+.editAccInfoBox-main label {
+  font-family: "Grenze", serif;
+  font-size: 1.1vw;
+  margin-bottom: 0.4rem;
 }
 
-.editAccInfoBox-main > div > div >label{
-    font-family: "Grenze", serif;
-    font-size: 1.3vw;
-    margin-left: 5%;
+.editAccInfoBox-main input {
+  height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 23px;
+  border: 3px solid white;
+  background-color: transparent;
+  font-family: "Grenze", serif;
+  font-size: 1vw;
 }
 
-.editAccInfoBox-main > div > div > input{
-    width: 40%;
-    height: 55%;
-    border-radius: 23px;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-    border: white solid 3px;
-    background-color: transparent;
-    position: relative;
-    left: 15%;
+.reverify-btn {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9vw;
+  font-family: "Grenze", serif;
+  border-radius: 20px;
+  border: 2px solid #850D0E;
+  background-color: white;
+  cursor: pointer;
 }
 
-footer{
-    width: 100%;
-    height: 10%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 20%;
+/* Footer */
+footer {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
 }
 
-footer > button{
-    width: 30%;
-    height: 90%;
-    background-color:#ffffff;
-    border-radius: 70px;
-    font-family: "Grenze", serif;
-    font-size: 1.2vw;
+footer > button {
+  width: 45%;
+  height: 90%;
+  background-color: #ffffff;
+  border-radius: 70px;
+  font-family: "Grenze", serif;
+  font-size: 1.2vw;
+  border: none;
+  cursor: pointer;
 }
 
-.truckImg{
-    width: 45.9%;
-    position: relative;
-    left: 14.1%;
+/* Truck Image */
+.truckImg {
+  width: 45%;
+  position: relative;
+  left: 10%;
 }

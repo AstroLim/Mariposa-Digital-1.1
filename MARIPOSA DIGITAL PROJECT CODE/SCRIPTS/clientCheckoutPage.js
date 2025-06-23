@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, push, set, remove } from "firebase/database";
 
 // Firebase config
 const firebaseConfig = {
@@ -22,6 +22,7 @@ const db = getDatabase(app);
 let uid = null;
 let cartItems = [];
 let cartKeys = [];
+let selectedPayment = null;
 
 // Auth check and cart load
 onAuthStateChanged(auth, async (firebaseUser) => {
@@ -59,7 +60,7 @@ async function loadCheckoutCart() {
   cartKeys = [];
 
   if (!snap.exists()) {
-    section.innerHTML = `<p>Your cart is empty. <a href="clientViewProductsPage.html">Go shopping</a></p>`;
+    section.innerHTML = `<p>Your cart is empty. <a href="clientViewProducts.html">Go shopping</a></p>`;
     // Also clear summary if empty
     const summarySection = document.querySelector(".order-summary-details");
     if (summarySection) summarySection.innerHTML = "";
@@ -129,10 +130,96 @@ async function loadCheckoutCart() {
   }
 }
 
-// Handle payment method selection
+// Payment method selection with highlight
+document.querySelectorAll('.pmc-sec-bot button[data-method]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    document.querySelectorAll('.pmc-sec-bot button[data-method]').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedPayment = btn.getAttribute('data-method');
+  });
+});
+
+// Handle checkout
+document.querySelector('.complete-order-btn')?.addEventListener('click', async () => {
+  if (!cartItems || cartItems.length === 0) {
+    alert("Your cart is empty. Please add items before checking out.");
+    return;
+  }
+
+  if (!selectedPayment) {
+    alert("Please select a payment method.");
+    return;
+  }
+
+  // Gather address and cart info
+  const address = document.querySelector('#address-form input[type="text"]')?.value || "";
+  if (!address) {
+    alert("Please enter your delivery address.");
+    return;
+  }
+
+  // Recalculate totals
+  let subtotal = 0;
+  cartItems.forEach(item => {
+    subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
+  });
+  const shipping = 0; // Adjust if you want to add shipping
+  const total = subtotal + shipping;
+
+  // --- Assign a courier ---
+  let assignedCourier = null;
+  try {
+    const usersSnap = await get(ref(db, "users"));
+    if (usersSnap.exists()) {
+      const users = usersSnap.val();
+      // Filter couriers
+      const couriers = Object.entries(users)
+        .filter(([id, user]) => user.accessLevel && user.accessLevel.toLowerCase() === "courier")
+        .map(([id, user]) => ({ id, ...user }));
+      if (couriers.length > 0) {
+        // Randomly assign a courier
+        assignedCourier = couriers[Math.floor(Math.random() * couriers.length)];
+      }
+    }
+  } catch (err) {
+    // If courier assignment fails, assignedCourier stays null
+  }
+
+  // --- Use Firebase push key as orderId ---
+  const newOrderRef = push(ref(db, `orders/${uid}`));
+  const orderId = newOrderRef.key;
+
+  // Compose order object
+  const orderData = {
+    status: "Pending",
+    courierId: assignedCourier ? assignedCourier.id : "N/A",
+    courierContactDetails: assignedCourier ? (assignedCourier.phone || assignedCourier.mobilenumber || assignedCourier.email || "N/A") : "N/A",
+    addressOfClient: address,
+    productDetails: cartItems,
+    orderId: orderId,
+    shippingFee: shipping,
+    subtotal: subtotal,
+    total: total,
+    paidWith: selectedPayment
+  };
+
+  try {
+    // Save the order using the generated key
+    await set(newOrderRef, orderData);
+
+    // Clear the cart after successful order
+    await remove(ref(db, `cart/${uid}`));
+
+    alert("Order placed successfully!" + (assignedCourier ? ` Courier assigned: ${assignedCourier.username || assignedCourier.email}` : ""));
+    window.location.href = "clientViewOrders.html";
+  } catch (err) {
+    alert("Failed to place order: " + err.message);
+  }
+});
+
+// (Optional) Handle payment method selection for redirecting to payment pages
 function handlePaymentMethod(e) {
   const method = e.target.getAttribute("data-method");
-  // Redirect to payment steps (replace with your actual payment page/routes)
   if (method === "gcash") {
     window.location.href = "payment-gcash.html";
   } else if (method === "cod") {
