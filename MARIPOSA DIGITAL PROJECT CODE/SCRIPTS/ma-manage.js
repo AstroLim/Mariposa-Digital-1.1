@@ -237,12 +237,12 @@ const manageLotSelectedOpt = (selected) => {
 
     get(ref(db, 'logs/lots')).then((snapshot) => {
       snapshot.forEach((lots) => {
+        // When rendering each log entry for lots:
         lotLogsDisplay += `
-          <div class="log-entry">
-            <p><strong>Lot Log ID: </strong><span>${lots.key}</span></p>
-            <p><strong>Date:</strong>${lots.val().date}</p>
-            <p><strong>Action:</strong>${lots.val().action}</p>
-            <p><strong>By UserID:</strong>${lots.val().by}</p>
+          <div class="lot-log-entry">
+            <div class="lot-log-date"><strong>Date:</strong> ${lots.val().date}</div>
+            <div class="lot-log-action"><strong>Action:</strong> ${lots.val().action}</div>
+            <div class="lot-log-by"><strong>By:</strong> ${lots.val().by}</div>
           </div>
         `
       })
@@ -250,7 +250,7 @@ const manageLotSelectedOpt = (selected) => {
         <div class="lot-logs">
           <div class="lot-logs-header">
             <label for="log-date">Filter by Date:</label>
-            <input id="log-date" type="date">
+            <input id="log-date" type="date" onchange="filterLotLogsByDate()">
             <button onclick="downloadLotLogs();">Download Logs</button>
           </div>
           <div class="lot-logs-content">
@@ -282,6 +282,7 @@ const manageProductSelectedOpt = (selected) => {
     get(ref(db, 'products')).then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const childData = childSnapshot.val();
+        const productKey = childSnapshot.key;
         viewProductsDisplay += `
           <div class="view-products-container">
                   <h2 class="view-products-container-header">${childData.productName}</h2>
@@ -289,7 +290,7 @@ const manageProductSelectedOpt = (selected) => {
                   <div class="view-products-container-info">
                     <div class="view-products-container-info-left">
                       <button class="view-products-container-info-left-description">${childData.productDescription}</button>
-                      <button class="view-products-container-info-left-button">Remove Product</button>
+                      <button class="view-products-container-info-left-button" onClick="removeProductFromView('${productKey}', '${childData.productName}')">Remove Product</button>
                     </div>
                     <div>
                       <img src="" alt="rice">  
@@ -334,7 +335,7 @@ const manageProductSelectedOpt = (selected) => {
   } else if (selected === 'Logs') {
     interfaceElement.innerHTML = `
       <div class="product-logs">
-        <button>Download Logs</button>
+        <button onClick="downloadProductLogs();">Download Logs</button>
         <section class="logs">
           <div class="logs-container">
             <h2>Number of Products</h2>
@@ -377,58 +378,65 @@ const manageOrderSelectedOpt = (selected) => {
   })
 
   if (selected === 'View Orders') {
-    interfaceElement.innerHTML = `
-      <div class="view-orders">
-        <div class="view-orders-container">
-          <h2 class="view-orders-container-header">Order Name</h2>
-          <div class="view-orders-container-info">
-            <div class="view-orders-container-info-left">
-              <div class="view-orders-container-info-left-description">Description</div>
-              <button class="view-orders-container-info-left-button">Order Status</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
-          </div>
+    let ordersDisplay = '';
+
+    // Fetch all orders from the database
+    get(ref(db, 'orders')).then((snapshot) => {
+      snapshot.forEach((userOrdersSnap) => {
+        userOrdersSnap.forEach((orderSnap) => {
+          const order = orderSnap.val();
+          // Only show orders that are not completed or delivered
+          if (
+            order.status &&
+            order.status.toLowerCase() !== 'completed' &&
+            order.status.toLowerCase() !== 'delivered'
+          ) {
+            // Build product list HTML from productDetails array
+            let productsHTML = '';
+            if (Array.isArray(order.productDetails)) {
+              productsHTML = order.productDetails.map(item => `
+                <div>
+                  <strong>Product:</strong> ${item.productName || 'N/A'}<br>
+                  <strong>Quantity:</strong> ${item.quantity || 'N/A'}
+                </div>
+              `).join('<hr>');
+            } else {
+              productsHTML = `<div>No products found.</div>`;
+            }
+
+            ordersDisplay += `
+              <div class="view-orders-container">
+                <h2 class="view-orders-container-header">Order ID: ${order.orderId || orderSnap.key}</h2>
+                <div class="view-orders-container-info">
+                  <div class="view-orders-container-info-left">
+                    <div class="view-orders-container-info-left-description">
+                      ${productsHTML}
+                      <strong>Customer:</strong> ${order.addressOfClient || 'N/A'}<br>
+                      <strong>Courier Contact:</strong> ${order.courierContactDetails || 'N/A'}<br>
+                      <strong>Paid With:</strong> ${order.paidWith || 'N/A'}<br>
+                      <strong>Shipping Fee:</strong> ${order.shippingFee || 'N/A'}<br>
+                      <strong>Subtotal:</strong> ${order.subtotal || 'N/A'}<br>
+                      <strong>Total:</strong> ${order.total || 'N/A'}<br>
+                      <strong>Status:</strong> ${order.status || 'N/A'}
+                    </div>
+                    <button class="view-orders-container-info-left-button" onclick="prefillUpdateOrder('${order.orderId || orderSnap.key}', '${order.status || ''}')">Update Order</button>
+                  </div>
+                  <div>
+                    <img src="" alt="order">
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        });
+      });
+
+      interfaceElement.innerHTML = `
+        <div class="view-orders">
+          ${ordersDisplay || '<p>No active orders found.</p>'}
         </div>
-        <div class="view-products-container">
-          <h2 class="view-products-container-header">Order Name</h2>
-          <div class="view-products-container-info">
-            <div class="view-products-container-info-left">
-              <div class="view-products-container-info-left-description">Description</div>
-              <button class="view-products-container-info-left-button">Order Status</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
-          </div>
-        </div>
-        <div class="view-products-container">
-          <h2 class="view-products-container-header">Order Name</h2>
-          <div class="view-products-container-info">
-            <div class="view-products-container-info-left">
-              <div class="view-products-container-info-left-description">Description</div>
-              <button class="view-products-container-info-left-button">Order Status</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
-          </div>
-        </div>
-        <div class="view-products-container">
-          <h2 class="view-products-container-header">Order Name</h2>
-          <div class="view-products-container-info">
-            <div class="view-products-container-info-left">
-              <div class="view-products-container-info-left-description">Description</div>
-              <button class="view-products-container-info-left-button">Order Status</button>
-            </div>
-            <div>
-              <img src="" alt="rice">  
-            </div>
-          </div>
-        </div>
-      </div>
-    `
+      `;
+    });
   } else if (selected === 'Update Order') {
     interfaceElement.innerHTML = `
       <div class="update-order"> 
@@ -438,16 +446,17 @@ const manageOrderSelectedOpt = (selected) => {
         </div>
         <div>
           <label for="order-status">Order Status: </label>
-          <select id="order-status" name="Search Order">
-            <option value="Pending">Pending</option>
-            <option value="Processing">Processing</option>
-            <option value="Shipping">Shipping</option>
+          <select id="order-status" name="order-status">
+            <option value="Pick-Up">Pick-Up</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivery Soon">Delivery Soon</option>
             <option value="Delivered">Delivered</option>
           </select>  
         </div>
-        <button>Cancel Order</button>
+        <button onclick="updateOrderStatus()">Update Order</button>
+        <button onclick="cancelOrder()">Cancel Order</button>
       </div>
-    `
+    `;
   } else if (selected === 'Add Order') {
     interfaceElement.innerHTML = `
       <div class="add-order">
@@ -474,62 +483,101 @@ const manageOrderSelectedOpt = (selected) => {
       </div>
     `
   } else if (selected === 'Remove Order') {
-    interfaceElement.innerHTML = `
-    <div class="remove-order">
-      <div class="remove-order-search">
-        <input type="text" placeholder="Search Order ID">
-        <button>Search</button>  
-      </div>
-      
-      <div class="remove-order-container">
-        <div>
-          Order ID: <span>N/A</span>
+    // Fetch all orders and display them
+    get(ref(db, 'orders')).then((snapshot) => {
+      let ordersHTML = '';
+      snapshot.forEach((userOrdersSnap) => {
+        userOrdersSnap.forEach((orderSnap) => {
+          const order = orderSnap.val();
+          // Build product list HTML from productDetails array
+          let productsHTML = '';
+          if (Array.isArray(order.productDetails)) {
+            productsHTML = order.productDetails.map(item => `
+              <div>
+                <strong>Product:</strong> ${item.productName || 'N/A'}<br>
+                <strong>Quantity:</strong> ${item.quantity || 'N/A'}
+              </div>
+            `).join('<hr>');
+          } else {
+            productsHTML = `<div>No products found.</div>`;
+          }
+
+          ordersHTML += `
+            <div class="remove-order-container">
+              <div class="remove-order-details">
+                <h2 class="view-orders-container-header">Order ID: ${order.orderId || orderSnap.key}</h2>
+                <div class="view-orders-container-info">
+                  <div class="view-orders-container-info-left">
+                    <div class="view-orders-container-info-left-description">
+                      ${productsHTML}
+                      <strong>Customer:</strong> ${order.addressOfClient || 'N/A'}<br>
+                      <strong>Courier Contact:</strong> ${order.courierContactDetails || 'N/A'}<br>
+                      <strong>Paid With:</strong> ${order.paidWith || 'N/A'}<br>
+                      <strong>Shipping Fee:</strong> ${order.shippingFee || 'N/A'}<br>
+                      <strong>Subtotal:</strong> ${order.subtotal || 'N/A'}<br>
+                      <strong>Total:</strong> ${order.total || 'N/A'}<br>
+                      <strong>Status:</strong> ${order.status || 'N/A'}
+                    </div>
+                  </div>
+                  <div>
+                    <img src="" alt="order">
+                  </div>
+                </div>
+              </div>
+              <button class="remove-order-btn" onclick="removeOrderFromList('${userOrdersSnap.key}', '${orderSnap.key}', '${order.orderId || orderSnap.key}')">Remove</button>
+            </div>
+          `;
+        });
+      });
+
+      interfaceElement.innerHTML = `
+        <div class="remove-order">
+          <div class="remove-order-search">
+            <input type="text" id="remove-order-search" placeholder="Search Order ID" oninput="filterRemoveOrderList()">
+          </div>
+          <div id="remove-order-list">
+            ${ordersHTML || '<p>No orders found.</p>'}
+          </div>
         </div>
-        <div>
-          Type: <span>N/A</span>
-        </div>
-        <div>
-          Date: <span>N/A</span>
-        </div>
-        <button>Remove</button>
-      </div>
-      <div class="remove-order-container">
-        <div>
-          Order ID: <span>N/A</span>
-        </div>
-        <div>
-          Type: <span>N/A</span>
-        </div>
-        <div>
-          Date: <span>N/A</span>
-        </div>
-        <button>Remove</button>
-      </div>
-    </div>
-  `
+      `;
+    });
   } else if (selected === 'Logs') {
-    interfaceElement.innerHTML = `
-      <div class="order-logs">
-        <div class="order-logs-header">
-          <label for="log-date">Filter by Date:</label>
-          <input id="log-date" type="date">
-          <button onclick="downloadOrderLogs()">Download Logs</button>
-        </div>
-        <div class="order-logs-content">
-          <div class="log-entry">
-            <p><strong>Date:</strong> 2025-03-14</p>
-            <p><strong>Action:</strong> Order 1 added</p>
-            <p><strong>User:</strong> John Doe</p>
+    get(ref(db, 'logs/orders')).then((snapshot) => {
+      let logsHTML = '';
+      if (snapshot.exists()) {
+        // Sort logs by date descending
+        const logsArr = [];
+        snapshot.forEach(logSnap => {
+          logsArr.push({ key: logSnap.key, ...logSnap.val() });
+        });
+        logsArr.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        logsArr.forEach(log => {
+          logsHTML += `
+            <div class="order-log-entry">
+              <div class="order-log-date"><strong>Date:</strong> ${log.date ? new Date(log.date).toLocaleString() : 'N/A'}</div>
+              <div class="order-log-action"><strong>Action:</strong> ${log.action || 'N/A'}</div>
+              <div class="order-log-by"><strong>By:</strong> ${log.by || 'N/A'}</div>
+            </div>
+          `;
+        });
+      } else {
+        logsHTML = '<p>No order logs found.</p>';
+      }
+
+      interfaceElement.innerHTML = `
+        <div class="order-logs">
+          <div class="order-logs-header">
+            <label for="order-log-date">Filter by Date:</label>
+            <input id="order-log-date" type="date" onchange="filterOrderLogsByDate()">
+            <button onclick="downloadOrderLogs()">Download Logs</button>
           </div>
-          <div class="log-entry">
-            <p><strong>Date:</strong> 2025-03-13</p>
-            <p><strong>Action:</strong> Order 2 removed</p>
-            <p><strong>User:</strong> Jane Smith</p>
+          <div class="order-logs-content" id="order-logs-content">
+            ${logsHTML}
           </div>
-          <!-- Add more log entries as needed -->
         </div>
-      </div>
-    `
+      `;
+    });
   }
 }
 
@@ -563,11 +611,11 @@ const manageAccountsSelectedOpt = (selected) => {
               <p>Phone: ${childData.phone}</p>
             </div>
             <div class="user-actions">
-              <button onclick="">Edit</button>
-              <button>Remove</button>
+              <button onclick="prefillEditUser('${childSnapshot.key}')">Edit</button>
+              <button onclick="removeUserFromView('${childSnapshot.key}', '${childData.username || ''}')">Remove</button>
             </div>
           </div>
-        `
+        `;
         });
         interfaceElement.innerHTML = `
           <div class="view-users">
@@ -693,31 +741,31 @@ const manageAccountsSelectedOpt = (selected) => {
 
   } else if (selected === 'Logs') {
 
-    let logHTML;
-
+    let logHTML = '';
     get(ref(db, 'logs/users')).then((snapshot) => {
       snapshot.forEach(logs => {
         const log = logs.val();
         logHTML += `
-          <div class="account-logs-log-entry">
-            <p><strong>Date:</strong> ${log.date}</p>
-            <p><strong>Action:</strong> ${log.action}</p>
-            <p><strong>User:</strong> ${log.userID}</p>
-            <p><strong>By UserID:</strong>${log.by}</p>
+          <div class="account-log-entry">
+            <div class="account-log-date"><strong>Date:</strong> ${log.date}</div>
+            <div class="account-log-action"><strong>Action:</strong> ${log.action}</div>
+            <div class="account-log-user"><strong>User:</strong> ${log.userID || ''}</div>
+            <div class="account-log-by"><strong>By:</strong> ${log.by}</div>
           </div>
-        `
-      })
+        `;
+      });
       interfaceElement.innerHTML = `
-      <div class="account-logs">
-        <div class="account-logs-header">
-          <label for="log-date">Filter by Date:</label>
-          <input id="log-date" type="date">
-          <button onclick="downloadAccountLogs(event); event.preventDefault();">Download Logs</button>
+        <div class="account-logs">
+          <div class="account-logs-header">
+            <label for="log-date">Filter by Date:</label>
+            <input id="log-date" type="date" onchange="filterAccountLogsByDate()">
+            <button onclick="downloadAccountLogs(event); event.preventDefault();">Download Logs</button>
+          </div>
+          <div class="account-logs-content">
+            ${logHTML}
+          </div>
         </div>
-        ${logHTML}
-        </div>
-      </div>
-    `
+      `;
     });
   }
 }
@@ -940,7 +988,7 @@ const removeUser = async (event) => {
 };
 
 const downloadAccountLogs = async (event) => {
-  event.preventDefault();
+  event && event.preventDefault && event.preventDefault();
   const logsRef = ref(db, 'logs/users');
   const logsSnapshot = await get(logsRef);
   const logs = logsSnapshot.val();
@@ -952,45 +1000,163 @@ const downloadAccountLogs = async (event) => {
 
   const doc = new jsPDF();
 
+  // Theme colors
+  const red = [182, 23, 24];
+  const green = [30, 125, 52];
+  const dark = [34, 58, 35];
+
   const now = new Date();
   const month = now.toLocaleString('default', { month: 'long' });
   const year = now.getFullYear();
-  const downloadDate = now.toLocaleDateString();
 
-  // Add a title
-  doc.setFontSize(18);
-  doc.text(`Account Logs - ${month} ${year}`, 105, 10, null, null, 'center');
+  doc.setFontSize(20);
+  doc.setTextColor(...red);
+  doc.text(`Account Logs - ${month} ${year}`, 105, 16, { align: 'center' });
 
-  // Add a horizontal line
-  doc.setLineWidth(0.5);
-  doc.line(10, 15, 200, 15);
-
-  // Set font size for the logs
   doc.setFontSize(12);
+  doc.setTextColor(...dark);
+  doc.text(`Downloaded: ${now.toLocaleString()}`, 105, 24, { align: 'center' });
 
-  let y = 20; // Starting y position for the text
-  Object.entries(logs).forEach(([key, log]) => {
-    doc.text(`Date: ${new Date(log.date).toLocaleString()}`, 10, y);
-    y += 10;
-    doc.text(`Action: ${log.action}`, 10, y);
-    y += 10;
-    doc.text(`User: ${log.userID}`, 10, y);
-    y += 10;
-    doc.text(`By UserID: ${log.by}`, 10, y);
-    y += 20; // Add extra space between logs
+  let y = 34;
+  doc.setFillColor(...green);
+  doc.setTextColor(255,255,255);
+  doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+  doc.text('Date', 14, y);
+  doc.text('By UserID', 180, y, { align: 'right' });
+  doc.text('Action', 14, y+7);
 
-    // Add a horizontal line between logs
-    doc.line(10, y - 10, 200, y - 10);
-  });
+  y += 15;
+  doc.setFontSize(11);
 
-  doc.save(`account_logs(${month} ${year}).pdf`);
+  const maxActionWidth = 170;
+  Object.values(logs)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .forEach((log, idx) => {
+      if (idx % 2 === 0) {
+        doc.setFillColor(246, 246, 246);
+        doc.rect(10, y-7, 190, 10, 'F');
+      }
+      doc.setTextColor(...dark);
+
+      const dateStr = log.date ? new Date(log.date).toLocaleString() : 'N/A';
+      doc.text(dateStr, 14, y);
+      doc.text(log.by ? String(log.by) : '', 180, y, { align: 'right' });
+
+      // Action and User (multi-line, below)
+      const actionLines = doc.splitTextToSize(
+        (log.action || 'N/A') + (log.userID ? `\nUser: ${log.userID}` : ''),
+        maxActionWidth
+      );
+      doc.text(actionLines, 14, y + 7);
+
+      const rowHeight = 7 + (actionLines.length * 6);
+
+      if (y + rowHeight > 280) {
+        doc.addPage();
+        y = 20;
+        doc.setFillColor(...green);
+        doc.setTextColor(255,255,255);
+        doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+        doc.text('Date', 14, y);
+        doc.text('By UserID', 180, y, { align: 'right' });
+        doc.text('Action', 14, y+7);
+        y += 15;
+        doc.setFontSize(11);
+      }
+
+      y += rowHeight + 3;
+    });
+
+  doc.save(`account_logs(${month}_${year}).pdf`);
 };
 
+const filterAccountLogsByDate = function() {
+  const filterDate = document.getElementById('log-date').value; // format: YYYY-MM-DD
+  document.querySelectorAll('.account-log-entry').forEach(entry => {
+    const dateText = entry.querySelector('.account-log-date').textContent;
+    const match = dateText.match(/Date:\s*(.*)/);
+    let logDate = '';
+    if (match && match[1]) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime())) {
+        // Get date in UTC to match the original log date
+        const year = d.getUTCFullYear();
+        const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(d.getUTCDate()).padStart(2, '0');
+        logDate = `${year}-${month}-${day}`;
+      }
+    }
+    if (!filterDate || logDate === filterDate) {
+      entry.style.display = '';
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+};
+
+const prefillEditUser = async function(userUID) {
+  manageAccountsSelectedOpt('Edit User');
+  setTimeout(async () => {
+    document.getElementById('user-uid').value = userUID;
+    await loadUser({ preventDefault: () => {} }); // Prefill fields
+  }, 100);
+};
+
+const removeUserFromView = async function(userUID, username) {
+  if (!confirm(`Are you sure you want to remove user "${username || userUID}"?`)) return;
+  try {
+    // Remove from Firebase Auth via backend, then from DB
+    const response = await fetch('http://localhost:3000/deleteUser', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid: userUID })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      await remove(ref(db, 'users/' + userUID));
+      push(ref(db, 'logs/users/'), {
+        action: 'User ' + (username || userUID) + ' removed',
+        date: new Date(Date.now()).toUTCString(),
+        userID: userUID,
+        by: uid
+      });
+      alert(result.message || 'User removed successfully');
+      manageAccountsSelectedOpt('View Accounts');
+    } else {
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    alert('Error removing user: ' + error.message);
+  }
+};
+
+window.filterAccountLogsByDate = filterAccountLogsByDate;
 window.downloadAccountLogs = downloadAccountLogs;
 window.addUser = addUser;
 window.editUser = editUser;
 window.loadUser = loadUser;
 window.removeUser = removeUser;
+window.prefillEditUser = prefillEditUser;
+window.removeUserFromView = removeUserFromView;
+
+const removeProductFromView = async function(productKey, productName) {
+  if (!confirm(`Are you sure you want to remove "${productName}"?`)) return;
+
+  try {
+    await remove(ref(db, 'products/' + productKey));
+    alert('Product removed successfully');
+    // Log the removal
+    push(ref(db, 'logs/products'), {
+      action: 'Product ' + productName + ' removed',
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+    // Optionally refresh the product list
+    manageProductSelectedOpt('View Products');
+  } catch (error) {
+    alert('Error removing product: ' + error.message);
+  }
+};
 
 const addProduct = async (event) => {
   event.preventDefault();
@@ -1013,7 +1179,7 @@ const addProduct = async (event) => {
   }).then(() => {
     alert('Product added successfully');
     push(ref(db, 'logs/products'), {
-      action: 'Product ' + productName + ' removed',
+      action: 'Product ' + productName + ' added',
       date: new Date(Date.now()).toUTCString(),
       by: uid
     });
@@ -1044,11 +1210,136 @@ const removeProduct = async (event) => {
   });
 };
 
-const downloadProductLogs = async (event) => {}
+async function updateProductStats() {
+  // Number of Products
+  const productsSnap = await get(ref(db, 'products'));
+  const products = productsSnap.exists() ? productsSnap.val() : {};
+  const numProducts = Object.keys(products).length;
 
+  // Products Added & Removed
+  const logsSnap = await get(ref(db, 'logs/products'));
+  let productsAdded = 0;
+  let productsRemoved = 0;
+  if (logsSnap.exists()) {
+    logsSnap.forEach(logSnap => {
+      const action = logSnap.val().action || '';
+      if (action.includes('added')) productsAdded++;
+      if (action.includes('removed')) productsRemoved++;
+    });
+  }
+
+  // Number of Sales (accumulated orders from all users)
+  const ordersSnap = await get(ref(db, 'orders'));
+  let numSales = 0;
+  if (ordersSnap.exists()) {
+    ordersSnap.forEach(userOrdersSnap => {
+      userOrdersSnap.forEach(orderSnap => {
+        numSales++;
+      });
+    });
+  }
+
+  // Update the DOM
+  document.querySelector('.logs-container-nop').textContent = numProducts;
+  document.querySelector('.logs-container-pa').textContent = productsAdded;
+  document.querySelector('.logs-container-pr').textContent = productsRemoved;
+  document.querySelector('.logs-container-nos').textContent = numSales;
+  document.querySelector('.logs-container-noco').textContent = "N/A"; // Cancelled orders
+}
+
+const downloadProductLogs = async (event) => {
+  if (event) event.preventDefault();
+
+  const logsRef = ref(db, 'logs/products');
+  const logsSnapshot = await get(logsRef);
+  const logs = logsSnapshot.val();
+
+  if (!logs) {
+    alert('No product logs found');
+    return;
+  }
+
+  const doc = new jsPDF();
+
+  // Theme colors
+  const red = [182, 23, 24];
+  const green = [30, 125, 52];
+  const dark = [34, 58, 35];
+
+  // Title
+  const now = new Date();
+  const month = now.toLocaleString('default', { month: 'long' });
+  const year = now.getFullYear();
+
+  doc.setFontSize(20);
+  doc.setTextColor(...red);
+  doc.text(`Product Logs - ${month} ${year}`, 105, 16, { align: 'center' });
+
+  // Subtitle
+  doc.setFontSize(12);
+  doc.setTextColor(...dark);
+  doc.text(`Downloaded: ${now.toLocaleString()}`, 105, 24, { align: 'center' });
+
+  // Table headers
+  let y = 34;
+  doc.setFillColor(...green);
+  doc.setTextColor(255,255,255);
+  doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+  doc.text('Date', 14, y);
+  doc.text('By UserID', 180, y, { align: 'right' });
+  doc.text('Action', 14, y+7);
+
+  // Table rows
+  y += 15;
+  doc.setFontSize(11);
+
+  const maxActionWidth = 170; // Wider for action since it's below
+  Object.entries(logs).forEach(([key, log], idx) => {
+    // Alternate row color
+    if (idx % 2 === 0) {
+      doc.setFillColor(246, 246, 246);
+      doc.rect(10, y-7, 190, 10, 'F');
+    }
+    doc.setTextColor(...dark);
+
+    // Date and By UserID on the same line
+    const dateStr = new Date(log.date).toLocaleString();
+    doc.text(dateStr, 14, y);
+    doc.text(log.by ? String(log.by) : '', 180, y, { align: 'right' });
+
+    // Action (multi-line, below)
+    const actionLines = doc.splitTextToSize(log.action, maxActionWidth);
+    doc.text(actionLines, 14, y + 7);
+
+    // Calculate height for this entry
+    const rowHeight = 7 + (actionLines.length * 6);
+
+    // Add page break if needed
+    if (y + rowHeight > 280) {
+      doc.addPage();
+      y = 20;
+      // Redraw header on new page
+      doc.setFillColor(...green);
+      doc.setTextColor(255,255,255);
+      doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+      doc.text('Date', 14, y);
+      doc.text('By UserID', 180, y, { align: 'right' });
+      doc.text('Action', 14, y+7);
+      y += 15;
+      doc.setFontSize(11);
+    }
+
+    y += rowHeight + 3; // Add spacing after each row
+  });
+
+  doc.save(`product_logs(${month}_${year}).pdf`);
+};
+
+window.removeProductFromView = removeProductFromView;
+window.downloadProductLogs = downloadProductLogs;
 window.addProduct = addProduct;
 window.removeProduct = removeProduct;
-
+window.updateProductStats = updateProductStats;
 
 const addLot = async (event) => {
   event.preventDefault();
@@ -1147,38 +1438,325 @@ const downloadLotLogs = async (event) => {
 
   const doc = new jsPDF();
 
+  // Theme colors
+  const red = [182, 23, 24];
+  const green = [30, 125, 52];
+  const dark = [34, 58, 35];
+
+  // Title
   const now = new Date();
   const month = now.toLocaleString('default', { month: 'long' });
   const year = now.getFullYear();
-  const downloadDate = now.toLocaleDateString();
 
-  // Add a title
-  doc.setFontSize(18);
-  doc.text(`Lot Logs - ${month} ${year}`, 105, 10, null, null, 'center');
+  doc.setFontSize(20);
+  doc.setTextColor(...red);
+  doc.text(`Lot Logs - ${month} ${year}`, 105, 16, { align: 'center' });
 
-  // Add a horizontal line
-  doc.setLineWidth(0.5);
-  doc.line(10, 15, 200, 15);
-
-  // Set font size for the logs
+  // Subtitle
   doc.setFontSize(12);
+  doc.setTextColor(...dark);
+  doc.text(`Downloaded: ${now.toLocaleString()}`, 105, 24, { align: 'center' });
 
-  let y = 20; // Starting y position for the text
-  Object.entries(logs).forEach(([key, log]) => {
-    doc.text(`Date: ${new Date(log.date).toLocaleString()}`, 10, y);
-    y += 10;
-    doc.text(`Action: ${log.action}`, 10, y);
-    y += 10;
-    doc.text(`By UserID: ${log.by}`, 10, y);
-    y += 20; // Add extra space between logs
+  // Table headers
+  let y = 34;
+  doc.setFillColor(...green);
+  doc.setTextColor(255,255,255);
+  doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+  doc.text('Date', 14, y);
+  doc.text('By UserID', 180, y, { align: 'right' });
+  doc.text('Action', 14, y+7);
 
-    // Add a horizontal line between logs
-    doc.line(10, y - 10, 200, y - 10);
+  // Table rows
+  y += 15;
+  doc.setFontSize(11);
+
+  const maxActionWidth = 170;
+  Object.values(logs)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .forEach((log, idx) => {
+      if (idx % 2 === 0) {
+        doc.setFillColor(246, 246, 246);
+        doc.rect(10, y-7, 190, 10, 'F');
+      }
+      doc.setTextColor(...dark);
+
+      const dateStr = log.date ? new Date(log.date).toLocaleString() : 'N/A';
+      doc.text(dateStr, 14, y);
+      doc.text(log.by ? String(log.by) : '', 180, y, { align: 'right' });
+
+      const actionLines = doc.splitTextToSize(log.action || 'N/A', maxActionWidth);
+      doc.text(actionLines, 14, y + 7);
+
+      const rowHeight = 7 + (actionLines.length * 6);
+
+      if (y + rowHeight > 280) {
+        doc.addPage();
+        y = 20;
+        doc.setFillColor(...green);
+        doc.setTextColor(255,255,255);
+        doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+        doc.text('Date', 14, y);
+        doc.text('By UserID', 180, y, { align: 'right' });
+        doc.text('Action', 14, y+7);
+        y += 15;
+        doc.setFontSize(11);
+      }
+
+      y += rowHeight + 3;
+    });
+
+  doc.save(`lot_logs(${month}_${year}).pdf`);
+};
+
+const filterLotLogsByDate = function() {
+  const filterDate = document.getElementById('log-date').value;
+  document.querySelectorAll('.lot-log-entry').forEach(entry => {
+    const dateText = entry.querySelector('.lot-log-date').textContent;
+    const match = dateText.match(/Date:\s*(.*)/);
+    let logDate = '';
+    if (match && match[1]) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime())) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        logDate = `${year}-${month}-${day}`;
+      }
+    }
+    if (!filterDate || logDate === filterDate) {
+      entry.style.display = '';
+    } else {
+      entry.style.display = 'none';
+    }
   });
+};
 
-  doc.save(`lot_logs(${month} ${year}).pdf`);
-}
-
+window.filterLotLogsByDate = filterLotLogsByDate;
 window.addLot = addLot;
 window.removeLot = removeLot;
 window.downloadLotLogs = downloadLotLogs;
+
+
+const prefillUpdateOrder = function(orderId, status) {
+  // Switch to Update Order section
+  manageOrderSelectedOpt('Update Order');
+  setTimeout(() => {
+    document.getElementById('order-id').value = orderId;
+    document.getElementById('order-status').value = status || 'Pending';
+  }, 100); // Wait for DOM to update
+};
+
+const updateOrderStatus = async function() {
+  const orderId = document.getElementById('order-id').value;
+  const newStatus = document.getElementById('order-status').value;
+  if (!orderId) {
+    alert('Please enter an Order ID.');
+    return;
+  }
+
+  // Find the order in all users' orders
+  const ordersSnap = await get(ref(db, 'orders'));
+  let found = false;
+  if (ordersSnap.exists()) {
+    ordersSnap.forEach(userOrdersSnap => {
+      userOrdersSnap.forEach(orderSnap => {
+        if ((orderSnap.val().orderId && orderSnap.val().orderId == orderId) || orderSnap.key == orderId) {
+          // Update status
+          update(ref(db, `orders/${userOrdersSnap.key}/${orderSnap.key}`), { status: newStatus });
+          push(ref(db, 'logs/orders'), {
+            action: `Order ${orderId} status updated to ${newStatus}`,
+            date: new Date(Date.now()).toUTCString(),
+            by: uid
+          });
+          found = true;
+        }
+      });
+    });
+  }
+  if (found) {
+    alert('Order status updated!');
+    manageOrderSelectedOpt('View Orders');
+  } else {
+    alert('Order not found.');
+  }
+};
+
+const cancelOrder = async function() {
+  const orderId = document.getElementById('order-id').value;
+  if (!orderId) {
+    alert('Please enter an Order ID.');
+    return;
+  }
+  // Find and remove the order
+  const ordersSnap = await get(ref(db, 'orders'));
+  let found = false;
+  if (ordersSnap.exists()) {
+    ordersSnap.forEach(userOrdersSnap => {
+      userOrdersSnap.forEach(orderSnap => {
+        if ((orderSnap.val().orderId && orderSnap.val().orderId == orderId) || orderSnap.key == orderId) {
+          push(ref(db, 'logs/orders'), {
+            action: `Order ${orderId} cancelled`,
+            date: new Date(Date.now()).toUTCString(),
+            by: uid
+          });
+          remove(ref(db, `orders/${userOrdersSnap.key}/${orderSnap.key}`));
+          found = true;
+        }
+      });
+    });
+  }
+  if (found) {
+    alert('Order cancelled!');
+    manageOrderSelectedOpt('View Orders');
+  } else {
+    alert('Order not found.');
+  }
+};
+
+const removeOrderFromList = async function(userKey, orderKey, orderId) {
+  if (!confirm(`Are you sure you want to remove Order "${orderId}"?`)) return;
+  try {
+    await remove(ref(db, `orders/${userKey}/${orderKey}`));
+    // Log the removal
+    push(ref(db, 'logs/orders'), {
+      action: `Order ${orderId} removed`,
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+    alert('Order removed successfully!');
+    manageOrderSelectedOpt('Remove Order');
+  } catch (error) {
+    alert('Error removing order: ' + error.message);
+  }
+};
+
+const filterRemoveOrderList = function() {
+  const search = document.getElementById('remove-order-search').value.toLowerCase();
+  document.querySelectorAll('.remove-order-container').forEach(card => {
+    const orderId = card.querySelector('span').textContent.toLowerCase();
+    card.style.display = orderId.includes(search) ? '' : 'none';
+  });
+};
+
+const filterOrderLogsByDate = function() {
+  const filterDate = document.getElementById('order-log-date').value; // format: YYYY-MM-DD
+  document.querySelectorAll('.order-log-entry').forEach(entry => {
+    const dateText = entry.querySelector('.order-log-date').textContent;
+    // Extract the date string from "Date: ..." and parse it
+    const match = dateText.match(/Date:\s*(.*)/);
+    let logDate = '';
+    if (match && match[1]) {
+      // Try to parse as Date, fallback to hiding if invalid
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime())) {
+        // Format as YYYY-MM-DD in local time
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        logDate = `${year}-${month}-${day}`;
+      }
+    }
+    // Show if filter is empty or matches
+    if (!filterDate || logDate === filterDate) {
+      entry.style.display = '';
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+};
+
+const downloadOrderLogs = async function() {
+  const logsRef = ref(db, 'logs/orders');
+  const logsSnapshot = await get(logsRef);
+  const logs = logsSnapshot.val();
+
+  if (!logs) {
+    alert('No order logs found');
+    return;
+  }
+
+  const doc = new jsPDF();
+
+  // Theme colors
+  const red = [182, 23, 24];
+  const green = [30, 125, 52];
+  const dark = [34, 58, 35];
+
+  // Title
+  const now = new Date();
+  const month = now.toLocaleString('default', { month: 'long' });
+  const year = now.getFullYear();
+
+  doc.setFontSize(20);
+  doc.setTextColor(...red);
+  doc.text(`Order Logs - ${month} ${year}`, 105, 16, { align: 'center' });
+
+  // Subtitle
+  doc.setFontSize(12);
+  doc.setTextColor(...dark);
+  doc.text(`Downloaded: ${now.toLocaleString()}`, 105, 24, { align: 'center' });
+
+  // Table headers
+  let y = 34;
+  doc.setFillColor(...green);
+  doc.setTextColor(255,255,255);
+  doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+  doc.text('Date', 14, y);
+  doc.text('By UserID', 180, y, { align: 'right' });
+  doc.text('Action', 14, y+7);
+
+  // Table rows
+  y += 15;
+  doc.setFontSize(11);
+
+  const maxActionWidth = 170; // Wider for action since it's below
+  Object.values(logs)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .forEach((log, idx) => {
+      // Alternate row color
+      if (idx % 2 === 0) {
+        doc.setFillColor(246, 246, 246);
+        doc.rect(10, y-7, 190, 10, 'F');
+      }
+      doc.setTextColor(...dark);
+
+      // Date and By UserID on the same line
+      const dateStr = log.date ? new Date(log.date).toLocaleString() : 'N/A';
+      doc.text(dateStr, 14, y);
+      doc.text(log.by ? String(log.by) : '', 180, y, { align: 'right' });
+
+      // Action (multi-line, below)
+      const actionLines = doc.splitTextToSize(log.action || 'N/A', maxActionWidth);
+      doc.text(actionLines, 14, y + 7);
+
+      // Calculate height for this entry
+      const rowHeight = 7 + (actionLines.length * 6);
+
+      // Add page break if needed
+      if (y + rowHeight > 280) {
+        doc.addPage();
+        y = 20;
+        // Redraw header on new page
+        doc.setFillColor(...green);
+        doc.setTextColor(255,255,255);
+        doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
+        doc.text('Date', 14, y);
+        doc.text('By UserID', 180, y, { align: 'right' });
+        doc.text('Action', 14, y+7);
+        y += 15;
+        doc.setFontSize(11);
+      }
+
+      y += rowHeight + 3; // Add spacing after each row
+    });
+
+  doc.save(`order_logs(${month}_${year}).pdf`);
+};
+
+window.filterOrderLogsByDate = filterOrderLogsByDate;
+window.filterRemoveOrderList = filterRemoveOrderList;
+window.removeOrderFromList = removeOrderFromList;
+window.prefillUpdateOrder = prefillUpdateOrder;
+window.updateOrderStatus = updateOrderStatus;
+window.cancelOrder = cancelOrder;
+window.downloadOrderLogs = downloadOrderLogs;
