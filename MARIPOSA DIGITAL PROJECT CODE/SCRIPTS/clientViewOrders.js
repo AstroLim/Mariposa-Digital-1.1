@@ -78,7 +78,10 @@ onAuthStateChanged(auth, async (firebaseUser) => {
                     </span>
                 </div>
                 <div class="order-card-body">
-                    <div class="order-card-row"><span class="label">Courier:</span> <span>${order.courierContactDetails || "N/A"}</span></div>
+                    <div class="order-card-row"><span class="label">Client Name:</span> <span>${order.clientName || "Unknown Client"}</span></div>
+                    <div class="order-card-row"><span class="label">Client Contact:</span> <span>${order.clientContactDetails || "No contact provided"}</span></div>
+                    <div class="order-card-row"><span class="label">Client ID:</span> <span>${order.clientId}</span></div>
+                    <div class="order-card-row"><span class="label">Courier Contact:</span> <span>${order.courierContactDetails}</span></div>
                     <div class="order-card-row"><span class="label">Address:</span> <span>${order.addressOfClient || "N/A"}</span></div>
                     <div class="order-card-row"><span class="label">Paid with:</span> <span>${order.paidWith || "N/A"}</span></div>
                     <div class="order-card-row"><span class="label">Subtotal:</span> <span>₱${(order.subtotal || 0).toLocaleString()}</span></div>

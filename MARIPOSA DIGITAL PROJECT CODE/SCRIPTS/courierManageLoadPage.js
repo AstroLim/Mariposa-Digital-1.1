@@ -55,6 +55,8 @@ async function loadOrder() {
   const order = snap.val();
   orderDetailsDiv.innerHTML = `
     <p><strong>Order ID:</strong> ${order.orderId}</p>
+    <p><strong>Client Name:</strong> ${order.clientName || "Unknown Client"}</p>
+    <p><strong>Client Contact:</strong> ${order.clientContactDetails || "No contact provided"}</p>
     <p><strong>Client Address:</strong> ${order.addressOfClient}</p>
     <p><strong>Status:</strong> <span id="current-status">${order.status}</span></p>
     <p><strong>Products:</strong></p>

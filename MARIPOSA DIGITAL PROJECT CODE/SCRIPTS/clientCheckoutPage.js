@@ -19,6 +19,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+const user = JSON.parse(localStorage.getItem('user'));
+
 let uid = null;
 let cartItems = [];
 let cartKeys = [];
@@ -152,11 +154,13 @@ document.querySelector('.complete-order-btn')?.addEventListener('click', async (
   }
 
   // Gather address and cart info
-  const address = document.querySelector('#address-form input[type="text"]')?.value || "";
+  const address = Array.from(document.querySelectorAll('.address-input')).map(input => input.value).join(", ");
   if (!address) {
     alert("Please enter your delivery address.");
     return;
   }
+
+  const clientName = document.querySelector('.client-name').value;
 
   // Recalculate totals
   let subtotal = 0;
@@ -192,6 +196,9 @@ document.querySelector('.complete-order-btn')?.addEventListener('click', async (
   // Compose order object
   const orderData = {
     status: "Pending",
+    clientName: clientName,
+    clientId: uid,
+    clientContactDetails: user.phone,
     courierId: assignedCourier ? assignedCourier.id : "N/A",
     courierContactDetails: assignedCourier ? (assignedCourier.phone || assignedCourier.mobilenumber || assignedCourier.email || "N/A") : "N/A",
     addressOfClient: address,

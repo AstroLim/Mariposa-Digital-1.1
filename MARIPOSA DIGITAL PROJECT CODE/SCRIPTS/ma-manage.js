@@ -1633,7 +1633,7 @@ const removeOrderFromList = async function(userKey, orderKey, orderId) {
 const filterRemoveOrderList = function() {
   const search = document.getElementById('remove-order-search').value.toLowerCase();
   document.querySelectorAll('.remove-order-container').forEach(card => {
-    const orderId = card.querySelector('span').textContent.toLowerCase();
+    const orderId = card.querySelector('.view-orders-container-header').textContent.toLowerCase();
     card.style.display = orderId.includes(search) ? '' : 'none';
   });
 };
