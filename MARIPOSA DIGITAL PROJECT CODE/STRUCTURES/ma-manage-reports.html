@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mariposa Digital - Reports Dashboard</title>
+  <link rel="stylesheet" href="../STYLES/ma-manage.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav class="nav-container">
+    <div class="nav-shortcuts">
+      <div class="nav-shortcut-links">
+        <a class="nav-shortcut-links--design" href="ma-home-page.html">Home</a>
+        <a class="nav-shortcut-links--design" href="ma-view-shipping.html">View Shipping</a>
+        <a class="nav-shortcut-links--design" href="ma-settings.html">Settings</a>
+        <a class="nav-shortcut-links--design nav-shortcut-links--active" href="ma-manage-lots.html">Manage</a>
+      </div>
+    </div>
+    <div class="nav-user">
+      <div class="nav-user-container">
+        <div></div>
+        <img src="images/profile.png" alt="pfp">
+      </div>
+    </div>
+  </nav>
+  <main class="main">
+    <aside id="sidebar">
+      <a href="ma-home-page.html" class="sidebar-logo">
+        <img class="sidebar-logo--fit" src="../RESOURCES/imgFiles/Logo.png" alt="Mariposa Digital">
+      </a>
+      <a href="ma-manage-lots.html">Lots</a>
+      <a href="ma-manage-products.html">Products</a>
+      <a href="ma-manage-orders.html">Orders</a>
+      <a href="ma-manage-accounts.html">Accounts</a>
+      <a href="ma-manage-reports.html" class="sidebar-option--selected">Analytics</a>
+    </aside>
+    <div class="dashboard-mainview">
+      <header class="dashboard-header">
+        <h1>Analytics Dashboard</h1>
+      </header>
+      <section class="dashboard-cards">
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Total Sales</div>
+          <div class="dashboard-card-value" id="total-sales">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line short"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Orders</div>
+          <div class="dashboard-card-value" id="total-orders">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Avg. Order Value</div>
+          <div class="dashboard-card-value" id="avg-order">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line short"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Top Product</div>
+          <div class="dashboard-card-value" id="top-product">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton-text-line"></div>
+            <div class="skeleton-text-line short"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Low Stock</div>
+          <div class="dashboard-card-value" id="low-stock">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line short"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Active Users</div>
+          <div class="dashboard-card-value" id="active-users">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Pending Orders</div>
+          <div class="dashboard-card-value" id="pending-orders">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Completed Orders</div>
+          <div class="dashboard-card-value" id="completed-orders">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">Cancelled Orders</div>
+          <div class="dashboard-card-value" id="cancelled-orders">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line"></div>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-title">New Users This Month</div>
+          <div class="dashboard-card-value" id="new-users">
+            <div class="skeleton-icon"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton-text-line"></div>
+          </div>
+        </div>
+      </section>
+      <section class="dashboard-visuals">
+        <div class="dashboard-visual dashboard-visual-large" style="position:relative;">
+          <div class="dashboard-visual-title">Sales Trend</div>
+          <div class="chart-loading" id="salesChart-loading">
+            <div class="skeleton-linechart"></div>
+          </div>
+          <canvas id="salesChart"></canvas>
+        </div>
+        <div class="dashboard-visual dashboard-visual-small" style="position:relative;">
+          <div class="dashboard-visual-title">Order Status</div>
+          <div class="chart-loading" id="orderStatusChart-loading">
+            <div class="skeleton-piechart"></div>
+          </div>
+          <canvas id="orderStatusChart"></canvas>
+        </div>
+        <div class="dashboard-visual dashboard-visual-small" style="position:relative;">
+          <div class="dashboard-visual-title">Inventory</div>
+          <div class="chart-loading" id="inventoryChart-loading">
+            <div class="skeleton-barchart">
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+            </div>
+          </div>
+          <canvas id="inventoryChart"></canvas>
+          <!-- Place after the inventory chart canvas -->
+          <button id="view-all-inventory-btn" class="inventory-viewall-btn">View All in Inventory</button>
+
+          <!-- Modal for viewing all inventory -->
+          <div id="inventory-modal" class="inventory-modal" style="display:none;">
+            <div class="inventory-modal-content">
+              <span class="inventory-modal-close" id="inventory-modal-close">&times;</span>
+              <h2>All Inventory Products</h2>
+              <div id="inventory-modal-list" class="inventory-modal-list"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-visual dashboard-visual-small" style="position:relative;">
+          <div class="dashboard-visual-title">User Roles</div>
+          <div class="chart-loading" id="userActivityChart-loading">
+            <div class="skeleton-piechart"></div>
+          </div>
+          <canvas id="userActivityChart"></canvas>
+        </div>
+        <div class="dashboard-visual dashboard-visual-small">
+          <div class="dashboard-visual-title">Calendar</div>
+          <div id="dashboard-calendar"></div>
+        </div>
+        <div class="dashboard-visual dashboard-visual-small" style="position:relative;">
+          <div class="dashboard-visual-title">Top Products</div>
+          <div class="chart-loading" id="topProductsChart-loading">
+            <div class="skeleton-barchart">
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+            </div>
+          </div>
+          <canvas id="topProductsChart"></canvas>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="../dist/ma-manage.bundle.js"></script>
+</body>
+</html>

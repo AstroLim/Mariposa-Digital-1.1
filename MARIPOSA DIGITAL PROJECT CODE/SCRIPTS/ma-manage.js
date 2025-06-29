@@ -315,6 +315,8 @@ const manageProductSelectedOpt = (selected) => {
           <input id="product-price" type="text">
           <label for="product-description">Description</label>
           <input id="product-description" type="text">
+          <label for="product-quantity">Quantity</label>
+          <input id="product-quantity" type="number" min="0">
           <label for="product-img">Product IMG</label>
           <input id="product-img" type="file">
           <button onclick="addProduct(event);">Add Product</button>
@@ -1160,31 +1162,102 @@ const removeProductFromView = async function(productKey, productName) {
 
 const addProduct = async (event) => {
   event.preventDefault();
-  const productName = document.getElementById('product-name').value;
+  const productName = document.getElementById('product-name').value.trim();
   const productPrice = document.getElementById('product-price').value;
   const productDescription = document.getElementById('product-description').value;
+  const productQuantity = parseInt(document.getElementById('product-quantity')?.value, 10);
 
-  if (!productName || !productPrice || !productDescription) {
+  if (!productName || !productPrice || !productDescription || isNaN(productQuantity)) {
     alert('Please fill in all fields');
     return;
   }
 
-  const storageRef = ref(db, 'products/');
-  
-  push(storageRef, {
+  // Check if product already exists (by name)
+  const productsSnap = await get(ref(db, 'products'));
+  let existingProductKey = null;
+  if (productsSnap.exists()) {
+    productsSnap.forEach(child => {
+      const prod = child.val();
+      if (prod.productName.trim().toLowerCase() === productName.toLowerCase()) {
+        existingProductKey = child.key;
+      }
+    });
+  }
+
+  if (existingProductKey) {
+    // Show modal dialog instead of prompt
+    const modal = document.getElementById('product-action-modal');
+    const msg = document.getElementById('product-action-modal-message');
+    msg.textContent = `Product "${productName}" already exists. What would you like to do?`;
+    modal.style.display = "flex";
+
+    // Remove previous listeners
+    const addBtn = document.getElementById('product-action-add');
+    const updateBtn = document.getElementById('product-action-update');
+    const cancelBtn = document.getElementById('product-action-cancel');
+    addBtn.onclick = null;
+    updateBtn.onclick = null;
+    cancelBtn.onclick = null;
+
+    addBtn.onclick = async () => {
+      modal.style.display = "none";
+      await updateInventory(existingProductKey, productName, productQuantity, "add");
+    };
+    updateBtn.onclick = async () => {
+      modal.style.display = "none";
+      await updateInventory(existingProductKey, productName, productQuantity, "update");
+    };
+    cancelBtn.onclick = () => {
+      modal.style.display = "none";
+      alert("Operation cancelled.");
+    };
+    return;
+  }
+
+  // Product does not exist, add new product and inventory
+  const productRef = push(ref(db, 'products/'));
+  const productKey = productRef.key;
+  await set(productRef, {
     productName: productName,
     pricePerSack: productPrice,
     productDescription: productDescription,
     productImages: 123123
-  }).then(() => {
-    alert('Product added successfully');
-    push(ref(db, 'logs/products'), {
-      action: 'Product ' + productName + ' added',
-      date: new Date(Date.now()).toUTCString(),
-      by: uid
-    });
-  }).catch((error) => {
-    alert('Error adding product: ' + error.message);
+  });
+
+  await set(ref(db, 'inventory/' + productKey), {
+    productId: productKey,
+    quantity: productQuantity
+  });
+
+  alert('Product and inventory added successfully');
+  push(ref(db, 'logs/products'), {
+    action: 'Product ' + productName + ' added (qty: ' + productQuantity + ')',
+    date: new Date(Date.now()).toUTCString(),
+    by: uid
+  });
+};
+
+// Helper function for inventory update
+async function updateInventory(existingProductKey, productName, productQuantity, action) {
+  const invRef = ref(db, 'inventory/' + existingProductKey);
+  const invSnap = await get(invRef);
+  let newQty = productQuantity;
+  if (invSnap.exists()) {
+    const currentQty = invSnap.val().quantity || 0;
+    if (action === "add") {
+      newQty = currentQty + productQuantity;
+    }
+  }
+  await set(invRef, {
+    productId: existingProductKey,
+    quantity: newQty
+  });
+
+  alert(`Inventory ${action === "add" ? "added to" : "updated"} successfully.`);
+  push(ref(db, 'logs/products'), {
+    action: `Product ${productName} inventory ${action === "add" ? "added to" : "updated"} (qty: ${newQty})`,
+    date: new Date(Date.now()).toUTCString(),
+    by: uid
   });
 }
 
@@ -1760,3 +1833,462 @@ window.prefillUpdateOrder = prefillUpdateOrder;
 window.updateOrderStatus = updateOrderStatus;
 window.cancelOrder = cancelOrder;
 window.downloadOrderLogs = downloadOrderLogs;
+
+// --- Dashboard Reports Section ---
+
+function showDashboardSkeletons() {
+  // Detailed skeletons for each card
+  const cardSkeletons = {
+    "total-sales": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line short"></div>`,
+    "total-orders": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line"></div>`,
+    "avg-order": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line short"></div>`,
+    "top-product": `<div class="skeleton-icon"></div><div class="skeleton-text-line"></div><div class="skeleton-text-line short"></div>`,
+    "low-stock": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line short"></div>`,
+    "active-users": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line"></div>`,
+    "pending-orders": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line"></div>`,
+    "completed-orders": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line"></div>`,
+    "cancelled-orders": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line"></div>`,
+    "new-users": `<div class="skeleton-icon"></div><div class="skeleton"></div><div class="skeleton-text-line"></div>`
+  };
+  Object.entries(cardSkeletons).forEach(([id, html]) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  });
+  // Chart skeletons: line for sales, pie for order status/user roles, bar for inventory
+  const chartSkeletons = {
+    "salesChart-loading": '<div class="skeleton-linechart"></div>',
+    "orderStatusChart-loading": '<div class="skeleton-piechart"></div>',
+    "inventoryChart-loading": `<div class="skeleton-barchart">
+      <div class="skeleton-bar"></div>
+      <div class="skeleton-bar"></div>
+      <div class="skeleton-bar"></div>
+      <div class="skeleton-bar"></div>
+      <div class="skeleton-bar"></div>
+    </div>`,
+    "userActivityChart-loading": '<div class="skeleton-piechart"></div>'
+  };
+  Object.entries(chartSkeletons).forEach(([id, html]) => {
+    const loadingDiv = document.getElementById(id);
+    if (loadingDiv) {
+      loadingDiv.innerHTML = html;
+      loadingDiv.style.display = "block";
+    }
+  });
+}
+
+// --- Dashboard Data Population ---
+// Fetch all orders from all users
+async function fetchAllOrders() {
+  const ordersRef = ref(db, "orders");
+  const snap = await get(ordersRef);
+  let orders = [];
+  if (snap.exists()) {
+    snap.forEach(userOrdersSnap => {
+      const userOrders = userOrdersSnap.val();
+      // userOrders is an object of orderId: orderData
+      Object.values(userOrders).forEach(order => orders.push(order));
+    });
+  }
+  return orders;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!document.querySelector('.dashboard-mainview')) return;
+
+  showDashboardSkeletons();
+
+  // Fetch orders, products, users
+  const orders = await fetchAllOrders();
+
+  const productsSnap = await get(ref(db, 'inventory'));
+  const usersSnap = await get(ref(db, 'users'));
+
+  // Total Sales, Orders, Avg Order
+  document.getElementById("total-sales").textContent = "₱" + orders.reduce((sum, o) => sum + (o.total || 0), 0).toLocaleString();
+  document.getElementById("total-orders").textContent = orders.length;
+  const avgOrder = orders.length ? (orders.reduce((sum, o) => sum + (o.total || 0), 0) / orders.length) : 0;
+  document.getElementById("avg-order").textContent = "₱" + avgOrder.toLocaleString(undefined, {maximumFractionDigits:2});
+
+  // Top Product
+  const productSales = {};
+  orders.forEach(order => {
+    (order.productDetails || []).forEach(prod => {
+      const name = prod.productName || "Unknown";
+      productSales[name] = (productSales[name] || 0) + (prod.quantity || 0);
+    });
+  });
+  const topProduct = Object.entries(productSales).sort((a,b) => b[1]-a[1])[0];
+  document.getElementById("top-product").textContent = topProduct ? topProduct[0] : "N/A";
+
+  // Low Stock
+  let lowStock = 0;
+  if (productsSnap.exists()) {
+    productsSnap.forEach(prodSnap => {
+      const qty = prodSnap.val().quantity || 0;
+      if (qty < 10) lowStock++;
+    });
+  }
+  document.getElementById("low-stock").textContent = lowStock;
+
+  // Active Users
+  let activeUsers = 0;
+  let newUsers = 0;
+  const now = new Date();
+  if (usersSnap.exists()) {
+    usersSnap.forEach(userSnap => {
+      const val = userSnap.val();
+      const role = (val.accessLevel || "").toLowerCase();
+      if (role === "user") activeUsers++;
+      // New users this month
+      if (val.registrationTimestamp) {
+        const regDate = new Date(val.registrationTimestamp);
+        if (
+          regDate.getFullYear() === now.getFullYear() &&
+          regDate.getMonth() === now.getMonth()
+        ) {
+          newUsers++;
+        }
+      }
+    });
+  }
+  document.getElementById("active-users").textContent = activeUsers;
+  document.getElementById("new-users").textContent = newUsers;
+
+  // Pending, Completed, Cancelled Orders
+  let pending = 0, completed = 0, cancelled = 0;
+  orders.forEach(order => {
+    const status = (order.status || "pending").toLowerCase();
+    if (status === "pending" || status === "in transit" || status === "pick-up" || status === "delivery soon") pending++;
+    else if (status === "completed" || status === "delivered") completed++;
+    else if (status === "cancelled" || status === "canceled") cancelled++;
+  });
+  document.getElementById("pending-orders").textContent = pending;
+  document.getElementById("completed-orders").textContent = completed;
+  document.getElementById("cancelled-orders").textContent = cancelled;
+
+  // Render charts (each hides its own skeleton)
+  await renderSalesChart();
+  await renderOrderStatusChart();
+  await renderInventoryChart();
+  await renderUserActivityChart();
+  await renderTopProductsChart();
+
+  // Render calendar
+  renderDashboardCalendar();
+
+  // Inventory modal logic
+  const viewAllBtn = document.getElementById('view-all-inventory-btn');
+  const modal = document.getElementById('inventory-modal');
+  const modalClose = document.getElementById('inventory-modal-close');
+  const modalList = document.getElementById('inventory-modal-list');
+
+  if (viewAllBtn && modal && modalClose && modalList) {
+    viewAllBtn.onclick = () => {
+      // Use the global _allInventoryProducts set by renderInventoryChart
+      const products = window._allInventoryProducts || [];
+      modalList.innerHTML = products.length
+        ? products.map(p => `<div class="inventory-modal-list-item"><span>${p.name}</span><span>Qty: ${p.qty}</span></div>`).join('')
+        : '<div>No products in inventory.</div>';
+      modal.style.display = 'flex';
+    };
+    modalClose.onclick = () => { modal.style.display = 'none'; };
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+  }
+});
+
+// --- Chart Functions with Skeleton Handling ---
+// --- Top Products Bar Chart ---
+async function renderTopProductsChart() {
+  const loadingDiv = document.getElementById("topProductsChart-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  const orders = await fetchAllOrders();
+  const productSales = {};
+  orders.forEach(order => {
+    (order.productDetails || []).forEach(prod => {
+      const name = prod.productName || "Unknown";
+      productSales[name] = (productSales[name] || 0) + (prod.quantity || 0);
+    });
+  });
+
+  // Get top 5 products
+  const sorted = Object.entries(productSales)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  const labels = sorted.map(([name]) => name);
+  const data = sorted.map(([, qty]) => qty);
+
+  const ctx = document.getElementById('topProductsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Quantity Sold',
+        data,
+        backgroundColor: '#b61718'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { title: { display: false } },
+        y: { beginAtZero: true, title: { display: true, text: 'Quantity Sold' } }
+      }
+    }
+  });
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+async function renderSalesChart() {
+  const loadingDiv = document.getElementById("salesChart-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  const orders = await fetchAllOrders();
+  const salesByDay = {};
+  orders.forEach(order => {
+    let dateStr = order.datePlaced || order.eta || order.date || "";
+    if (dateStr) {
+      let d = new Date(dateStr);
+      if (!isNaN(d.getTime())) {
+        const key = d.toISOString().slice(0,10);
+        salesByDay[key] = (salesByDay[key] || 0) + (order.total || 0);
+      }
+    }
+  });
+  const labels = Object.keys(salesByDay).sort();
+  const data = labels.map(day => salesByDay[day]);
+
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Sales',
+        data,
+        borderColor: '#b61718',
+        backgroundColor: 'rgba(182,23,24,0.08)',
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+async function renderOrderStatusChart() {
+  const loadingDiv = document.getElementById("orderStatusChart-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  const orders = await fetchAllOrders();
+  const statusCounts = {};
+  orders.forEach(order => {
+    const status = (order.status || "Pending").toLowerCase();
+    statusCounts[status] = (statusCounts[status] || 0) + 1;
+  });
+  const labels = Object.keys(statusCounts);
+  const data = Object.values(statusCounts);
+
+  const ctx = document.getElementById('orderStatusChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: ['#b61718', '#2D5F4D', '#888', '#ccc', '#f5a623', '#f8e71c']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+async function renderInventoryChart() {
+  const loadingDiv = document.getElementById("inventoryChart-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  // Fetch both inventory and products
+  const [productsSnap, inventorySnap] = await Promise.all([
+    get(ref(db, 'products')),
+    get(ref(db, 'inventory'))
+  ]);
+  const productsMap = {};
+  if (productsSnap.exists()) {
+    productsSnap.forEach(prodSnap => {
+      const prod = prodSnap.val();
+      productsMap[prodSnap.key] = prod.productName || prodSnap.key;
+    });
+  }
+
+  let productNames = [];
+  let inStockData = [], lowStockData = [], outOfStockData = [];
+  let allProducts = [];
+
+  if (inventorySnap.exists()) {
+    inventorySnap.forEach(invSnap => {
+      const inv = invSnap.val();
+      const name = productsMap[inv.productId] || inv.productId || invSnap.key;
+      const qty = inv.quantity || 0;
+      productNames.push(name);
+      allProducts.push({ name, qty });
+      if (qty === 0) {
+        inStockData.push(0);
+        lowStockData.push(0);
+        outOfStockData.push(qty);
+      } else if (qty < 10) {
+        inStockData.push(0);
+        lowStockData.push(qty);
+        outOfStockData.push(0);
+      } else {
+        inStockData.push(qty);
+        lowStockData.push(0);
+        outOfStockData.push(0);
+      }
+    });
+  }
+
+  const ctx = document.getElementById('inventoryChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [
+        {
+          label: 'In Stock (≥10)',
+          data: inStockData,
+          backgroundColor: '#2D5F4D'
+        },
+        {
+          label: 'Low Stock (<10)',
+          data: lowStockData,
+          backgroundColor: '#b61718'
+        },
+        {
+          label: 'Out of Stock',
+          data: outOfStockData,
+          backgroundColor: '#ccc'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, beginAtZero: true }
+      }
+    }
+  });
+
+  // Store all products for modal
+  window._allInventoryProducts = allProducts;
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+async function renderUserActivityChart() {
+  const loadingDiv = document.getElementById("userActivityChart-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  const usersSnap = await get(ref(db, 'users'));
+  let admins = 0, staff = 0, couriers = 0, regular = 0;
+  if (usersSnap.exists()) {
+    usersSnap.forEach(userSnap => {
+      const role = (userSnap.val().accessLevel || "").toLowerCase();
+      if (role === "admin") admins++;
+      else if (role === "staff") staff++;
+      else if (role === "courier") couriers++;
+      else regular++;
+    });
+  }
+  const ctx = document.getElementById('userActivityChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Admins', 'Staff', 'Couriers', 'Users'],
+      datasets: [{
+        data: [admins, staff, couriers, regular],
+        backgroundColor: ['#b61718', '#2D5F4D', '#888', '#ccc']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+// --- Simple Calendar (current month) ---
+function renderDashboardCalendar() {
+  const container = document.getElementById('dashboard-calendar');
+  if (!container) return;
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const today = now.getDate();
+
+  // Get first day of month
+  const firstDay = new Date(year, month, 1).getDay();
+  // Get number of days in month
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = `<div style="width:100%;text-align:center;">
+    <div style="font-weight:bold;font-size:1.1em;margin-bottom:8px;">${now.toLocaleString('default', { month: 'long' })} ${year}</div>
+    <table style="width:100%;border-collapse:collapse;">
+      <tr>
+        <th style="color:#b61718;">Sun</th>
+        <th style="color:#b61718;">Mon</th>
+        <th style="color:#b61718;">Tue</th>
+        <th style="color:#b61718;">Wed</th>
+        <th style="color:#b61718;">Thu</th>
+        <th style="color:#b61718;">Fri</th>
+        <th style="color:#b61718;">Sat</th>
+      </tr>
+      <tr>
+  `;
+  let day = 1;
+  // Fill initial empty cells
+  for (let i = 0; i < firstDay; i++) html += `<td></td>`;
+  for (let i = firstDay; i < 7; i++) {
+    html += `<td${day === today ? ' style="background:#b61718;color:#fff;border-radius:50%;font-weight:bold;"' : ''}>${day}</td>`;
+    day++;
+  }
+  html += `</tr>`;
+  while (day <= daysInMonth) {
+    html += `<tr>`;
+    for (let i = 0; i < 7 && day <= daysInMonth; i++) {
+      html += `<td${day === today ? ' style="background:#b61718;color:#fff;border-radius:50%;font-weight:bold;"' : ''}>${day}</td>`;
+      day++;
+    }
+    html += `</tr>`;
+  }
+  html += `</table></div>`;
+  container.innerHTML = html;
+}
+
+// --- End Dashboard Reports Section ---

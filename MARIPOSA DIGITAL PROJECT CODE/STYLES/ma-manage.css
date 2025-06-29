@@ -676,7 +676,8 @@ body {
 }
 
 .add-products-container input[type="text"],
-.add-products-container input[type="file"] {
+.add-products-container input[type="file"],
+.add-products-container input[type="number"] {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -1440,6 +1441,332 @@ body {
   color: #b61718;
 }
 /* End of Account Logs CSS */
+
+/* Report CSS */
+/* Dashboard Layout */
+.dashboard-mainview {
+  width: 100%;
+  margin-left: 250px;
+  margin-top: 40px;
+  padding: 24px 32px;
+  box-sizing: border-box;
+}
+.dashboard-header {
+  margin-bottom: 24px;
+  margin-top: 50px;
+}
+.dashboard-header h1 {
+  font-size: 2.2em;
+  color: darkred;
+  margin: 0;
+}
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.dashboard-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(139,0,0,0.08);
+  padding: 24px 32px;
+  min-width: 180px;
+  flex: 1 1 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+.dashboard-card-title {
+  color: #b61718;
+  font-weight: bold;
+  font-size: 1em;
+  margin-bottom: 8px;
+}
+.dashboard-card-value {
+  font-size: 2em;
+  font-weight: bold;
+  color: #222;
+}
+.dashboard-visuals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+.dashboard-visual {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(139,0,0,0.08);
+  padding: 18px 18px 12px 18px;
+  flex: 1 1 320px;
+  min-width: 320px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+.dashboard-visual-large {
+  flex: 2 1 600px;
+  min-width: 600px;
+  min-height: 340px;
+}
+.dashboard-visual-title {
+  font-size: 1.1em;
+  color: #b61718;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+#dashboard-calendar {
+  margin: 0 auto;
+  width: 320px;         
+  min-width: 260px;
+  max-width: 340px;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(139,0,0,0.08);
+  padding: 16px;
+}
+@media (max-width: 1200px) {
+  .dashboard-mainview {
+    margin-left: 0;
+    padding: 12px 2vw;
+  }
+  .dashboard-visual-large {
+    min-width: 320px;
+  }
+}
+@media (max-width: 900px) {
+  .dashboard-cards, .dashboard-visuals {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .dashboard-visual, .dashboard-visual-large {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* Spinning Circle Loader */
+.loading-spinner {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #b61718;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+.chart-loading {
+  display: inline-block;
+  color: #b61718;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+}
+.chart-loading {
+  position: absolute;
+  left: 0; right: 0; top: 40%; margin: auto;
+  z-index: 2;
+  background: rgba(255,255,255,0.85);
+  padding: 12px 0;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 1.1em;
+}
+
+.inventory-viewall-btn {
+  margin: 16px auto 0 auto;
+  display: block;
+  background: #b61718;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1em;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+.inventory-viewall-btn:hover {
+  background: #8b0000;
+}
+
+.inventory-modal {
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inventory-modal-content {
+  background: #fff;
+  border-radius: 14px;
+  padding: 32px 24px 24px 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(139,0,0,0.18), 0 3px 8px rgba(139,0,0,0.15);
+  position: relative;
+}
+.inventory-modal-close {
+  position: absolute;
+  right: 18px;
+  top: 12px;
+  font-size: 2em;
+  color: #b61718;
+  cursor: pointer;
+  font-weight: bold;
+}
+.inventory-modal-list {
+  margin-top: 18px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.inventory-modal-list-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1.1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Skeleton Loader Enhancements */
+.skeleton {
+  display: block;
+  height: 28px;
+  width: 100%;
+  background: linear-gradient(90deg, #f3f3f3 25%, #ececec 37%, #f3f3f3 63%);
+  background-size: 400% 100%;
+  border-radius: 8px;
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+  margin: 0 auto;
+}
+
+.skeleton-text-line {
+  height: 18px;
+  width: 70%;
+  margin: 8px 0 0 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f3f3f3 25%, #ececec 37%, #f3f3f3 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+}
+
+.skeleton-text-line.short {
+  width: 40%;
+}
+
+.skeleton-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f3f3f3 25%, #ececec 37%, #f3f3f3 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* Chart Skeletons for Dashboard Visuals */
+.skeleton-linechart {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(180deg, #f3f3f3 60%, #ececec 80%, #f3f3f3 100%);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-linechart::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  bottom: 30px;
+  width: 80%;
+  height: 4px;
+  background: #ececec;
+  border-radius: 2px;
+}
+.skeleton-linechart::after {
+  content: "";
+  position: absolute;
+  left: 10%;
+  bottom: 30px;
+  width: 80%;
+  height: 120px;
+  background: none;
+  border-left: 4px solid #ececec;
+  border-bottom: 4px solid #ececec;
+  border-radius: 0 0 80px 80px;
+  transform: skew(-20deg, 0deg);
+}
+
+.skeleton-piechart {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  margin: 24px auto 0 auto;
+  background: conic-gradient(
+    #ececec 0% 25%,
+    #f3f3f3 25% 50%,
+    #ececec 50% 75%,
+    #f3f3f3 75% 100%
+  );
+  position: relative;
+}
+.skeleton-piechart::after {
+  content: "";
+  position: absolute;
+  left: 25%;
+  top: 25%;
+  width: 50%;
+  height: 50%;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.skeleton-barchart {
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  margin-left: 10px;
+}
+.skeleton-bar {
+  flex: 1;
+  background: linear-gradient(90deg, #ececec 60%, #f3f3f3 100%);
+  border-radius: 6px 6px 0 0;
+  animation: skeleton-loading 1.2s ease-in-out infinite;
+}
+.skeleton-bar:nth-child(1) { height: 40px; }
+.skeleton-bar:nth-child(2) { height: 80px; }
+.skeleton-bar:nth-child(3) { height: 120px; }
+.skeleton-bar:nth-child(4) { height: 70px; }
+.skeleton-bar:nth-child(5) { height: 100px; }
+/* End of Report CSS */
 
 aside {
   position: fixed;

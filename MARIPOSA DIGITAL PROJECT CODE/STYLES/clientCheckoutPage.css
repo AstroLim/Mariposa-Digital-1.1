@@ -283,6 +283,50 @@ nav {
     box-shadow: 0 2px 8px rgba(34,58,35,0.10);
 }
 
+.loyalty-header {
+    display: inline-block;
+    background: #fff5f5;
+    color: #B61718;
+    font-weight: bold;
+    font-size: 1.05rem;
+    border: 1.5px solid #B61718;
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    margin-right: 1vw;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 4px rgba(182,23,24,0.07);
+    vertical-align: middle;
+}
+
+/* Delivery Option Selector */
+#delivery-option {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1.5px solid #b61718;
+  background: #fff5f5;
+  color: #8b0000;
+  font-size: 1em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  transition: border 0.2s;
+}
+#delivery-option:focus {
+  border: 2px solid #b61718;
+  outline: none;
+}
+.checkout-box h2 {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 900px) {
+    .loyalty-header {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+        padding: 0.3rem 0.7rem;
+    }
+}
+
 @media (max-width: 900px) {
     .main-nav {
         flex-direction: column;

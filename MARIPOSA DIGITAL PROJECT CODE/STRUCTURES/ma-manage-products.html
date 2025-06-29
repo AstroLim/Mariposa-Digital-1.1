@@ -26,15 +26,17 @@
     </nav>
 
     <main class="main">
-      <aside id="sidebar">
-        <a href="ma-home-page.html" class="sidebar-logo">
-          <img class="sidebar-logo--fit" src="../RESOURCES/imgFiles/Logo.png" alt="Mariposa Digital">
-        </a>
-        <a href="ma-manage-lots.html">Lots</a>
-        <a href="ma-manage-products.html" class="sidebar-option--selected">Products</a>
-        <a href="ma-manage-orders.html">Orders</a>
-        <a href="ma-manage-accounts.html">Accounts</a>
-      </aside>
+      <!-- ...other HTML... -->
+    <aside id="sidebar">
+      <a href="ma-home-page.html" class="sidebar-logo">
+        <img class="sidebar-logo--fit" src="../RESOURCES/imgFiles/Logo.png" alt="Mariposa Digital">
+      </a>
+      <a href="ma-manage-lots.html">Lots</a>
+      <a href="ma-manage-products.html" class="sidebar-option--selected">Products</a>
+      <a href="ma-manage-orders.html">Orders</a>
+      <a href="ma-manage-accounts.html">Accounts</a>
+      <a href="ma-manage-reports.html">Analytics</a>
+    </aside>
       <div class="manage-mainview">
         <section class="manage-mainview-title">
           <header class="manage-mainview-title-container">
@@ -58,6 +60,16 @@
         </section>
       </div>
     </main>
+
+    <!-- Add this to your HTML, e.g. in ma-manage-products.html or index.html -->
+    <div id="product-action-modal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:9999; align-items:center; justify-content:center;">
+      <div style="background:#fff; padding:2rem; border-radius:10px; max-width:350px; text-align:center;">
+        <div id="product-action-modal-message" style="margin-bottom:1.5rem;"></div>
+        <button id="product-action-add" style="margin:0 0.5rem;">Add</button>
+        <button id="product-action-update" style="margin:0 0.5rem;">Update</button>
+        <button id="product-action-cancel" style="margin:0 0.5rem;">Cancel</button>
+      </div>
+    </div>
 
     <script src="../dist/ma-manage.bundle.js"></script>
   </body>
