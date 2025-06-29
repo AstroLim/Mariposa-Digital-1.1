@@ -23,6 +23,7 @@ let uid = null;
 let cartItems = [];
 let cartKeys = [];
 let selectedPayment = null;
+let shippingFee = 0; // Track shipping fee globally
 
 const gcashBtn = document.querySelector(".gCash");
 const debitBtn = document.querySelector(".debitCard");
@@ -89,13 +90,26 @@ async function loadCheckoutCart() {
 
   if (!snap.exists()) {
     section.innerHTML = `<p>Your cart is empty. <a href="clientViewProducts.html">Go shopping</a></p>`;
+    checkOrderRequirements();
     return;
   }
 
   Object.entries(snap.val()).forEach(([key, value]) => {
-    cartItems.push(value);
+    cartItems.push({ ...value, productId: key }); // Attach productId to each item
     cartKeys.push(key);
   });
+
+  let subtotal = 0;
+  cartItems.forEach(item => {
+    subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
+  });
+  // Use the current shippingFee value
+  const total = subtotal + shippingFee;
+
+  // Update order summary
+  document.getElementById('summary-subtotal').textContent = `₱${subtotal.toLocaleString()}`;
+  document.getElementById('summary-shipping').textContent = `₱${shippingFee.toLocaleString()}`;
+  document.getElementById('summary-total').textContent = `₱${total.toLocaleString()}`;
 
   section.innerHTML = cartItems.map(item => {
     const price = (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
@@ -114,17 +128,77 @@ async function loadCheckoutCart() {
       </div>
     </div>`;
   }).join('');
+  checkOrderRequirements();
 }
 
+// --- Payment method selection ---
 document.querySelectorAll('.pmc-sec-bot button[data-method]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.pmc-sec-bot button').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     selectedPayment = btn.getAttribute('data-method');
+    checkOrderRequirements();
   });
 });
 
+// --- Delivery option selection and shipping fee update ---
+document.getElementById('delivery-option').addEventListener('change', function() {
+  if (this.value === "standard") shippingFee = 80;
+  else if (this.value === "express") shippingFee = 150;
+  else if (this.value === "pickup") shippingFee = 0;
+
+  let subtotal = 0;
+  cartItems.forEach(item => {
+    subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
+  });
+  const total = subtotal + shippingFee;
+
+  document.getElementById('summary-shipping').textContent = `₱${shippingFee.toLocaleString()}`;
+  document.getElementById('summary-total').textContent = `₱${total.toLocaleString()}`;
+  checkOrderRequirements();
+});
+
+// --- Consent and form validation logic ---
+function checkOrderRequirements() {
+  const consentChecked = document.getElementById('consent-checkbox')?.checked;
+  const deliveryOptionElem = document.getElementById('delivery-option');
+  const deliveryOption = deliveryOptionElem ? deliveryOptionElem.value : "";
+  const clientNameInput = document.querySelector('.client-name');
+  const addressInputs = document.querySelectorAll('.address-input');
+  const clientName = clientNameInput?.value.trim();
+  const addressValues = Array.from(addressInputs).map(input => input.value.trim());
+  const paymentSelected = !!selectedPayment;
+  const cartNotEmpty = cartItems && cartItems.length > 0;
+
+  // All requirements must be met
+  const allValid = consentChecked && deliveryOption && clientName && addressValues.every(val => val) && paymentSelected && cartNotEmpty;
+
+  const btn = document.getElementById("completeOrderBtn");
+  if (btn) {
+    btn.disabled = !allValid;
+    btn.classList.toggle('disabled', !allValid);
+  }
+}
+
+// Listen to all relevant fields
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('consent-checkbox')?.addEventListener('change', checkOrderRequirements);
+  document.getElementById('delivery-option')?.addEventListener('change', checkOrderRequirements);
+  document.querySelector('.client-name')?.addEventListener('input', checkOrderRequirements);
+  document.querySelectorAll('.address-input').forEach(input => input.addEventListener('input', checkOrderRequirements));
+  document.querySelectorAll('.pmc-sec-bot button[data-method]').forEach(btn => btn.addEventListener('click', checkOrderRequirements));
+  checkOrderRequirements();
+});
+
+// --- Complete Order Handler ---
 document.getElementById("completeOrderBtn")?.addEventListener("click", async () => {
+  // All requirements should be met due to button disabling, but double-check:
+  const consentChecked = document.getElementById('consent-checkbox')?.checked;
+  if (!consentChecked) {
+    alert("You must agree to the privacy policy and terms of service before completing your order.");
+    document.getElementById('consent-checkbox').focus();
+    return;
+  }
   if (!selectedPayment) return alert("Select a payment method.");
   if (!cartItems || cartItems.length === 0) {
     alert("Your cart is empty. Please add items before completing your order.");
@@ -139,23 +213,23 @@ document.getElementById("completeOrderBtn")?.addEventListener("click", async () 
     return;
   }
 
-const clientNameInput = document.querySelector('.client-name');
-const addressInputs = document.querySelectorAll('.address-input');
-const addressValues = Array.from(addressInputs).map(input => input.value.trim());
-const clientName = clientNameInput.value.trim();
+  const clientNameInput = document.querySelector('.client-name');
+  const addressInputs = document.querySelectorAll('.address-input');
+  const addressValues = Array.from(addressInputs).map(input => input.value.trim());
+  const clientName = clientNameInput.value.trim();
 
-// Address validation
-if (!clientName) {
-  alert("Please enter your full name.");
-  clientNameInput.focus();
-  return;
-}
-if (addressValues.some(val => !val)) {
-  alert("Please fill in all address fields.");
-  const firstEmpty = Array.from(addressInputs).find(input => !input.value.trim());
-  firstEmpty && firstEmpty.focus();
-  return;
-}
+  // Address validation
+  if (!clientName) {
+    alert("Please enter your full name.");
+    clientNameInput.focus();
+    return;
+  }
+  if (addressValues.some(val => !val)) {
+    alert("Please fill in all address fields.");
+    const firstEmpty = Array.from(addressInputs).find(input => !input.value.trim());
+    firstEmpty && firstEmpty.focus();
+    return;
+  }
 
   // ETA Calculation
   let eta = "";
@@ -179,13 +253,12 @@ if (addressValues.some(val => !val)) {
     return;
   }
 
-  // Recalculate totals
+  // Recalculate totals with current shippingFee
   let subtotal = 0;
   cartItems.forEach(item => {
     subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
   });
-  const shipping = 0; // Adjust if you want to add shipping
-  const total = subtotal + shipping;
+  const total = subtotal + shippingFee;
 
   // --- Assign a courier ---
   let assignedCourier = null;
@@ -209,6 +282,7 @@ if (addressValues.some(val => !val)) {
   // --- Use Firebase push key as orderId ---
   const newOrderRef = push(ref(db, `orders/${uid}`));
   const orderId = newOrderRef.key;
+
   const orderData = {
     status: "Pending",
     clientName: clientName,
@@ -220,6 +294,7 @@ if (addressValues.some(val => !val)) {
     productDetails: cartItems,
     orderId,
     subtotal,
+    shippingFee,
     total,
     paidWith: selectedPayment,
     deliveryOption,
@@ -231,13 +306,17 @@ if (addressValues.some(val => !val)) {
 
     // --- Inventory update START ---
     for (const item of cartItems) {
-      const productId = item.productId || item.key; // Ensure cartItems have productId or key
+      const productId = item.productId;
       const qtyOrdered = item.quantity;
       const invRef = ref(db, `inventory/${productId}`);
       const invSnap = await get(invRef);
       if (invSnap.exists()) {
         const currentQty = invSnap.val().quantity || 0;
-        await set(invRef, { productId, quantity: Math.max(0, currentQty - qtyOrdered) });
+        const newQty = Math.max(0, currentQty - qtyOrdered);
+        console.log(`Updating inventory for ${productId}: ${currentQty} -> ${newQty}`);
+        await set(invRef, { productId, quantity: newQty });
+      } else {
+        console.warn(`Inventory item not found for productId: ${productId}`);
       }
     }
     // --- Inventory update END ---

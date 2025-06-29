@@ -45,12 +45,61 @@
                 </main>
 
                 <!-- Modal for contract date -->
-                <div id="contract-modal" class="modal" style="display:none;">
+                <div id="contract-modal" class="modal">
                     <div class="modal-content">
-                        <span id="close-modal" class="close">&times;</span>
-                        <h2>Set Contract Signing Date</h2>
+                        <!-- Step 1: Terms -->
+                        <div id="modal-step-1" class="modal-step">
+                        <h2>Terms and Agreement</h2>
+                        <div id="terms-scrollbox" class="terms-scrollbox">
+                            <!-- ... your terms here ... -->
+                            <ol>
+                            <li>
+                                <strong>Reservation Fee:</strong> The reservation fee is refundable, but a penalty charge of 10% will be deducted from the fee if you cancel your reservation.
+                            </li>
+                            <li>
+                                <strong>Reservation Period:</strong> The lot will be reserved for you for a period of 30 days from the date of reservation. Failure to complete the contract signing within this period may result in cancellation of your reservation and a penalty charge.
+                            </li>
+                            <li>
+                                <strong>Contract Signing:</strong> You agree to appear on the selected contract signing date to finalize the purchase and sign all necessary documents.
+                            </li>
+                            <li>
+                                <strong>Non-Transferable:</strong> The reservation is strictly non-transferable without written consent from Mariposa Digital.
+                            </li>
+                            <li>
+                                <strong>Refunds:</strong> If you cancel your reservation, 90% of the reservation fee will be refunded to you. The remaining 10% will be retained as a penalty charge.
+                            </li>
+                            <li>
+                                <strong>Compliance:</strong> You agree to comply with all community rules and regulations as set forth by Mariposa Digital.
+                            </li>
+                            </ol>
+                            <p>
+                            By proceeding, you acknowledge that you have read, understood, and agreed to the terms and conditions stated above.
+                            </p>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <input type="checkbox" id="accept-terms-checkbox">
+                            <label for="accept-terms-checkbox">I accept the terms and agreement</label>
+                        </div>
+                        <button id="next-to-payment" class="modal-next-btn" disabled>Next</button>
+                        </div>
+                        <!-- Step 2: Payment -->
+                        <div id="modal-step-2" class="modal-step" style="display:none;">
+                        <h2>Reservation Fee Payment</h2>
+                        <div id="reservation-fee-display" style="margin-bottom:1rem;font-weight:bold;"></div>
+                        <select id="reservation-payment-method" required>
+                            <option value="" disabled selected>Select payment method</option>
+                            <option value="gcash">GCash</option>
+                            <option value="debitcard">Debit Card</option>
+                        </select>
+                        <button id="next-to-date" class="modal-next-btn" disabled>Next</button>
+                        </div>
+                        <!-- Step 3: Contract Date -->
+                        <div id="modal-step-3" class="modal-step" style="display:none;">
+                        <h2>Contract Signing Date</h2>
                         <input type="date" id="contract-date" required>
-                        <button id="confirm-contract-btn">Confirm Reservation</button>
+                        <button id="confirm-contract-btn" class="modal-next-btn">Confirm Reservation</button>
+                        </div>
+                        <button id="close-modal" class="modal-close-btn">Close</button>
                     </div>
                 </div>
             </section>

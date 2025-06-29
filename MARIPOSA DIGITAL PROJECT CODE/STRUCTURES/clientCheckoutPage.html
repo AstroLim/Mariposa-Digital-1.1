@@ -26,12 +26,14 @@
 
   <main class="checkout-main">
     <div class="checkout-columns">
+      <!-- Review Order -->
       <div class="checkout-col">
         <div class="checkout-box">
           <h2>1. Review Your Order</h2>
           <div class="review-order-list"></div>
         </div>
       </div>
+      <!-- Delivery Address & Option -->
       <div class="checkout-col">
         <div class="checkout-box">
           <h2>2. Delivery Address</h2>
@@ -46,7 +48,7 @@
         </div>
         <div class="checkout-box">
           <h2>3. Delivery Option</h2>
-          <select id="delivery-option" required style="width:100%;padding:10px;border-radius:5px;border:1px solid #ccc;">
+          <select id="delivery-option" required>
             <option value="" disabled selected>Select delivery option</option>
             <option value="standard">Standard Delivery (3-5 days)</option>
             <option value="express">Express Delivery (1-2 days)</option>
@@ -54,13 +56,44 @@
           </select>
         </div>
       </div>
+      <!-- Payment & Summary -->
       <div class="checkout-col">
         <div class="checkout-box">
-          <h2>4. Select Payment Method</h2>
-          <div class="pmc-sec-bot">
-            <button type="button" class="gCash" data-method="gcash">GCASH</button>
-            <button type="button" class="debitCard" data-method="debitcard">DEBIT CARD</button>
-            <button type="button" class="COD" data-method="cod">COD</button>
+        <h2>4. Select Payment Method</h2>
+        <div class="pmc-sec-bot">
+          <button type="button" class="gCash" data-method="gcash">
+            <img src="../RESOURCES/imgFiles/gcash.png" class="pm-icon" alt="GCash">GCASH
+          </button>
+          <button type="button" class="debitCard" data-method="debitcard">
+            <img src="../RESOURCES/imgFiles/debitcard.png" class="pm-icon" alt="Debit Card">DEBIT CARD
+          </button>
+          <button type="button" class="COD" data-method="cod">
+            <img src="../RESOURCES/imgFiles/cod.png" class="pm-icon" alt="Cash on Delivery">COD
+          </button>
+        </div>
+      </div>
+        <div class="checkout-box order-summary-box">
+          <h2>Order Summary</h2>
+          <div class="order-summary-details">
+            <div class="summary-row"><span>Subtotal:</span> <span id="summary-subtotal">₱0</span></div>
+            <div class="summary-row"><span>Shipping Fee:</span> <span id="summary-shipping">₱0</span></div>
+            <div class="summary-row total"><span>Total:</span> <span id="summary-total">₱0</span></div>
+          </div>
+        </div>
+        <div class="checkout-box consent-box">
+          <label class="consent-label">
+            <input type="checkbox" id="consent-checkbox" required>
+            <span class="checkmark"></span>
+            <small>
+              I agree to the
+              <a href="privacyPolicy.html" target="_blank">privacy policy</a> and
+              <a href="termsOfService.html" target="_blank">terms of service</a>.
+            </small>
+          </label>
+          <div class="no-refunds-notice">
+            <small>
+              <strong>Notice:</strong> Once an order is made, <span style="color:#b61718;">there are no refunds.</span>
+            </small>
           </div>
         </div>
         <div class="checkout-box">

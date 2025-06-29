@@ -38,7 +38,7 @@ if (user && user.username && document.querySelector(".userName")) {
 
 // Load and display reserved lots from Firebase
 async function loadClientReservedLots() {
-  const section = document.getElementById("lots-list") || document.querySelector(".MainSection-mainCont");
+  const section = document.getElementById("lots-list") || document.querySelector(".lots-grid") || document.querySelector(".MainSection-mainCont");
   if (!section) return;
   section.innerHTML = "<p>Loading your reserved lots...</p>";
 
@@ -65,17 +65,35 @@ async function loadClientReservedLots() {
   section.innerHTML = "";
   lots.forEach((lot, i) => {
     const images = Array.isArray(lot.lotImages) ? lot.lotImages : [];
+    // Format price correctly even if it has commas
+    let priceDisplay = "N/A";
+    if (lot.lotPrice && !isNaN(Number(lot.lotPrice.toString().replace(/,/g, "")))) {
+      priceDisplay = Number(lot.lotPrice.toString().replace(/,/g, "")).toLocaleString();
+    }
+    // Show reservation fee if available
+    let feeDisplay = "";
+    if (lot.reservationFee && !isNaN(Number(lot.reservationFee))) {
+      feeDisplay = `<p class="lot-fee">Reservation Fee: ₱${Number(lot.reservationFee).toLocaleString()}</p>`;
+    }
+
     section.innerHTML += `
       <div class="lot-card">
         <div class="lot-images">
           ${images.map(img => `<img src="${img}" alt="Lot Image" class="lot-image">`).join('')}
         </div>
-        <h2>Lot #${lot.lotNumber || ""}</h2>
-        <p>${lot.lotDescription || ""}</p>
-        <p>Size: ${lot.lotSize || ""}</p>
-        <p>Price: ₱${typeof lot.lotPrice === "number" ? lot.lotPrice.toLocaleString() : "N/A"}</p>
-        <p>Contract Signing Date: ${lot.contractSigningDate || "Not set"}</p>
-        <button class="cancelReservation" data-key="${lot.key}">Cancel Reservation</button>
+        <div class="lot-details">
+          <h2>Lot #${lot.lotNumber || ""}</h2>
+          <div class="lot-info">
+            <p>${lot.lotDescription || ""}</p>
+            <p>Size: ${lot.lotSize || ""}</p>
+            <p>Price: ₱${priceDisplay}</p>
+            ${feeDisplay}
+            <p>Contract Signing Date: ${lot.contractSigningDate || "Not set"}</p>
+          </div>
+          <div class="lot-actions">
+            <button class="cancelReservation" data-key="${lot.key}">Cancel Reservation</button>
+          </div>
+        </div>
       </div>
     `;
   });
@@ -100,7 +118,14 @@ async function loadClientReservedLots() {
         );
       }
 
-      alert("Reservation canceled.");
+      // Refund 90% of the reservation fee if available
+      if (lot && lot.reservationFee && !isNaN(Number(lot.reservationFee))) {
+        const refund = Math.round(Number(lot.reservationFee) * 0.9);
+        alert(`Reservation canceled. ₱${refund.toLocaleString()} will be refunded to you (90% of the reservation fee).`);
+      } else {
+        alert("Reservation canceled.");
+      }
+
       loadClientReservedLots();
     };
   });
