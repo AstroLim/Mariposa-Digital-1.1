@@ -197,6 +197,44 @@ button.cancelReservation:hover {
     transform: translateY(-1px) scale(1.03);
 }
 
+/* Add to your CSS file */
+/* ...existing code... */
+.client-lots-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  justify-content: center; /* <-- change from flex-start to center */
+  width: 100%;
+}
+.client-lots-tab {
+  background: #f3e9e9;
+  color: #B61718;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.08rem;
+  font-family: "Grenze", serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.13s;
+  outline: none;
+}
+.client-lots-tab.active {
+  background: #fff;
+  color: #B61718;
+  border-bottom: 2px solid #fff;
+  box-shadow: 0 -2px 8px rgba(30,41,59,0.04);
+}
+.lot-card.owned .owned-badge {
+  background: #2D5F4D;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.1rem 0.7rem;
+  font-size: 0.95rem;
+  margin-left: 0.7rem;
+  font-weight: 600;
+}
+
 /* Responsive: Stack image and details on mobile */
 @media (max-width: 700px) {
     .lot-card {

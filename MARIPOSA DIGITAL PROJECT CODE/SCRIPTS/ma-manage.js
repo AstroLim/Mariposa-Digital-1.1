@@ -121,117 +121,9 @@ const manageLotSelectedOpt = (selected) => {
     </div>
     `
   } else if (selected === 'Lot Reservation') {
-    interfaceElement.innerHTML = `
-      <div class="lot-reservation">
-        <div class="lot-reservation-container">
-          <div class="lot-reservation-container-header">List of Cancel Request</div>
-          <div class="lot-reservation-container-box-layout">
-            <div class="lot-reservation-container-box">
-              <div class="lot-reservation-container-box-img">
-                <img src="" alt="lot">
-              </div>
-              <div>Lot Number: <span>1</span></div>
-              <div>Reason: <span>N/A</span></div>
-              <div>Name: <span>John Doe</span></div>
-              <div>Contact: <span>123-456-7890</span></div>
-              <button>Accept Cancel Request</button>
-            </div>
-            <div class="lot-reservation-container-box">
-              <div class="lot-reservation-container-box-img">
-                <img src="" alt="lot">
-              </div>
-              <div>Lot Number: <span>1</span></div>
-              <div>Reason: <span>N/A</span></div>
-              <div>Name: <span>John Doe</span></div>
-              <div>Contact: <span>123-456-7890</span></div>
-              <button>Accept Cancel Request</button>
-            </div>
-            <div class="lot-reservation-container-box">
-              <div class="lot-reservation-container-box-img">
-                <img src="" alt="lot">
-              </div>
-              <div>Lot Number: <span>1</span></div>
-              <div>Reason: <span>N/A</span></div>
-              <div>Name: <span>John Doe</span></div>
-              <div>Contact: <span>123-456-7890</span></div>
-              <button>Accept Cancel Request</button>
-            </div>
-            <div class="lot-reservation-container-box">
-              <div class="lot-reservation-container-box-img">
-                <img src="" alt="lot">
-              </div>
-              <div>Lot Number: <span>1</span></div>
-              <div>Reason: <span>N/A</span></div>
-              <div>Name: <span>John Doe</span></div>
-              <div>Contact: <span>123-456-7890</span></div>
-              <button>Accept Cancel Request</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  } else if (selected === 'Contract Schedule') {
-    interfaceElement.innerHTML = `
-      <div class="contract-schedule">
-        <div class="contract-schedule-layout">
-          <div class="contract-schedule-layout-header">Lot Contract Signing Dates</div>
-          <div class="contract-schedule-layout-box-container">
-            <div class="contract-schedule-layout-box">
-              <h2>Lot 1</h2>
-              <div class="contract-schedule-layout-box-info">
-                <div class="contract-schedule-layout-box-info-left">
-                  <div>Date Req: <span>1/24/2025</span></div>
-                  <button>Confirm Schedule</button>
-                  <button>Cancel Schedule</button>
-                </div>
-                <div>
-                  <img src="" alt="lot">
-                </div>
-              </div>
-            </div>
-            <div class="contract-schedule-layout-box">
-              <h2>Lot 1</h2>
-              <div class="contract-schedule-layout-box-info">
-                <div class="contract-schedule-layout-box-info-left">
-                  <div>Date Req: <span>1/24/2025</span></div>
-                  <button>Confirm Schedule</button>
-                  <button>Cancel Schedule</button>
-                </div>
-                <div>
-                  <img src="" alt="lot">
-                </div>
-              </div>
-            </div>
-            <div class="contract-schedule-layout-box">
-              <h2>Lot 1</h2>
-              <div class="contract-schedule-layout-box-info">
-                <div class="contract-schedule-layout-box-info-left">
-                  <div>Date Req: <span>1/24/2025</span></div>
-                  <button>Confirm Schedule</button>
-                  <button>Cancel Schedule</button>
-                </div>
-                <div>
-                  <img src="" alt="lot">
-                </div>
-              </div>
-            </div>
-            <div class="contract-schedule-layout-box">
-              <h2>Lot 1</h2>
-              <div class="contract-schedule-layout-box-info">
-                <div class="contract-schedule-layout-box-info-left">
-                  <div>Date Req: <span>1/24/2025</span></div>
-                  <button>Confirm Schedule</button>
-                  <button>Cancel Schedule</button>
-                </div>
-                <div>
-                  <img src="" alt="lot">
-                </div>
-              </div>
-            </div>  
-          </div>
-        </div>
-      </div>
-    `
+    renderReservedLotsAdmin();
+  } else if (selected === 'Lots Owned') {
+    renderOwnedLotsAdmin();
   } else if (selected === 'Logs') {
     let lotLogsDisplay =  '';
 
@@ -1497,6 +1389,198 @@ const removeLot = async (event) => {
   } else {
     alert('Lot not found');
   }
+}
+
+async function renderReservedLotsAdmin() {
+  const interfaceElement = document.querySelector('#manage-mainview-settings-editable');
+  let html = `<div class="lot-reservation-admin-list">`;
+
+  // Fetch reserved lots
+  const reserveLotsSnap = await get(ref(db, 'reserveLots'));
+  if (!reserveLotsSnap.exists()) {
+    html += `<p>No reserved lots found.</p></div>`;
+    interfaceElement.innerHTML = html;
+    return;
+  }
+
+  let lots = [];
+  reserveLotsSnap.forEach(child => {
+    lots.push({ ...child.val(), key: child.key });
+  });
+
+  // Fetch user info for each lot
+  const usersSnap = await get(ref(db, 'users'));
+  const users = usersSnap.exists() ? usersSnap.val() : {};
+
+  lots.forEach(lot => {
+    const user = users[lot.uid] || {};
+    let priceDisplay = "N/A";
+    if (lot.lotPrice && !isNaN(Number(lot.lotPrice.toString().replace(/,/g, "")))) {
+      priceDisplay = Number(lot.lotPrice.toString().replace(/,/g, "")).toLocaleString();
+    }
+    let feeDisplay = lot.reservationFee ? `₱${Number(lot.reservationFee).toLocaleString()}` : "N/A";
+    html += `
+      <div class="lot-reservation-admin-card">
+        <div class="lot-reservation-admin-card-header">
+          <span>Lot #${lot.lotNumber || ""}</span>
+          <span class="lot-reservation-admin-card-status">Reserved</span>
+        </div>
+        <div class="lot-reservation-admin-card-details">
+          <div>
+            <strong>Client:</strong> ${user.firstName || ""} ${user.lastName || ""} <br>
+            <strong>Email:</strong> ${user.email || ""} <br>
+            <strong>Contact:</strong> ${user.phone || ""}
+          </div>
+          <div>
+            <strong>Price:</strong> ₱${priceDisplay} <br>
+            <strong>Reservation Fee:</strong> ${feeDisplay} <br>
+            <strong>Contract Date:</strong> ${lot.contractSigningDate || "N/A"}
+          </div>
+        </div>
+        <div class="lot-reservation-admin-card-actions">
+          <button class="cancel-reservation-admin-btn" data-key="${lot.key}" data-uid="${lot.uid}" data-fee="${lot.reservationFee}" data-method="${lot.reservationPaymentMethod}">Cancel & Refund</button>
+          <button class="mark-contract-signed-btn" data-key="${lot.key}" data-lotkey="${lot.lotKey}" data-uid="${lot.uid}">Mark as Contract Signed</button>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  interfaceElement.innerHTML = html;
+
+  // Add event listeners for "Mark as Contract Signed"
+  document.querySelectorAll('.mark-contract-signed-btn').forEach(btn => {
+    btn.onclick = async () => {
+      const lotKey = btn.getAttribute('data-lotkey');
+      const uid = btn.getAttribute('data-uid');
+      if (!confirm("Mark this lot as contract signed and transfer ownership?")) return;
+      await update(ref(db, `lots/${lotKey}`), { status: "owned", reservedBy: uid });
+      // Remove the reservation entry
+      const reservationKey = btn.getAttribute('data-key');
+      await remove(ref(db, `reserveLots/${reservationKey}`));
+      push(ref(db, 'logs/lots'), {
+        action: `Lot ${lotKey} marked as owned after contract signing.`,
+        date: new Date().toUTCString(),
+        by: uid
+      });
+      alert("Lot marked as owned.");
+      renderReservedLotsAdmin();
+    };
+  });
+
+  // Add event listeners for cancel/refund
+  document.querySelectorAll('.cancel-reservation-admin-btn').forEach(btn => {
+    btn.onclick = async () => {
+      const key = btn.getAttribute('data-key');
+      const uid = btn.getAttribute('data-uid');
+      const fee = Number(btn.getAttribute('data-fee')) || 0;
+      const method = btn.getAttribute('data-method') || '';
+      if (!confirm("Cancel this reservation and refund the fee?")) return;
+
+      // Remove reservation
+      await remove(ref(db, `reserveLots/${key}`));
+
+      // Update lot status to available
+      // Find the lotKey from the reservation (if available)
+      let lotKey = null;
+      const lotSnap = await get(ref(db, `reserveLots/${key}`));
+      if (lotSnap.exists()) {
+        lotKey = lotSnap.val().lotKey;
+      }
+      if (lotKey) {
+        await update(ref(db, `lots/${lotKey}`), { status: "available", reservedBy: null });
+      }
+
+      // Log the action
+      push(ref(db, 'logs/lots'), {
+        action: `Reservation for Lot ${lotKey || key} cancelled and fee refunded via ${method}`,
+        date: new Date().toUTCString(),
+        by: uid
+      });
+
+      // Simulate refund (in real app, trigger payment API here)
+      alert(`Refunded ₱${fee.toLocaleString()} to client via ${method}.`);
+      renderReservedLotsAdmin();
+    };
+  });
+}
+
+async function renderOwnedLotsAdmin() {
+  const interfaceElement = document.querySelector('#manage-mainview-settings-editable');
+  let html = `<div class="owned-lots-admin-list">`;
+
+  // Fetch all lots
+  const lotsSnap = await get(ref(db, 'lots'));
+  if (!lotsSnap.exists()) {
+    html += `<p>No owned lots found.</p></div>`;
+    interfaceElement.innerHTML = html;
+    return;
+  }
+
+  // Fetch users
+  const usersSnap = await get(ref(db, 'users'));
+  const users = usersSnap.exists() ? usersSnap.val() : {};
+
+  let ownedCount = 0;
+  lotsSnap.forEach(child => {
+    const lot = child.val();
+    if ((lot.status || '').toLowerCase() === 'owned') {
+      ownedCount++;
+      const owner = users[lot.reservedBy] || {};
+      html += `
+        <div class="owned-lot-admin-card">
+          <div class="owned-lot-admin-card-accent"></div>
+          <div class="owned-lot-admin-card-content">
+            <div class="owned-lot-admin-card-header">
+              <span class="owned-lot-admin-card-lotnum">Lot #${lot.lotNumber || ""}</span>
+              <span class="owned-lot-admin-card-status">Owned</span>
+            </div>
+            <div class="owned-lot-admin-card-details">
+              <div class="owned-lot-admin-owner">
+                <div class="owned-lot-admin-label">Owner</div>
+                <div><strong>Name:</strong> ${owner.firstName || ""} ${owner.lastName || ""}</div>
+                <div><strong>Email:</strong> ${owner.email || ""}</div>
+                <div><strong>Contact:</strong> ${owner.phone || ""}</div>
+              </div>
+              <div class="owned-lot-admin-info">
+                <div class="owned-lot-admin-label">Lot Details</div>
+                <div><strong>Price:</strong> ₱${lot.lotPrice || "N/A"}</div>
+                <div><strong>Size:</strong> ${lot.lotSize || "N/A"}</div>
+                <div><strong>Description:</strong> ${lot.lotDescription || "N/A"}</div>
+              </div>
+            </div>
+            <div class="owned-lot-admin-card-actions">
+              <button class="cancel-contract-btn" data-lotkey="${child.key}" data-owner="${lot.reservedBy}">Cancel Contract</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  });
+
+  if (ownedCount === 0) {
+    html += `<p>No owned lots found.</p>`;
+  }
+
+  html += `</div>`;
+  interfaceElement.innerHTML = html;
+
+  // Add event listeners for cancel contract
+  document.querySelectorAll('.cancel-contract-btn').forEach(btn => {
+    btn.onclick = async () => {
+      const lotKey = btn.getAttribute('data-lotkey');
+      const owner = btn.getAttribute('data-owner');
+      if (!confirm("Cancel this contract and set lot as available?")) return;
+      await update(ref(db, `lots/${lotKey}`), { status: "available", reservedBy: null });
+      push(ref(db, 'logs/lots'), {
+        action: `Contract for Lot ${lotKey} cancelled by admin.`,
+        date: new Date().toUTCString(),
+        by: uid
+      });
+      alert("Contract cancelled and lot is now available.");
+      renderOwnedLotsAdmin();
+    };
+  });
 }
 
 const downloadLotLogs = async (event) => {

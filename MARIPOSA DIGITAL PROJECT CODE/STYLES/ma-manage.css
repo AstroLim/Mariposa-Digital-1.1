@@ -364,158 +364,251 @@ body {
 
 
 /* Lot Reservation CSS */
-.lot-reservation {
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.lot-reservation-container {
-  margin-bottom: 20px;
-}
-
-.lot-reservation-container-header {
-  font-size: 1.5em;
-  color: darkred;
-  margin-bottom: 20px;
-}
-
-.lot-reservation-container-box-layout {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-.lot-reservation-container-box {
+/* Modern reserved lot card for admin */
+.lot-reservation-admin-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  background-color: white;
-  width: fit-content;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
 }
-
-.lot-reservation-container-box-img img {
-  width: 100%;
-  height: auto;
-  border-radius: 5px;
+.lot-reservation-admin-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(30,41,59,0.08);
+  border: 1px solid #ececec;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
-
-.lot-reservation-container-box div {
-  font-size: 1em;
-  color: black;
-  font-weight: bold;
+.lot-reservation-admin-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #B61718;
 }
-
-.lot-reservation-container-box div span {
-  font-size: 1em;
-  color: darkred;
-  font-weight: normal;
+.lot-reservation-admin-card-status {
+  background: #f3e9e9;
+  color: #B61718;
+  border-radius: 8px;
+  padding: 0.2rem 0.8rem;
+  font-size: 0.98rem;
+  font-weight: 600;
 }
-
-.lot-reservation-container-box button {
-  padding: 10px 15px;
-  font-size: 1em;
-  color: white;
-  background-color: darkred;
+.lot-reservation-admin-card-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  font-size: 1.08rem;
+}
+.lot-reservation-admin-card-details > div {
+  flex: 1;
+}
+.lot-reservation-admin-card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.cancel-reservation-admin-btn {
+  background: #B61718;
+  color: #fff;
   border: none;
-  border-radius: 20px;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.08rem;
+  font-family: "Grenze", serif;
+  font-weight: 600;
   cursor: pointer;
-  margin: 10px 0;
+  transition: background 0.18s, transform 0.13s;
+}
+.cancel-reservation-admin-btn:hover {
+  background: #223a23;
+  color: #fff;
+  transform: translateY(-1px) scale(1.03);
 }
 
-.lot-reservation-container-box button:hover {
-  background-color: red;
+/* Modern admin action buttons for lot reservation */
+.cancel-reservation-admin-btn,
+.mark-contract-signed-btn {
+  background: #B61718;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.08rem;
+  font-family: "Grenze", serif;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.7rem;
+  transition: background 0.18s, transform 0.13s;
+  box-shadow: 0 1px 4px rgba(182,23,24,0.08);
+  outline: none;
+}
+.mark-contract-signed-btn {
+  background: #2D5F4D;
+}
+.cancel-reservation-admin-btn:hover,
+.mark-contract-signed-btn:hover {
+  background: #223a23;
+  color: #fff;
+  transform: translateY(-1px) scale(1.03);
+}
+
+@media (max-width: 700px) {
+  .lot-reservation-admin-card-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
 /* End of Lot Reservation CSS */
 
 
-/* Contract Schedule CSS */
-.contract-schedule {
-  padding: 20px;
-  border-radius: 10px;
+/* Lots Owned CSS */
+/* Modern admin action buttons */
+.cancel-reservation-admin-btn,
+.mark-contract-signed-btn,
+.cancel-contract-btn {
+  background: #B61718;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.08rem;
+  font-family: "Grenze", serif;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.7rem;
+  transition: background 0.18s, transform 0.13s;
+  box-shadow: 0 1px 4px rgba(182,23,24,0.08);
+  outline: none;
+}
+.mark-contract-signed-btn {
+  background: #2D5F4D;
+}
+.cancel-contract-btn {
+  background: #888;
+}
+.cancel-reservation-admin-btn:hover,
+.mark-contract-signed-btn:hover,
+.cancel-contract-btn:hover {
+  background: #223a23;
+  color: #fff;
+  transform: translateY(-1px) scale(1.03);
 }
 
-.contract-schedule-layout {
-  margin-bottom: 20px;
-}
-
-.contract-schedule-layout-header {
-  font-size: 1.5em;
-  color: darkred;
-  margin-bottom: 50px;
-}
-
-.contract-schedule-layout-box-container {
+/* Owned Lot Admin Card Redesign */
+.owned-lots-admin-list {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
 }
 
-.contract-schedule-layout-box {
-  padding: 20px;
-  width: fit-content;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: white;
-  margin-bottom: 20px;
+.owned-lot-admin-card {
+  display: flex;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(30,41,59,0.10), 0 1.5px 6px rgba(30,41,59,0.03);
+  border: 1.5px solid #ececec;
+  overflow: hidden;
+  min-width: 0;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  transition: box-shadow 0.18s, transform 0.18s, background 0.18s;
 }
-
-.contract-schedule-layout-box h2 {
-  font-size: 1.2em;
-  color: darkred;
-  margin-bottom: 0px;
+.owned-lot-admin-card-accent {
+  width: 10px;
+  background: linear-gradient(180deg, #B61718 60%, #2D5F4D 100%);
+  border-radius: 14px 0 0 14px;
 }
-
-.contract-schedule-layout-box-info {
+.owned-lot-admin-card-content {
+  flex: 1;
+  padding: 1.2rem 1.5rem 1.1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.owned-lot-admin-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.7rem;
 }
-
-.contract-schedule-layout-box-info-left {
+.owned-lot-admin-card-lotnum {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #B61718;
+  letter-spacing: 1px;
+}
+.owned-lot-admin-card-status {
+  background: #f3e9e9;
+  color: #B61718;
+  border-radius: 8px;
+  padding: 0.2rem 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.owned-lot-admin-card-details {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-right: 20px;
-  margin-top: 0;
+  gap: 2.5rem;
+  margin-bottom: 0.7rem;
+  flex-wrap: wrap;
 }
-
-.contract-schedule-layout-box-info-left div {
-  font-size: 1em;
-  color: black;
-  font-weight: bold;
-  margin-top: 0;
+.owned-lot-admin-owner, .owned-lot-admin-info {
+  flex: 1 1 220px;
+  min-width: 180px;
+  background: #f8f8fa;
+  border-radius: 8px;
+  padding: 0.7rem 1rem 0.7rem 1rem;
+  margin-bottom: 0.2rem;
 }
-
-.contract-schedule-layout-box-info-left div span{
-  font-size: 1em;
-  color: darkred;
+.owned-lot-admin-label {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #2D5F4D;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.5px;
 }
-
-.contract-schedule-layout-box-info-left button {
-  padding: 10px 15px;
-  font-size: 1em;
-  color: white;
-  background-color: darkred;
+.owned-lot-admin-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+.cancel-contract-btn {
+  background: #888;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.08rem;
+  font-family: "Grenze", serif;
+  font-weight: 600;
   cursor: pointer;
+  margin-right: 0.7rem;
+  transition: background 0.18s, transform 0.13s;
+  box-shadow: 0 1px 4px rgba(182,23,24,0.08);
+  outline: none;
+}
+.cancel-contract-btn:hover {
+  background: #B61718;
+  color: #fff;
+  transform: translateY(-1px) scale(1.03);
 }
 
-.contract-schedule-layout-box-info-left button:hover {
-  background-color: red;
+@media (max-width: 700px) {
+  .owned-lot-admin-card-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .owned-lot-admin-card-content {
+    padding: 1rem 0.7rem 0.7rem 0.7rem;
+  }
 }
-
-.contract-schedule-layout-box img {
-  width: 100px;
-  height: auto;
-  border-radius: 5px;
-}
-/* End of Contract Schedule CSS */
+/* End of Lots Owned CSS */
 
 /* Lot Logs CSS */
 .lot-logs {

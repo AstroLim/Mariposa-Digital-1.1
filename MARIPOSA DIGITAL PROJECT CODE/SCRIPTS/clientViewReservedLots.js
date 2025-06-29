@@ -36,19 +36,30 @@ if (user && user.username && document.querySelector(".userName")) {
   document.querySelector(".userName").innerHTML = `<p>${user.username}</p>`;
 }
 
-// Load and display reserved lots from Firebase
-async function loadClientReservedLots() {
-  const section = document.getElementById("lots-list") || document.querySelector(".lots-grid") || document.querySelector(".MainSection-mainCont");
-  if (!section) return;
-  section.innerHTML = "<p>Loading your reserved lots...</p>";
+// ...existing imports and setup...
 
-  // Query reserveLots where uid == current user
+// Tab logic
+const lotsListSection = document.getElementById("lots-list");
+const tabReserved = document.getElementById("tab-reserved");
+const tabOwned = document.getElementById("tab-owned");
+
+function setActiveTab(tab) {
+  tabReserved.classList.remove("active");
+  tabOwned.classList.remove("active");
+  tab.classList.add("active");
+}
+
+// Load reserved lots
+async function loadClientReservedLots() {
+  if (!lotsListSection) return;
+  lotsListSection.innerHTML = "<p>Loading your reserved lots...</p>";
+
   const reserveLotsRef = ref(db, "reserveLots");
   const q = query(reserveLotsRef, orderByChild("uid"), equalTo(uid));
   const snapshot = await get(q);
 
   if (!snapshot.exists()) {
-    section.innerHTML = `<p>You have no reserved lots.</p>`;
+    lotsListSection.innerHTML = `<p>You have no reserved lots.</p>`;
     return;
   }
 
@@ -58,25 +69,23 @@ async function loadClientReservedLots() {
   });
 
   if (lots.length === 0) {
-    section.innerHTML = `<p>You have no reserved lots.</p>`;
+    lotsListSection.innerHTML = `<p>You have no reserved lots.</p>`;
     return;
   }
 
-  section.innerHTML = "";
+  lotsListSection.innerHTML = "";
   lots.forEach((lot, i) => {
     const images = Array.isArray(lot.lotImages) ? lot.lotImages : [];
-    // Format price correctly even if it has commas
     let priceDisplay = "N/A";
     if (lot.lotPrice && !isNaN(Number(lot.lotPrice.toString().replace(/,/g, "")))) {
       priceDisplay = Number(lot.lotPrice.toString().replace(/,/g, "")).toLocaleString();
     }
-    // Show reservation fee if available
     let feeDisplay = "";
     if (lot.reservationFee && !isNaN(Number(lot.reservationFee))) {
       feeDisplay = `<p class="lot-fee">Reservation Fee: ₱${Number(lot.reservationFee).toLocaleString()}</p>`;
     }
 
-    section.innerHTML += `
+    lotsListSection.innerHTML += `
       <div class="lot-card">
         <div class="lot-images">
           ${images.map(img => `<img src="${img}" alt="Lot Image" class="lot-image">`).join('')}
@@ -105,11 +114,9 @@ async function loadClientReservedLots() {
       if (!key) return;
       if (!confirm("Are you sure you want to cancel this reservation?")) return;
 
-      // Remove reservation from reserveLots
       await remove(ref(db, `reserveLots/${key}`));
 
       // Optionally, update the lot's status back to available
-      // Find the lotKey from the reservation
       const lot = lots.find(l => l.key === key);
       if (lot && lot.lotKey) {
         const lotRef = ref(db, `lots/${lot.lotKey}`);
@@ -118,7 +125,6 @@ async function loadClientReservedLots() {
         );
       }
 
-      // Refund 90% of the reservation fee if available
       if (lot && lot.reservationFee && !isNaN(Number(lot.reservationFee))) {
         const refund = Math.round(Number(lot.reservationFee) * 0.9);
         alert(`Reservation canceled. ₱${refund.toLocaleString()} will be refunded to you (90% of the reservation fee).`);
@@ -131,5 +137,77 @@ async function loadClientReservedLots() {
   });
 }
 
-// Call on page load
-loadClientReservedLots();
+// Load owned lots
+async function loadClientOwnedLots() {
+  if (!lotsListSection) return;
+  lotsListSection.innerHTML = "<p>Loading your owned lots...</p>";
+
+  const lotsRef = ref(db, "lots");
+  const q = query(lotsRef, orderByChild("reservedBy"), equalTo(uid));
+  const snapshot = await get(q);
+
+  if (!snapshot.exists()) {
+    lotsListSection.innerHTML = `<p>You have no owned lots.</p>`;
+    return;
+  }
+
+  const lots = [];
+  snapshot.forEach(child => {
+    const lot = child.val();
+    if ((lot.status || '').toLowerCase() === 'owned') {
+      lots.push({ ...lot, key: child.key });
+    }
+  });
+
+  if (lots.length === 0) {
+    lotsListSection.innerHTML = `<p>You have no owned lots.</p>`;
+    return;
+  }
+
+  lotsListSection.innerHTML = "";
+  lots.forEach((lot, i) => {
+    const images = Array.isArray(lot.lotImages) ? lot.lotImages : [];
+    let priceDisplay = "N/A";
+    if (lot.lotPrice && !isNaN(Number(lot.lotPrice.toString().replace(/,/g, "")))) {
+      priceDisplay = Number(lot.lotPrice.toString().replace(/,/g, "")).toLocaleString();
+    }
+
+    lotsListSection.innerHTML += `
+      <div class="lot-card owned">
+        <div class="lot-images">
+          ${images.map(img => `<img src="${img}" alt="Lot Image" class="lot-image">`).join('')}
+        </div>
+        <div class="lot-details">
+          <h2>Lot #${lot.lotNumber || ""} <span class="owned-badge">Owned</span></h2>
+          <div class="lot-info">
+            <p>${lot.lotDescription || ""}</p>
+            <p>Size: ${lot.lotSize || ""}</p>
+            <p>Price: ₱${priceDisplay}</p>
+            <p>Ownership Date: ${lot.ownershipDate || "N/A"}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// Tab event listeners
+if (tabReserved && tabOwned) {
+  tabReserved.onclick = () => {
+    setActiveTab(tabReserved);
+    loadClientReservedLots();
+  };
+  tabOwned.onclick = () => {
+    setActiveTab(tabOwned);
+    loadClientOwnedLots();
+  };
+}
+
+// Initial load
+if (tabReserved) {
+  setActiveTab(tabReserved);
+  loadClientReservedLots();
+} else {
+  // fallback for old pages
+  loadClientReservedLots();
+}
