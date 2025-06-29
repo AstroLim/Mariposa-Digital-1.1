@@ -71,6 +71,7 @@ onAuthStateChanged(auth, async (firebaseUser) => {
         <h1>Order #${order.orderId}</h1>
       </div>
       <div class="order-sec-bot">
+        <p>Client Name: ${order.clientName || "Unknown Client"}</p>
         <p>Client Address: ${order.addressOfClient}</p>
         <p>Status: ${order.status}</p>
         <a href="courierManageLoadPage.html?orderId=${order.orderId}&clientId=${order.clientId}">

@@ -17,6 +17,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+const user = JSON.parse(localStorage.getItem('user'));
+
 let uid = null;
 let cartItems = [];
 let cartKeys = [];
@@ -154,7 +156,6 @@ if (addressValues.some(val => !val)) {
   firstEmpty && firstEmpty.focus();
   return;
 }
-const address = addressValues.join(", ");
 
   // ETA Calculation
   let eta = "";
@@ -171,15 +172,50 @@ const address = addressValues.join(", ");
     eta = now.toLocaleDateString();
   }
 
-  const subtotal = cartItems.reduce((acc, item) => acc + ((item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity), 0);
-  const total = subtotal;
+  // Gather address and cart info
+  const address = Array.from(document.querySelectorAll('.address-input')).map(input => input.value).join(", ");
+  if (!address) {
+    alert("Please enter your delivery address.");
+    return;
+  }
 
+  // Recalculate totals
+  let subtotal = 0;
+  cartItems.forEach(item => {
+    subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
+  });
+  const shipping = 0; // Adjust if you want to add shipping
+  const total = subtotal + shipping;
+
+  // --- Assign a courier ---
+  let assignedCourier = null;
+  try {
+    const usersSnap = await get(ref(db, "users"));
+    if (usersSnap.exists()) {
+      const users = usersSnap.val();
+      // Filter couriers
+      const couriers = Object.entries(users)
+        .filter(([id, user]) => user.accessLevel && user.accessLevel.toLowerCase() === "courier")
+        .map(([id, user]) => ({ id, ...user }));
+      if (couriers.length > 0) {
+        // Randomly assign a courier
+        assignedCourier = couriers[Math.floor(Math.random() * couriers.length)];
+      }
+    }
+  } catch (err) {
+    // If courier assignment fails, assignedCourier stays null
+  }
+
+  // --- Use Firebase push key as orderId ---
   const newOrderRef = push(ref(db, `orders/${uid}`));
   const orderId = newOrderRef.key;
   const orderData = {
     status: "Pending",
-    clientName,
+    clientName: clientName,
     clientId: uid,
+    clientContactDetails: user.phone,
+    courierId: assignedCourier ? assignedCourier.id : "N/A",
+    courierContactDetails: assignedCourier ? (assignedCourier.phone || assignedCourier.mobilenumber || assignedCourier.email || "N/A") : "N/A",
     addressOfClient: address,
     productDetails: cartItems,
     orderId,

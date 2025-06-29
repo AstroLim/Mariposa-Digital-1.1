@@ -162,7 +162,7 @@ async function manageContractScheduleui() {
     lotManagementBoxSecBot.innerHTML = `
         <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
         <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Current Schedule</button>
+        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
         <button class="back" onclick="backToDashBoard()">Back</button>
     `;
 
@@ -253,7 +253,7 @@ function addLotui() {
     lotManagementBoxSecBot.innerHTML = `
         <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
         <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Current Schedule</button>
+        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
         <button class="back" onclick="backToDashBoard()">Back</button>
     `;
 
@@ -293,7 +293,7 @@ function removeLotui() {
     lotManagementBoxSecBot.innerHTML = `
         <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
         <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Current Schedule</button>
+        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
         <button class="back" onclick="backToDashBoard()">Back</button>
     `;
 
@@ -321,7 +321,7 @@ function backToDashBoard() {
     lotManagementBoxSecBot.innerHTML = `
         <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
         <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Current Schedule</button>
+        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
     `;
 
     rightSec.innerHTML = `
