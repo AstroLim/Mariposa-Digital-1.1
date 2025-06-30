@@ -39,7 +39,7 @@ if (!user || !uid) {
 
 document.querySelector('.nav-user-container div').textContent = `${user.lastName}, ${user.firstName}`;
 
-const manageLotSelectedOpt = (selected) => {
+const manageLotSelectedOpt = async (selected, editLotKey = null) => {
   const interfaceElement = document.querySelector('#manage-mainview-settings-editable');
   const mainviewOptions = document.querySelectorAll('.manage-mainview-settings-options-button');
   const mainviewHeader = document.querySelector('#manage-mainview-settings-header');
@@ -56,32 +56,70 @@ const manageLotSelectedOpt = (selected) => {
   if (selected === 'View Lots') {
     let viewLotsDisplay = '';
 
+    // Fetch logs for date added
+    const logsSnap = await get(ref(db, 'logs/lots'));
+    const logs = logsSnap.exists() ? logsSnap.val() : {};
+
     get(ref(db, '/lots')).then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const childData = childSnapshot.val();
+        const lotKey = childSnapshot.key;
+
+        // Find the first "added" log for this lot
+        let dateAdded = 'N/A';
+        if (logs) {
+          for (const log of Object.values(logs)) {
+            if (
+              log.action &&
+              log.action.includes('added') &&
+              log.action.includes(childData.lotNumber)
+            ) {
+              dateAdded = log.date ? new Date(log.date).toLocaleString() : 'N/A';
+              break;
+            }
+          }
+        }
+
+        // Format price with comma if needed
+        let priceDisplay = childData.lotPrice;
+        if (typeof priceDisplay === "string") {
+          // Remove existing commas, parse as float, then format
+          priceDisplay = Number(priceDisplay.replace(/,/g, ''));
+          priceDisplay = isNaN(priceDisplay) ? childData.lotPrice : priceDisplay.toLocaleString();
+        } else if (typeof priceDisplay === "number") {
+          priceDisplay = priceDisplay.toLocaleString();
+        }
+
         viewLotsDisplay += `
           <div class="view-lots-container">
             <h2 class="view-lots-container-header">Lot: ${childData.lotNumber}</h2>
             <div class="view-lots-container-info">
               <div class="view-lots-container-info-left">
-                <p>Price: ${childData.lotPrice}</p>
-                <div class="view-lots-container-info-left-description">Size: ${childData.lotSize}</div>
-                <button class="view-lots-container-info-left-button">Edit Lot</button>
+                <div><strong>Lot ID:</strong> ${lotKey}</div>
+                <div><strong>Price:</strong> ₱${priceDisplay}</div>
+                <div><strong>Size:</strong> ${childData.lotSize}</div>
+                <div><strong>Status:</strong> ${childData.lotStatus || 'N/A'}</div>
+                <div class="view-lots-container-info-desc-header"><strong>Description:</strong></div>
+                <div class="view-lots-container-info-left-description">${childData.lotDescription}</div>
+                <div><strong>Date Added:</strong> ${dateAdded}</div>
+                <div class="view-lots-container-actions">
+                  <button class="view-lots-container-info-left-button" onclick="editLotFromView('${lotKey}')">Edit Lot</button>
+                  <button class="view-lots-container-info-left-button" onclick="removeLotFromView('${lotKey}', '${childData.lotNumber}')">Remove Lot</button>
+                </div>
               </div>
               <div>
-                <img src="" alt="${childData.lotImages}">  
+                <img src="" alt="Lot Image">  
               </div>
             </div>
           </div>
-        `
-        interfaceElement.innerHTML = `
-          <div class="view-lots">
-            ${viewLotsDisplay}
-          </div>
-        `
-      })
+        `;
+      });
+      interfaceElement.innerHTML = `
+        <div class="view-lots">
+          ${viewLotsDisplay}
+        </div>
+      `;
     });
-
   } else if (selected === 'Add Lot') {
     interfaceElement.innerHTML = `
     <div class="add-lot">
@@ -109,7 +147,61 @@ const manageLotSelectedOpt = (selected) => {
       </div>
     </div> 
     `
-  } else if (selected === 'Remove Lot') {
+  } else if (selected === 'Edit Lot') {
+  let lotData = null;
+
+  // Search bar HTML
+  let searchHTML = `
+    <div class="edit-lot-search">
+      <label for="edit-lot-search-input">Enter Lot Number or ID:</label>
+      <input id="edit-lot-search-input" type="text" placeholder="Type and press Search or Enter">
+      <button type="button" onclick="searchEditLot()">Search</button>
+    </div>
+  `;
+
+  if (!editLotKey && window._editLotKey) editLotKey = window._editLotKey;
+
+  // Fetch lot data if key is provided
+  if (editLotKey) {
+    const lotSnap = await get(ref(db, 'lots/' + editLotKey));
+    if (lotSnap.exists()) {
+      lotData = lotSnap.val();
+    }
+  }
+
+  interfaceElement.innerHTML = `
+    <div class="edit-lot">
+      <h2>Edit Lot</h2>
+      ${searchHTML}
+      <form id="edit-lot-form">
+        <label for="edit-lot-id">Lot ID:</label>
+        <input id="edit-lot-id" type="text" value="${editLotKey || ''}" disabled>
+        <label for="edit-lot-number">Lot Number:</label>
+        <input id="edit-lot-number" type="text" value="${lotData ? lotData.lotNumber : ''}">
+        <label for="edit-lot-price">Lot Price:</label>
+        <input id="edit-lot-price" type="text" value="${lotData ? lotData.lotPrice : ''}">
+        <label for="edit-lot-size">Lot Size:</label>
+        <input id="edit-lot-size" type="text" value="${lotData ? lotData.lotSize : ''}">
+        <label for="edit-lot-status">Lot Status:</label>
+        <input id="edit-lot-status" type="text" value="${lotData ? lotData.lotStatus || '' : ''}">
+        <label for="edit-lot-description">Description:</label>
+        <input id="edit-lot-description" type="text" value="${lotData ? lotData.lotDescription : ''}">
+        <button type="button" onclick="saveEditLot('${editLotKey || ''}')">Save Changes</button>
+      </form>
+    </div>
+  `;
+
+  // Autofocus search input if no lot loaded
+  if (!lotData) {
+    setTimeout(() => {
+      document.getElementById('edit-lot-search-input').focus();
+      document.getElementById('edit-lot-form').querySelectorAll('input:not([type="button"])').forEach(inp => inp.disabled = true);
+    }, 100);
+  } else {
+    document.getElementById('edit-lot-form').querySelectorAll('input:not([type="button"])').forEach(inp => inp.disabled = false);
+    document.getElementById('edit-lot-id').disabled = true;
+  }
+} else if (selected === 'Remove Lot') {
     interfaceElement.innerHTML = `
     <div class="remove-lot">
       <h2>Removing Lot</h2>
@@ -154,7 +246,7 @@ const manageLotSelectedOpt = (selected) => {
   }
 }
 
-const manageProductSelectedOpt = (selected) => {
+const manageProductSelectedOpt = async (selected, editProductKey = null) => {
   const interfaceElement = document.querySelector('#manage-mainview-settings-editable');
   const mainviewOptions = document.querySelectorAll('.manage-mainview-settings-options-button');
   const mainviewHeader = document.querySelector('#manage-mainview-settings-header');
@@ -171,32 +263,65 @@ const manageProductSelectedOpt = (selected) => {
   if (selected === 'View Products') {
     let viewProductsDisplay = '';
 
+    // Fetch inventory and logs for quantity and date display
+    const [inventorySnap, logsSnap] = await Promise.all([
+      get(ref(db, 'inventory')),
+      get(ref(db, 'logs/products'))
+    ]);
+    const inventory = inventorySnap.exists() ? inventorySnap.val() : {};
+    const logs = logsSnap.exists() ? logsSnap.val() : {};
+
     get(ref(db, 'products')).then((snapshot) => {
       snapshot.forEach((childSnapshot) => {
         const childData = childSnapshot.val();
         const productKey = childSnapshot.key;
+        const quantity = inventory[productKey]?.quantity ?? 'N/A';
+
+        // Find the first "added" log for this product
+        let dateAdded = 'N/A';
+        if (logs) {
+          for (const log of Object.values(logs)) {
+            if (
+              log.action &&
+              log.action.includes('added') &&
+              log.action.includes(childData.productName)
+            ) {
+              dateAdded = log.date ? new Date(log.date).toLocaleString() : 'N/A';
+              break;
+            }
+          }
+        }
+
+        // ...inside manageProductSelectedOpt, in the View Products section...
         viewProductsDisplay += `
           <div class="view-products-container">
-                  <h2 class="view-products-container-header">${childData.productName}</h2>
-                  <p>Price: ${childData.pricePerSack}</p>
-                  <div class="view-products-container-info">
-                    <div class="view-products-container-info-left">
-                      <button class="view-products-container-info-left-description">${childData.productDescription}</button>
-                      <button class="view-products-container-info-left-button" onClick="removeProductFromView('${productKey}', '${childData.productName}')">Remove Product</button>
-                    </div>
-                    <div>
-                      <img src="" alt="rice">  
-                    </div>
-                  </div>
+            <h2 class="view-products-container-header">${childData.productName}</h2>
+            <div class="view-products-container-info">
+              <div class="view-products-container-info-left">
+                <div><strong>Product ID:</strong> ${productKey}</div>
+                <div><strong>Price per Sack:</strong> ₱${Number(childData.pricePerSack).toLocaleString()}</div>
+                <div class="view-products-container-info-desc-header"><strong>Description:</strong></div>
+                <div class="view-products-container-info-left-description">${childData.productDescription}</div>
+                <div><strong>Quantity in Inventory:</strong> ${quantity}</div>
+                <div><strong>Date Added:</strong> ${dateAdded}</div>
+                <div class="view-products-container-actions">
+                  <button class="view-products-container-info-left-button" onClick="editProductFromView('${productKey}')">Edit Product</button>
+                  <button class="view-products-container-info-left-button" onClick="removeProductFromView('${productKey}', '${childData.productName}')">Remove Product</button>
                 </div>
-        `
-        interfaceElement.innerHTML = `
-          <div class="view-products">
-            ${viewProductsDisplay}
+              </div>
+              <div>
+                <img src="" alt="Product Image">  
+              </div>
+            </div>
           </div>
-        `
-        });
-    })
+        `;
+      });
+      interfaceElement.innerHTML = `
+        <div class="view-products">
+          ${viewProductsDisplay}
+        </div>
+      `;
+    });
   } else if (selected === 'Add Products') {
     interfaceElement.innerHTML = `
       <div class="add-products">
@@ -226,6 +351,74 @@ const manageProductSelectedOpt = (selected) => {
         <button onclick="removeProduct(event);" class="remove-product-button">Remove Product</button>
       </div>
     `
+  } else if (selected === 'Edit Product') {
+    // If called with a key, load that product. Otherwise, show a search field.
+    let productData = null;
+    let quantity = '';
+    // Fetch inventory for this product
+    if (editProductKey) {
+      const productSnap = await get(ref(db, 'products/' + editProductKey));
+      if (productSnap.exists()) {
+        productData = productSnap.val();
+      }
+      const invSnap = await get(ref(db, 'inventory/' + editProductKey));
+      if (invSnap.exists()) {
+        quantity = invSnap.val().quantity ?? '';
+      }
+    }
+
+    // HTML for search field
+    let searchHTML = `
+      <div class="edit-product-search">
+        <label for="edit-product-search-input">Enter Product ID or Name:</label>
+        <input id="edit-product-search-input" type="text" placeholder="Type and press Search or Enter">
+        <button type="button" onclick="searchEditProduct()">Search</button>
+      </div>
+    `;
+
+    // If editProductKey is not set, try to get from search input
+    if (!editProductKey && window._editProductKey) editProductKey = window._editProductKey;
+
+    // If we have a key, fetch product data
+    if (editProductKey) {
+      const productSnap = await get(ref(db, 'products/' + editProductKey));
+      if (productSnap.exists()) {
+        productData = productSnap.val();
+      }
+    }
+
+    // Render the form
+    interfaceElement.innerHTML = `
+      <div class="edit-product">
+        <h2>Edit Product</h2>
+        ${searchHTML}
+        <form id="edit-product-form">
+          <label for="edit-product-id">Product ID:</label>
+          <input id="edit-product-id" type="text" value="${editProductKey || ''}" disabled>
+          <label for="edit-product-name">Product Name:</label>
+          <input id="edit-product-name" type="text" value="${productData ? productData.productName : ''}">
+          <label for="edit-product-price">Price Per Sack:</label>
+          <input id="edit-product-price" type="text" value="${productData ? productData.pricePerSack : ''}">
+          <label for="edit-product-description">Description:</label>
+          <input id="edit-product-description" type="text" value="${productData ? productData.productDescription : ''}">
+          <label for="edit-product-quantity">Quantity in Inventory:</label>
+          <input id="edit-product-quantity" type="number" min="0" value="${quantity}">
+          <button type="button" onclick="saveEditProduct('${editProductKey || ''}')">Save Changes</button>
+        </form>
+      </div>
+    `;
+
+    // Autofocus search input if no product loaded
+    if (!productData) {
+      setTimeout(() => {
+        document.getElementById('edit-product-search-input').focus();
+        document.getElementById('edit-product-form').querySelectorAll('input:not([type="button"])').forEach(inp => inp.disabled = true);
+      }, 100);
+    } else {
+      // Enable fields if product loaded
+      document.getElementById('edit-product-form').querySelectorAll('input:not([type="button"])').forEach(inp => inp.disabled = false);
+      document.getElementById('edit-product-id').disabled = true;
+    }
   } else if (selected === 'Logs') {
     interfaceElement.innerHTML = `
       <div class="product-logs">
@@ -515,7 +708,7 @@ const manageAccountsSelectedOpt = (selected) => {
           <div class="view-users">
             <div class="view-users-search">
               <input type="text" placeholder="Search for users...">
-              <button>Search</button>
+              <button onclick="filterUserCards()">Search</button>
             </div>
             ${viewUsersDisplay}
           </div>
@@ -663,6 +856,7 @@ const manageAccountsSelectedOpt = (selected) => {
     });
   }
 }
+
 
 window.manageLotSelectedOpt = manageLotSelectedOpt;
 window.manageProductSelectedOpt = manageProductSelectedOpt;
@@ -1024,6 +1218,15 @@ const removeUserFromView = async function(userUID, username) {
   }
 };
 
+function filterUserCards() {
+  const searchValue = document.querySelector('.view-users-search input[type="text"]').value.trim().toLowerCase();
+  document.querySelectorAll('.user-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(searchValue) ? '' : 'none';
+  });
+}
+
+window.filterUserCards = filterUserCards;
 window.filterAccountLogsByDate = filterAccountLogsByDate;
 window.downloadAccountLogs = downloadAccountLogs;
 window.addUser = addUser;
@@ -1037,14 +1240,26 @@ const removeProductFromView = async function(productKey, productName) {
   if (!confirm(`Are you sure you want to remove "${productName}"?`)) return;
 
   try {
+    // Remove from products
     await remove(ref(db, 'products/' + productKey));
-    alert('Product removed successfully');
-    // Log the removal
+    // Remove from inventory
+    await remove(ref(db, 'inventory/' + productKey));
+
+    // Log the removal in inventory logs
+    push(ref(db, 'logs/inventory'), {
+      action: `Inventory for product ${productName} removed (product deleted)`,
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+
+    // Log the removal in product logs
     push(ref(db, 'logs/products'), {
       action: 'Product ' + productName + ' removed',
       date: new Date(Date.now()).toUTCString(),
       by: uid
     });
+
+    alert('Product and inventory removed successfully');
     // Optionally refresh the product list
     manageProductSelectedOpt('View Products');
   } catch (error) {
@@ -1070,7 +1285,7 @@ const addProduct = async (event) => {
   if (productsSnap.exists()) {
     productsSnap.forEach(child => {
       const prod = child.val();
-      if (prod.productName.trim().toLowerCase() === productName.toLowerCase()) {
+      if (prod.productName.trim().toLowerCase() === productName.trim().toLowerCase()) {
         existingProductKey = child.key;
       }
     });
@@ -1121,6 +1336,13 @@ const addProduct = async (event) => {
     quantity: productQuantity
   });
 
+  // Log inventory addition
+  push(ref(db, 'logs/inventory'), {
+    action: `Inventory for product ${productName} initialized (qty: ${productQuantity})`,
+    date: new Date(Date.now()).toUTCString(),
+    by: uid
+  });
+
   alert('Product and inventory added successfully');
   push(ref(db, 'logs/products'), {
     action: 'Product ' + productName + ' added (qty: ' + productQuantity + ')',
@@ -1146,7 +1368,7 @@ async function updateInventory(existingProductKey, productName, productQuantity,
   });
 
   alert(`Inventory ${action === "add" ? "added to" : "updated"} successfully.`);
-  push(ref(db, 'logs/products'), {
+  push(ref(db, 'logs/inventory'), {
     action: `Product ${productName} inventory ${action === "add" ? "added to" : "updated"} (qty: ${newQty})`,
     date: new Date(Date.now()).toUTCString(),
     by: uid
@@ -1161,18 +1383,39 @@ const removeProduct = async (event) => {
     return;
   }
 
-  const product = await get(ref(db, 'products/' + productNumber));
-
-  if (!product.exists()) {
+  const productSnap = await get(ref(db, 'products/' + productNumber));
+  if (!productSnap.exists()) {
     alert('Product does not exist');
     return;
   }
+  const productData = productSnap.val();
+  const productName = productData.productName || productNumber;
 
-  remove(ref(db, 'products/' + productNumber)).then(() => {
-    alert('Product removed successfully');
-  }).catch((error) => {
+  try {
+    // Remove from products
+    await remove(ref(db, 'products/' + productNumber));
+    // Remove from inventory
+    await remove(ref(db, 'inventory/' + productNumber));
+
+    // Log the removal in inventory logs
+    push(ref(db, 'logs/inventory'), {
+      action: `Inventory for product ${productName} removed (product deleted)`,
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+
+    // Log the removal in product logs
+    push(ref(db, 'logs/products'), {
+      action: 'Product ' + productName + ' removed',
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+
+    alert('Product and inventory removed successfully');
+    manageProductSelectedOpt('View Products');
+  } catch (error) {
     alert('Error removing product: ' + error.message);
-  });
+  }
 };
 
 async function updateProductStats() {
@@ -1300,6 +1543,177 @@ const downloadProductLogs = async (event) => {
   doc.save(`product_logs(${month}_${year}).pdf`);
 };
 
+async function saveEditProduct(productKey) {
+  const name = document.getElementById('edit-product-name').value.trim();
+  const price = document.getElementById('edit-product-price').value.trim();
+  const description = document.getElementById('edit-product-description').value.trim();
+  const quantity = parseInt(document.getElementById('edit-product-quantity').value, 10);
+
+  if (!name || !price || !description || isNaN(quantity)) {
+    alert('Please fill in all fields');
+    return;
+  }
+
+  // Duplicate check (exclude current product)
+  const productsSnap = await get(ref(db, 'products'));
+  let duplicate = false;
+  if (productsSnap.exists()) {
+    productsSnap.forEach(child => {
+      if (
+        child.key !== productKey &&
+        child.val().productName.trim().toLowerCase() === name.toLowerCase()
+      ) {
+        duplicate = true;
+      }
+    });
+  }
+  if (duplicate) {
+    alert('A product with this name already exists.');
+    return;
+  }
+
+  try {
+    // Fetch old values for detailed logging
+    const oldProductSnap = await get(ref(db, 'products/' + productKey));
+    const oldProduct = oldProductSnap.exists() ? oldProductSnap.val() : {};
+    let oldQuantity = 0;
+    const invSnap = await get(ref(db, 'inventory/' + productKey));
+    if (invSnap.exists()) {
+      oldQuantity = invSnap.val().quantity ?? 0;
+    }
+
+    // Update product info
+    await update(ref(db, 'products/' + productKey), {
+      productName: name,
+      pricePerSack: price,
+      productDescription: description
+    });
+
+    // After await update(ref(db, 'products/' + productKey), { ... });
+
+    const cartsSnap = await get(ref(db, 'carts'));
+    if (cartsSnap.exists()) {
+      cartsSnap.forEach(userCartSnap => {
+        const userCart = userCartSnap.val();
+        let updated = false;
+        // If cart is an array
+        if (Array.isArray(userCart)) {
+          userCart.forEach((item, idx) => {
+            if (item.productId === productKey) {
+              userCart[idx] = {
+                ...item,
+                productName: name,
+                pricePerSack: price,
+                productDescription: description
+              };
+              updated = true;
+            }
+          });
+          if (updated) {
+            set(ref(db, `carts/${userCartSnap.key}`), userCart);
+          }
+        }
+        // If cart is an object (productId as key)
+        else if (typeof userCart === 'object') {
+          let cartChanged = false;
+          Object.keys(userCart).forEach(pid => {
+            if (pid === productKey) {
+              userCart[pid] = {
+                ...userCart[pid],
+                productName: name,
+                pricePerSack: price,
+                productDescription: description
+              };
+              cartChanged = true;
+            }
+          });
+          if (cartChanged) {
+            set(ref(db, `carts/${userCartSnap.key}`), userCart);
+          }
+        }
+      });
+    }
+
+    // Update inventory
+    await update(ref(db, 'inventory/' + productKey), {
+      productId: productKey,
+      quantity: quantity
+    });
+
+    // Build detailed action log
+    let changes = [];
+    if (oldProduct.productName !== name) changes.push(`Name: "${oldProduct.productName}" → "${name}"`);
+    if (oldProduct.pricePerSack != price) changes.push(`Price: "${oldProduct.pricePerSack}" → "${price}"`);
+    if (oldProduct.productDescription !== description) changes.push(`Description: "${oldProduct.productDescription}" → "${description}"`);
+    if (oldQuantity !== quantity) changes.push(`Quantity: "${oldQuantity}" → "${quantity}"`);
+    const actionDetail = changes.length
+      ? `Product ${name} edited. Changes: ${changes.join(', ')}`
+      : `Product ${name} edited (no changes detected)`;
+
+    // Log product edit
+    push(ref(db, 'logs/products'), {
+      action: actionDetail,
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+
+    // Log inventory change if quantity changed
+    if (oldQuantity !== quantity) {
+      push(ref(db, 'logs/inventory'), {
+        action: `Inventory updated for product ${name} (${productKey})`,
+        date: new Date(Date.now()).toUTCString(),
+        by: uid,
+        productId: productKey,
+        oldQuantity: oldQuantity,
+        newQuantity: quantity
+      });
+    }
+
+    alert('Product and inventory updated successfully');
+    manageProductSelectedOpt('View Products');
+  } catch (error) {
+    alert('Error updating product: ' + error.message);
+  }
+}
+
+async function searchEditProduct() {
+  const searchVal = document.getElementById('edit-product-search-input').value.trim().toLowerCase();
+  if (!searchVal) {
+    alert('Please enter a Product ID or Name.');
+    return;
+  }
+  // Try to find by ID first
+  let foundKey = null;
+  let foundData = null;
+  const productsSnap = await get(ref(db, 'products'));
+  if (productsSnap.exists()) {
+    productsSnap.forEach(child => {
+      const prod = child.val();
+      if (
+        child.key.toLowerCase() === searchVal ||
+        (prod.productName && prod.productName.trim().toLowerCase() === searchVal)
+      ) {
+        foundKey = child.key;
+        foundData = prod;
+      }
+    });
+  }
+  if (foundKey) {
+    window._editProductKey = foundKey;
+    manageProductSelectedOpt('Edit Product', foundKey);
+  } else {
+    alert('Product not found.');
+  }
+};
+
+function editProductFromView(productKey) {
+  window._editProductKey = productKey;
+  manageProductSelectedOpt('Edit Product', productKey);
+};
+
+window.editProductFromView = editProductFromView;
+window.searchEditProduct = searchEditProduct;
+window.saveEditProduct = saveEditProduct;
 window.removeProductFromView = removeProductFromView;
 window.downloadProductLogs = downloadProductLogs;
 window.addProduct = addProduct;
@@ -1688,6 +2102,141 @@ const filterLotLogsByDate = function() {
   });
 };
 
+async function removeLotFromView(lotKey, lotNumber) {
+  if (!confirm(`Are you sure you want to remove Lot "${lotNumber}"?`)) return;
+  try {
+    await remove(ref(db, 'lots/' + lotKey));
+    push(ref(db, 'logs/lots'), {
+      action: 'Lot ' + lotNumber + ' removed (from View Lots)',
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+    alert('Lot removed successfully');
+    manageLotSelectedOpt('View Lots');
+  } catch (error) {
+    alert('Error removing lot: ' + error.message);
+  }
+}
+
+function editLotFromView(lotKey) {
+  window._editLotKey = lotKey;
+  manageLotSelectedOpt('Edit Lot', lotKey);
+};
+
+async function searchEditLot() {
+  const searchVal = document.getElementById('edit-lot-search-input').value.trim().toLowerCase();
+  if (!searchVal) {
+    alert('Please enter a Lot Number or ID.');
+    return;
+  }
+  let foundKey = null;
+  const lotsSnap = await get(ref(db, 'lots'));
+  if (lotsSnap.exists()) {
+    lotsSnap.forEach(child => {
+      const lot = child.val();
+      if (
+        child.key.toLowerCase() === searchVal ||
+        (lot.lotNumber && lot.lotNumber.trim().toLowerCase() === searchVal)
+      ) {
+        foundKey = child.key;
+      }
+    });
+  }
+  if (foundKey) {
+    window._editLotKey = foundKey;
+    manageLotSelectedOpt('Edit Lot', foundKey);
+  } else {
+    alert('Lot not found.');
+  }
+};
+
+async function saveEditLot(lotKey) {
+  const number = document.getElementById('edit-lot-number').value.trim();
+  const price = document.getElementById('edit-lot-price').value.trim();
+  const size = document.getElementById('edit-lot-size').value.trim();
+  const status = document.getElementById('edit-lot-status').value.trim();
+  const description = document.getElementById('edit-lot-description').value.trim();
+
+  if (!number || !price || !size || !description) {
+    alert('Please fill in all fields');
+    return;
+  }
+
+  // Duplicate check (exclude current lot)
+  const lotsSnap = await get(ref(db, 'lots'));
+  let duplicate = false;
+  if (lotsSnap.exists()) {
+    lotsSnap.forEach(child => {
+      if (child.key !== lotKey && child.val().lotNumber === number) {
+        duplicate = true;
+      }
+    });
+  }
+  if (duplicate) {
+    alert('A lot with this number already exists.');
+    return;
+  }
+
+  try {
+    // Fetch old values for detailed logging
+    const oldLotSnap = await get(ref(db, 'lots/' + lotKey));
+    const oldLot = oldLotSnap.exists() ? oldLotSnap.val() : {};
+
+    await update(ref(db, 'lots/' + lotKey), {
+      lotNumber: number,
+      lotPrice: price,
+      lotSize: size,
+      lotStatus: status,
+      lotDescription: description
+    });
+
+    // After await update(ref(db, 'lots/' + lotKey), { ... });
+
+    const reserveLotsSnap = await get(ref(db, 'reserveLots'));
+    if (reserveLotsSnap.exists()) {
+      reserveLotsSnap.forEach(child => {
+        const reserve = child.val();
+        if (reserve.lotKey === lotKey) {
+          update(ref(db, 'reserveLots/' + child.key), {
+            lotNumber: number,
+            lotPrice: price,
+            lotSize: size,
+            lotStatus: status,
+            lotDescription: description
+          });
+        }
+      });
+    }
+
+    // Build detailed action log
+    let changes = [];
+    if (oldLot.lotNumber !== number) changes.push(`Number: "${oldLot.lotNumber}" → "${number}"`);
+    if (oldLot.lotPrice != price) changes.push(`Price: "${oldLot.lotPrice}" → "${price}"`);
+    if (oldLot.lotSize !== size) changes.push(`Size: "${oldLot.lotSize}" → "${size}"`);
+    if ((oldLot.lotStatus || '') !== status) changes.push(`Status: "${oldLot.lotStatus || ''}" → "${status}"`);
+    if (oldLot.lotDescription !== description) changes.push(`Description: "${oldLot.lotDescription}" → "${description}"`);
+    const actionDetail = changes.length
+      ? `Lot ${number} edited. Changes: ${changes.join(', ')}`
+      : `Lot ${number} edited (no changes detected)`;
+
+    // Log lot edit
+    push(ref(db, 'logs/lots'), {
+      action: actionDetail,
+      date: new Date(Date.now()).toUTCString(),
+      by: uid
+    });
+
+    alert('Lot updated successfully');
+    manageLotSelectedOpt('View Lots');
+  } catch (error) {
+    alert('Error updating lot: ' + error.message);
+  }
+}
+
+window.saveEditLot = saveEditLot;
+window.searchEditLot = searchEditLot;
+window.editLotFromView = editLotFromView;
+window.removeLotFromView = removeLotFromView;
 window.filterLotLogsByDate = filterLotLogsByDate;
 window.addLot = addLot;
 window.removeLot = removeLot;

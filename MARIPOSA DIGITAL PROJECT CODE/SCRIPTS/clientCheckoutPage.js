@@ -315,6 +315,17 @@ document.getElementById("completeOrderBtn")?.addEventListener("click", async () 
         const newQty = Math.max(0, currentQty - qtyOrdered);
         console.log(`Updating inventory for ${productId}: ${currentQty} -> ${newQty}`);
         await set(invRef, { productId, quantity: newQty });
+
+        // --- Inventory update log ---
+        await push(ref(db, 'logs/inventory'), {
+          action: `Inventory reduced for product ${productId} due to order ${orderId}`,
+          date: new Date().toUTCString(),
+          by: uid,
+          orderId: orderId,
+          productId: productId,
+          oldQuantity: currentQty,
+          newQuantity: newQty
+        });
       } else {
         console.warn(`Inventory item not found for productId: ${productId}`);
       }
