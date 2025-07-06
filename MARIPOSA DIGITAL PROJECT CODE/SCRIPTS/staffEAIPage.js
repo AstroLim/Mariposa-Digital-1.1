@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, update } from "firebase/database";
-import { getAuth, sendEmailVerification, updateEmail } from "firebase/auth";
+import { getAuth, sendEmailVerification, updateEmail, signOut } from "firebase/auth";
 
 // Firebase config (same as reserved lots)
 const firebaseConfig = {
@@ -127,3 +127,18 @@ document.getElementById("editAccountForm").addEventListener("submit", async (e) 
     alert("Failed to update account: " + err.message);
   }
 });
+
+// Add logoutStaff function for logout button
+function logoutStaff() {
+  signOut(auth).then(() => {
+    alert('You are now logged out.');
+    localStorage.removeItem('user');
+    localStorage.removeItem('uid');
+    localStorage.removeItem('strLoginAccount');
+    window.location.href = 'landingPage.html';
+  }).catch((error) => {
+    console.error(error);
+    alert(`An error occurred while logging out. Please try again.`);
+  });
+}
+window.logoutStaff = logoutStaff;

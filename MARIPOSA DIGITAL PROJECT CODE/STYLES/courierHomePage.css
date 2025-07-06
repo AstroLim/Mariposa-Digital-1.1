@@ -16,7 +16,7 @@
 }
 
 /* Navigation Bar*/
-a, p{
+a, p, .userName{
     text-decoration: none;
     color: #660001;
     font-family: "Grenze", serif;

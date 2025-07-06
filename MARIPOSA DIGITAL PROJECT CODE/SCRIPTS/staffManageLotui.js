@@ -43,22 +43,33 @@ async function toggleDashboard() {
             lots.push(childSnapshot.val());
         });
 
-        const reservedLots = lots.filter(lot => lot.status === "Reserved");
-        // Assuming rented lots are tracked in a separate path; adjust as needed
-        const rentedLotsSnapshot = await get(ref(db, 'rentedLots')); // Update path if different
-        const rentedLots = [];
-        if (rentedLotsSnapshot.exists()) {
-            rentedLotsSnapshot.forEach((childSnapshot) => {
-                rentedLots.push(childSnapshot.val());
-            });
-        }
+        // Debug: Log all lots and their statuses to see what we're working with
+        console.log("All lots:", lots);
+        lots.forEach(lot => {
+            console.log(`Lot ${lot.lotNumber}: status = "${lot.status}"`);
+        });
 
-        document.querySelector(".availableLotsStat-sec-bot > div > p").textContent = lots.length;
+        // Filter lots by status (case-insensitive and handle variations)
+        const availableLots = lots.filter(lot => 
+            lot.status && lot.status.toLowerCase() === "available"
+        );
+        const reservedLots = lots.filter(lot => 
+            lot.status && lot.status.toLowerCase() === "reserved"
+        );
+        const rentedLots = lots.filter(lot => 
+            lot.status && lot.status.toLowerCase() === "rented"
+        );
+
+        console.log("Available lots:", availableLots.length);
+        console.log("Reserved lots:", reservedLots.length);
+        console.log("Rented lots:", rentedLots.length);
+
+        // Update the dashboard with correct counts
+        document.querySelector(".availableLotsStat-sec-bot > div > p").textContent = availableLots.length;
         document.querySelector(".reservedLotsStat-sec-bot > div > p").textContent = reservedLots.length;
-        document.querySelector(".rentedLotsStat-sec-bot > div > p").textContent = rentedLots.length || "0";
+        document.querySelector(".rentedLotsStat-sec-bot > div > p").textContent = rentedLots.length;
     } catch (error) {
         console.error("Error updating dashboard:", error);
-        alert("Failed to load dashboard data.");
     }
 }
 
@@ -68,11 +79,17 @@ async function addLot() {
     const lotDescription = document.querySelector(".lotDescription").value.trim();
     const lotSize = parseFloat(document.querySelector(".lotSize").value);
     const lotMonthlyRent = document.querySelector(".lotPrice").value.trim();
+    const lotImages = document.querySelector(".lotImages").value.trim();
+    let lotStatus = document.querySelector(".lotStatus").value;
 
-    if (!lotName || !lotDescription || isNaN(lotMonthlyRent) || isNaN(lotSize)) {
-        alert("Please fill in all product details correctly.");
+    // Only require Lot Number and Lot Size
+    if (!lotName || isNaN(lotSize)) {
+        alert("Please enter at least the Lot Number and Lot Size.");
         return;
     }
+
+    // Default status to 'Available' if not set
+    if (!lotStatus) lotStatus = "Available";
 
     try {
         // Check if lot number already exists
@@ -89,31 +106,56 @@ async function addLot() {
             return;
         }
 
+        // Use correct property names for saving
         const newLot = {
             lotNumber: lotName,
-            name: `Lot ${lotName}`,
-            price: `₱${lotMonthlyRent}/month`,
-            description: lotDescription,
-            size: lotSize,
-            status: "Available",
+            lotPrice: lotMonthlyRent ? `₱${lotMonthlyRent}` : "",
+            lotDescription: lotDescription || "",
+            lotSize: lotSize,
+            lotStatus: lotStatus,
             lotOwner: "",
             contractDuration: "",
-            lotImages: "" // Placeholder for image URL
+            lotImages: lotImages || ""
         };
 
         await push(ref(db, 'lots'), newLot);
+        
+        // Log the action with staff information
         await push(ref(db, 'logs/lots'), {
-            action: `Lot ${lotName} added`,
+            action: `Lot ${lotName} added by staff member ${user.firstName} ${user.lastName}`,
             date: new Date().toUTCString(),
-            by: uid
+            by: uid,
+            staffName: `${user.firstName} ${user.lastName}`,
+            staffId: uid
         });
 
         alert("New Lot has been added.");
+        
+        // Clear the form fields after successful submission
+        clearAddLotForm();
+        
         await toggleDashboard();
     } catch (error) {
         console.error("Error adding lot:", error);
         alert("Failed to add lot: " + error.message);
     }
+}
+
+// Function to clear the add lot form
+function clearAddLotForm() {
+    const lotNumberField = document.querySelector(".lotNumber");
+    const lotDescriptionField = document.querySelector(".lotDescription");
+    const lotSizeField = document.querySelector(".lotSize");
+    const lotPriceField = document.querySelector(".lotPrice");
+    const lotImagesField = document.querySelector(".lotImages");
+    const lotStatusField = document.querySelector(".lotStatus");
+
+    if (lotNumberField) lotNumberField.value = "";
+    if (lotDescriptionField) lotDescriptionField.value = "";
+    if (lotSizeField) lotSizeField.value = "";
+    if (lotPriceField) lotPriceField.value = "";
+    if (lotImagesField) lotImagesField.value = "";
+    if (lotStatusField) lotStatusField.value = "available";
 }
 
 // Function to Remove Lot
@@ -140,10 +182,14 @@ async function removeLot() {
         }
 
         await remove(ref(db, 'lots/' + lotKey));
+        
+        // Log the action with staff information
         await push(ref(db, 'logs/lots'), {
-            action: `Lot ${lotNumberInput} removed`,
+            action: `Lot ${lotNumberInput} removed by staff member ${user.firstName} ${user.lastName}`,
             date: new Date().toUTCString(),
-            by: uid
+            by: uid,
+            staffName: `${user.firstName} ${user.lastName}`,
+            staffId: uid
         });
 
         alert(`Lot ${lotNumberInput} has been removed.`);
@@ -151,97 +197,6 @@ async function removeLot() {
     } catch (error) {
         console.error("Error removing lot:", error);
         alert("Failed to remove lot: " + error.message);
-    }
-}
-
-// Function to Manage Contract Schedule UI
-async function manageContractScheduleui() {
-    const lotManagementBoxSecBot = document.querySelector('.lotManagementBox-sec-bot');
-    const rightSec = document.querySelector('.MainSection-Content-right-sec');
-
-    lotManagementBoxSecBot.innerHTML = `
-        <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
-        <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
-        <button class="back" onclick="backToDashBoard()">Back</button>
-    `;
-
-    try {
-        const contractSnapshot = await get(ref(db, 'contractSigningDates')); // Adjust path if different
-        const listOfContractSigningDates = [];
-        contractSnapshot.forEach((childSnapshot) => {
-            listOfContractSigningDates.push({ key: childSnapshot.key, ...childSnapshot.val() });
-        });
-
-        let contractScheduleHtml = `
-            <div class="manageContractScheduleBox"> 
-                <div class="manageContractScheduleBox-sec-top">
-                    <h1>Lot Contract Signing Dates</h1>
-                </div>
-                <div class="manageContractScheduleBox-sec-bot">
-        `;
-
-        listOfContractSigningDates.forEach((contract, index) => {
-            contractScheduleHtml += `
-                <div class="contractLotInfoBox">
-                    <header><h1>${contract.lotName}</h1></header>
-                    <main>
-                        <div class="main-contractLotInfoBox-leftSec">
-                            <div><p>Lot Number: ${contract.lotName}</p></div>
-                            <div><p>User: ${contract.user || "N/A"}</p></div>
-                            <div><p>Date: ${contract.scheduleDate}</p></div>
-                            <button class="confirmSchedule" data-key="${contract.key}">Confirm Schedule</button>
-                            <button class="cancelSchedule" data-key="${contract.key}">Cancel Schedule</button>
-                        </div>
-                        <div class="main-contractLotInfoBox-rightSec">
-                            <img src="${contract.lotImage || ''}" class="lotImg" alt="img of Lot">
-                        </div>
-                    </main>
-                </div>
-            `;
-        });
-
-        contractScheduleHtml += `</div></div>`;
-        rightSec.innerHTML = contractScheduleHtml;
-
-        // Add event listeners for confirm and cancel schedule buttons
-        document.querySelectorAll(".cancelSchedule").forEach(button => {
-            button.addEventListener("click", async (event) => {
-                const key = event.target.dataset.key;
-                try {
-                    await remove(ref(db, `contractSigningDates/${key}`));
-                    await push(ref(db, 'logs/contracts'), {
-                        action: `Contract schedule for lot ${key} cancelled`,
-                        date: new Date().toUTCString(),
-                        by: uid
-                    });
-                    await manageContractScheduleui(); // Re-render UI
-                } catch (error) {
-                    alert("Failed to cancel schedule: " + error.message);
-                }
-            });
-        });
-
-        document.querySelectorAll(".confirmSchedule").forEach(button => {
-            button.addEventListener("click", async (event) => {
-                const key = event.target.dataset.key;
-                try {
-                    await update(ref(db, `contractSigningDates/${key}`), { confirmed: true });
-                    await push(ref(db, 'logs/contracts'), {
-                        action: `Contract schedule for lot ${key} confirmed`,
-                        date: new Date().toUTCString(),
-                        by: uid
-                    });
-                    await manageContractScheduleui(); // Re-render UI
-                } catch (error) {
-                    alert("Failed to confirm schedule: " + error.message);
-                }
-            });
-        });
-    } catch (error) {
-        console.error("Error loading contract schedules:", error);
-        alert("Failed to load contract schedules.");
-        rightSec.innerHTML = `<div class="manageContractScheduleBox"><p>No schedules available.</p></div>`;
     }
 }
 
@@ -253,7 +208,6 @@ function addLotui() {
     lotManagementBoxSecBot.innerHTML = `
         <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
         <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
         <button class="back" onclick="backToDashBoard()">Back</button>
     `;
 
@@ -261,28 +215,37 @@ function addLotui() {
         <div class="addLotBox">
             <div class="addLotBox-sec-top">
                 <h1>Add Lot</h1>
+                <button class="addLotBox-header-btn" onclick="addLot()">Confirm ADD LOT</button>
             </div>
-            <div class="addLotBox-sec-bot">
-                <div class="sec-bot-leftSec">
+            <div class="addLotBox-sec-bot addLotBox-cols">
+                <div class="addLotCol">
                     <label for="lotNumber">Lot Number:</label>
-                    <label for="lotDescription">Description:</label>
-                    <label for="lotSize">Lot Size:</label>
-                    <label for="lotPrice">Lot Price:</label>
-                    <label for="lotImages">Lot Images</label>
+                    <input type="text" id="lotNumber" class="lotNumber" value="">
+                    <label for="lotSize">Lot Size (sqm):</label>
+                    <input type="number" id="lotSize" class="lotSize" value="">
+                    <label for="lotImages">Lot Images (URL or text):</label>
+                    <input type="text" id="lotImages" class="lotImages" value="">
                 </div>
-                <div class="sec-bot-rightSec">
-                    <input type="text" id="lotNumber" class="lotNumber">
-                    <input type="text" id="lotDescription" class="lotDescription">
-                    <input type="text" id="lotSize" class="lotSize">
-                    <input type="number" id="lotPrice" class="lotPrice">
-                    <input type="text" id="lotImages" class="lotImages">
+                <div class="addLotCol">
+                    <label for="lotDescription">Description:</label>
+                    <input type="text" id="lotDescription" class="lotDescription" value="">
+                    <label for="lotPrice">Lot Price (₱):</label>
+                    <input type="text" id="lotPrice" class="lotPrice" value="">
+                    <label for="lotStatus">Lot Status:</label>
+                    <select id="lotStatus" class="lotStatus">
+                        <option value="available">Available</option>
+                        <option value="reserved">Reserved</option>
+                        <option value="rented">Rented</option>
+                    </select>
                 </div>
             </div>
-            <footer class="addLotBox-sec-footer">
-                <button onclick="addLot()">Confirm ADD LOT</button>
-            </footer>
         </div>
     `;
+    
+    // Ensure form is cleared when UI is loaded
+    setTimeout(() => {
+        clearAddLotForm();
+    }, 100);
 }
 
 // Function to render Remove Lot UI
@@ -293,7 +256,6 @@ function removeLotui() {
     lotManagementBoxSecBot.innerHTML = `
         <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
         <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
         <button class="back" onclick="backToDashBoard()">Back</button>
     `;
 
@@ -321,7 +283,6 @@ function backToDashBoard() {
     lotManagementBoxSecBot.innerHTML = `
         <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
         <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-        <button class="manageCurrentSchedBtn" onclick="manageContractScheduleui()">Manage Contract Schedule</button>
     `;
 
     rightSec.innerHTML = `
@@ -334,20 +295,24 @@ function backToDashBoard() {
                     <div class="statContainer"><h1 class="statLabel">Number of Lots:</h1><p class="stat">0</p></div>
                 </div>
             </div>
+
             <div class="reservedLotsStat-container">
                 <div class="reservedLotsStat-sec-top">
                     <h1>Reserved Lots</h1>
                 </div>
                 <div class="reservedLotsStat-sec-bot">
-                    <div class="statContainer"><h1 class="statLabel">Number of Reserved Lots:</h1><p class="stat">0</p></div>
+                    <div class="statContainer"><h1 class="statLabel">Number of Lots:</h1><p class="stat">0</p></div>
                 </div>
             </div>
+        </div>
+
+        <div class="right-sec-botContent">
             <div class="rentedLotsStat-container">
                 <div class="rentedLotsStat-sec-top">
                     <h1>Rented Lots</h1>
                 </div>
                 <div class="rentedLotsStat-sec-bot">
-                    <div class="statContainer"><h1 class="statLabel">Number of Rented Lots:</h1><p class="stat">0</p></div>
+                    <div class="statContainer"><h1 class="statLabel">Number of Lots:</h1><p class="stat">0</p></div>
                 </div>
             </div>
         </div>
@@ -357,13 +322,18 @@ function backToDashBoard() {
     toggleDashboard();
 }
 
-// Export functions to be available globally
+// Make functions globally available for onclick handlers
 window.addLot = addLot;
 window.removeLot = removeLot;
-window.manageContractScheduleui = manageContractScheduleui;
 window.addLotui = addLotui;
 window.removeLotui = removeLotui;
 window.backToDashBoard = backToDashBoard;
+window.clearAddLotForm = clearAddLotForm;
 
 // Initialize dashboard on page load
 toggleDashboard();
+
+// Set staff username in navbar
+if (user && user.username && document.querySelector('.userName')) {
+  document.querySelector('.userName').textContent = user.username;
+}

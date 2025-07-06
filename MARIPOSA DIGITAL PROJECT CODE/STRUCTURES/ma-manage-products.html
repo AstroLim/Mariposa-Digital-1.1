@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mariposa Digital</title>
     <link rel="stylesheet" href="../STYLES/ma-manage.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   </head>
   <body>
     <nav class="nav-container">
@@ -72,6 +74,18 @@
         <button id="product-action-cancel" style="margin:0 0.5rem;">Cancel</button>
       </div>
     </div>
+
+    <div id="inventory-modal" class="inventory-modal" style="display:none;">
+      <div class="inventory-modal-content">
+        <span class="inventory-modal-close" id="inventory-modal-close">&times;</span>
+        <h3>All Inventory Items</h3>
+        <div id="inventory-modal-list" class="inventory-modal-list"></div>
+      </div>
+    </div>
+
+    <!-- Hidden dashboard elements for JavaScript compatibility -->
+    <div id="dashboard-calendar" style="display:none;"></div>
+    <div id="view-all-inventory-btn" style="display:none;"></div>
 
     <script src="../dist/ma-manage.bundle.js"></script>
   </body>

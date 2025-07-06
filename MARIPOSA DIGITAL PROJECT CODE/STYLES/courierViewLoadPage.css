@@ -49,7 +49,7 @@ nav > .nav-right-sec {
     margin-right: 2vw;
 }
 
-nav a, nav p {
+nav a, nav p, .userName {
     text-decoration: none;
     color: #660001;
     font-family: "Grenze", serif;

@@ -23,6 +23,7 @@ function loginAccount() {
             if (registeredStaffUsers [i].email === loginEmail && registeredStaffUsers [i].password === loginPassWord) {
                 alert(`Welcome Back Sir ${registeredStaffUsers[i].firstname}`);
                 localStorage.setItem("strLoginAccount", JSON.stringify(registeredStaffUsers[i])); 
+                localStorage.setItem("user", JSON.stringify(registeredStaffUsers[i]));
                 window.location.href = "http://127.0.0.1:5500/STRUCTURES/staffHomePage.html";
                 return;
             }

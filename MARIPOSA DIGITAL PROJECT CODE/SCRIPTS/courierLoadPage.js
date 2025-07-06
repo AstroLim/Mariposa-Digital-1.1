@@ -18,7 +18,15 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-const user = JSON.parse(localStorage.getItem('user'));
+// Set username in navbar with debug logging
+const user = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('strLoginAccount'));
+console.log('Loaded user for navbar:', user);
+const userNameElem = document.querySelector('.userName');
+console.log('Navbar .userName element:', userNameElem);
+if (user && user.username && userNameElem) {
+    userNameElem.textContent = user.username;
+}
+
 const uid = localStorage.getItem('uid');
 
 if (!user || !uid) {
@@ -37,48 +45,62 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     window.location.href = "landingPage.html";
     return;
   }
-  const courierId = firebaseUser.uid;
+  
   const loadsSection = document.getElementById("assigned-loads");
   loadsSection.innerHTML = "<p>Loading assigned loads...</p>";
 
-  // Fetch all orders for all users
-  const ordersSnap = await get(ref(db, "orders"));
-  let assignedOrders = [];
-  if (ordersSnap.exists()) {
-    ordersSnap.forEach(userOrdersSnap => {
-      userOrdersSnap.forEach(orderSnap => {
-        const order = orderSnap.val();
-        if (order.courierId === courierId) {
-          assignedOrders.push({ ...order, clientId: userOrdersSnap.key });
-        }
+  try {
+    // Fetch all orders from Firebase
+    const ordersSnap = await get(ref(db, "orders"));
+    let assignedOrders = [];
+    
+    if (ordersSnap.exists()) {
+      ordersSnap.forEach(userOrdersSnap => {
+        const clientId = userOrdersSnap.key;
+        userOrdersSnap.forEach(orderSnap => {
+          const order = orderSnap.val();
+          // Only include orders assigned to this courier and not completed/delivered
+          if (order.courierId === uid && 
+              order.status && 
+              order.status.toLowerCase() !== 'completed' && 
+              order.status.toLowerCase() !== 'delivered') {
+            assignedOrders.push({ ...order, clientId });
+          }
+        });
       });
+    }
+
+    loadsSection.innerHTML = "";
+    if (assignedOrders.length === 0) {
+      loadsSection.innerHTML = "<p style='color: white; text-align: center; padding: 2rem;'>No assigned loads at the moment.</p>";
+      document.getElementById("load-count").textContent = "0";
+      return;
+    }
+
+    document.getElementById("load-count").textContent = assignedOrders.length;
+
+    assignedOrders.forEach(order => {
+      const div = document.createElement("div");
+      div.className = "order-container";
+      div.innerHTML = `
+        <div class="order-sec-top">
+          <h1>Order #${order.orderId}</h1>
+        </div>
+        <div class="order-sec-bot">
+          <p><strong>Client:</strong> ${order.clientName || "Unknown Client"}</p>
+          <p><strong>Address:</strong> ${order.addressOfClient || "No address"}</p>
+          <p><strong>Status:</strong> ${order.status || "Pending"}</p>
+          <p><strong>ETA:</strong> ${order.eta || "Not set"}</p>
+          <p><strong>Total:</strong> ₱${(order.total || 0).toLocaleString()}</p>
+          <a href="courierManageLoadPage.html?orderId=${order.orderId}&clientId=${order.clientId}">
+            <button class="manage-load-btn">Manage Load</button>
+          </a>
+        </div>
+      `;
+      loadsSection.appendChild(div);
     });
+  } catch (error) {
+    console.error("Error loading assigned loads:", error);
+    loadsSection.innerHTML = "<p style='color: white; text-align: center; padding: 2rem;'>Error loading assigned loads. Please try again.</p>";
   }
-
-  loadsSection.innerHTML = "";
-  if (assignedOrders.length === 0) {
-    loadsSection.innerHTML = "<p>No assigned loads.</p>";
-    return;
-  }
-
-  document.getElementById("load-count").textContent = assignedOrders.length;
-
-  assignedOrders.forEach(order => {
-    const div = document.createElement("div");
-    div.className = "order-container";
-    div.innerHTML = `
-      <div class="order-sec-top">
-        <h1>Order #${order.orderId}</h1>
-      </div>
-      <div class="order-sec-bot">
-        <p>Client Name: ${order.clientName || "Unknown Client"}</p>
-        <p>Client Address: ${order.addressOfClient}</p>
-        <p>Status: ${order.status}</p>
-        <a href="courierManageLoadPage.html?orderId=${order.orderId}&clientId=${order.clientId}">
-          <button class="manage-load-btn">Manage Load</button>
-        </a>
-      </div>
-    `;
-    loadsSection.appendChild(div);
-  });
 });

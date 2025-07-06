@@ -11,3 +11,8 @@ if (!user || !uid) {
   window.location.href = 'landingPage.html';
 }
 
+// Set username in navbar
+if (user && user.username && document.querySelector('.userName')) {
+  document.querySelector('.userName').innerHTML = `<p>${user.username}</p>`;
+}
+

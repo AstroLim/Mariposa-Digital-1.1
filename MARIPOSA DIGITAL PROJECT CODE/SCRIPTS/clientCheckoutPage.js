@@ -77,6 +77,11 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     return;
   }
 
+  // Set username in navbar
+  if (userData && userData.username && document.querySelector('.userName')) {
+    document.querySelector('.userName').innerHTML = `<p>${userData.username}</p>`;
+  }
+
   loadCheckoutCart();
 });
 
@@ -260,9 +265,15 @@ document.getElementById("completeOrderBtn")?.addEventListener("click", async () 
   });
   const total = subtotal + shippingFee;
 
-  // --- Assign a courier ---
+  // --- Assign a courier using alternating pattern ---
   let assignedCourier = null;
   try {
+    // Get courier assignment counter
+    const counterRef = ref(db, "system/courierAssignmentCounter");
+    const counterSnap = await get(counterRef);
+    let currentIndex = counterSnap.exists() ? counterSnap.val().index || 0 : 0;
+    
+    // Get all available couriers
     const usersSnap = await get(ref(db, "users"));
     if (usersSnap.exists()) {
       const users = usersSnap.val();
@@ -270,12 +281,23 @@ document.getElementById("completeOrderBtn")?.addEventListener("click", async () 
       const couriers = Object.entries(users)
         .filter(([id, user]) => user.accessLevel && user.accessLevel.toLowerCase() === "courier")
         .map(([id, user]) => ({ id, ...user }));
+      
       if (couriers.length > 0) {
-        // Randomly assign a courier
-        assignedCourier = couriers[Math.floor(Math.random() * couriers.length)];
+        // Assign courier in alternating pattern
+        assignedCourier = couriers[currentIndex % couriers.length];
+        
+        // Update counter for next assignment
+        const nextIndex = (currentIndex + 1) % couriers.length;
+        await set(counterRef, { index: nextIndex });
+        
+        console.log(`Assigned courier: ${assignedCourier.username} (Index: ${currentIndex}, Total couriers: ${couriers.length})`);
+        console.log(`Courier details:`, assignedCourier);
+      } else {
+        console.log("No couriers found in the system");
       }
     }
   } catch (err) {
+    console.error("Courier assignment error:", err);
     // If courier assignment fails, assignedCourier stays null
   }
 
@@ -283,13 +305,40 @@ document.getElementById("completeOrderBtn")?.addEventListener("click", async () 
   const newOrderRef = push(ref(db, `orders/${uid}`));
   const orderId = newOrderRef.key;
 
+  // Get courier name with fallbacks
+  let courierName = "Not assigned";
+  let courierContact = "N/A";
+  
+  if (assignedCourier) {
+    // Try different name formats
+    courierName = assignedCourier.username || 
+                  (assignedCourier.firstName && assignedCourier.lastName ? 
+                   `${assignedCourier.firstName} ${assignedCourier.lastName}` : 
+                   assignedCourier.firstName || 
+                   assignedCourier.lastName || 
+                   "Courier");
+    
+    // Get contact details with fallbacks
+    courierContact = assignedCourier.phone || 
+                     assignedCourier.mobilenumber || 
+                     assignedCourier.email || 
+                     "N/A";
+  }
+
+  console.log(`Final courier assignment for order ${orderId}:`, {
+    courierId: assignedCourier ? assignedCourier.id : "N/A",
+    courierName: courierName,
+    courierContact: courierContact
+  });
+
   const orderData = {
     status: "Pending",
     clientName: clientName,
     clientId: uid,
     clientContactDetails: user.phone,
     courierId: assignedCourier ? assignedCourier.id : "N/A",
-    courierContactDetails: assignedCourier ? (assignedCourier.phone || assignedCourier.mobilenumber || assignedCourier.email || "N/A") : "N/A",
+    courierName: courierName,
+    courierContactDetails: courierContact,
     addressOfClient: address,
     productDetails: cartItems,
     orderId,

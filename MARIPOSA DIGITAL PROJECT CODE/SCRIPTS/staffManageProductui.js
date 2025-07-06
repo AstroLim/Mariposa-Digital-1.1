@@ -132,17 +132,33 @@ function loadAddProduct() {
             alert("Please fill in all required fields.");
             return;
         }
-        await push(ref(db, "products"), {
-            productName: name,
-            pricePerSack: price,
-            productDescription: desc,
-            productImages: img
-        });
-        alert("Product added!");
-        loadViewProducts();
-        sidebarOptions.forEach(b => b.classList.remove("active"));
-        sidebarOptions[0].classList.add("active");
-        mainHeaderTitle.textContent = "View Products";
+        
+        try {
+            await push(ref(db, "products"), {
+                productName: name,
+                pricePerSack: price,
+                productDescription: desc,
+                productImages: img
+            });
+            
+            // Log the action with staff information
+            await push(ref(db, 'logs/products'), {
+                action: `Product ${name} added by staff member ${user.firstName} ${user.lastName}`,
+                date: new Date().toUTCString(),
+                by: uid,
+                staffName: `${user.firstName} ${user.lastName}`,
+                staffId: uid
+            });
+            
+            alert("Product added!");
+            loadViewProducts();
+            sidebarOptions.forEach(b => b.classList.remove("active"));
+            sidebarOptions[0].classList.add("active");
+            mainHeaderTitle.textContent = "View Products";
+        } catch (error) {
+            console.error("Error adding product:", error);
+            alert("Failed to add product: " + error.message);
+        }
     };
 }
 
@@ -213,17 +229,33 @@ async function loadEditProductForm(prodId) {
         const price = document.getElementById("edit-product-price").value.trim();
         const desc = document.getElementById("edit-product-description").value.trim();
         const img = document.getElementById("edit-product-image").value.trim();
-        await update(prodRef, {
-            productName: name,
-            pricePerSack: price,
-            productDescription: desc,
-            productImages: img
-        });
-        alert("Product updated!");
-        loadViewProducts();
-        sidebarOptions.forEach(b => b.classList.remove("active"));
-        sidebarOptions[0].classList.add("active");
-        mainHeaderTitle.textContent = "View Products";
+        
+        try {
+            await update(prodRef, {
+                productName: name,
+                pricePerSack: price,
+                productDescription: desc,
+                productImages: img
+            });
+            
+            // Log the action with staff information
+            await push(ref(db, 'logs/products'), {
+                action: `Product ${name} edited by staff member ${user.firstName} ${user.lastName}`,
+                date: new Date().toUTCString(),
+                by: uid,
+                staffName: `${user.firstName} ${user.lastName}`,
+                staffId: uid
+            });
+            
+            alert("Product updated!");
+            loadViewProducts();
+            sidebarOptions.forEach(b => b.classList.remove("active"));
+            sidebarOptions[0].classList.add("active");
+            mainHeaderTitle.textContent = "View Products";
+        } catch (error) {
+            console.error("Error updating product:", error);
+            alert("Failed to update product: " + error.message);
+        }
     };
 }
 
@@ -250,12 +282,29 @@ function loadRemoveProduct() {
             alert("Product not found.");
             return;
         }
-        await remove(prodRef);
-        alert("Product removed!");
-        loadViewProducts();
-        sidebarOptions.forEach(b => b.classList.remove("active"));
-        sidebarOptions[0].classList.add("active");
-        mainHeaderTitle.textContent = "View Products";
+        
+        try {
+            const productName = snap.val().productName || prodId;
+            await remove(prodRef);
+            
+            // Log the action with staff information
+            await push(ref(db, 'logs/products'), {
+                action: `Product ${productName} removed by staff member ${user.firstName} ${user.lastName}`,
+                date: new Date().toUTCString(),
+                by: uid,
+                staffName: `${user.firstName} ${user.lastName}`,
+                staffId: uid
+            });
+            
+            alert("Product removed!");
+            loadViewProducts();
+            sidebarOptions.forEach(b => b.classList.remove("active"));
+            sidebarOptions[0].classList.add("active");
+            mainHeaderTitle.textContent = "View Products";
+        } catch (error) {
+            console.error("Error removing product:", error);
+            alert("Failed to remove product: " + error.message);
+        }
     };
 }
 
@@ -266,13 +315,43 @@ window.editProductPrompt = (prodId) => {
     mainHeaderTitle.textContent = "Edit Product";
     loadEditProduct(prodId); // Pass the ID
 };
+
 window.removeProductPrompt = async (prodId) => {
     if (confirm("Are you sure you want to remove this product?")) {
-        await remove(ref(db, `products/${prodId}`));
-        alert("Product removed!");
-        loadViewProducts();
-        sidebarOptions.forEach(b => b.classList.remove("active"));
-        sidebarOptions[0].classList.add("active");
-        mainHeaderTitle.textContent = "View Products";
+        try {
+            const prodRef = ref(db, `products/${prodId}`);
+            const snap = await get(prodRef);
+            if (!snap.exists()) {
+                alert("Product not found.");
+                return;
+            }
+            
+            const productName = snap.val().productName || prodId;
+            await remove(prodRef);
+            
+            // Log the action with staff information
+            await push(ref(db, 'logs/products'), {
+                action: `Product ${productName} removed by staff member ${user.firstName} ${user.lastName}`,
+                date: new Date().toUTCString(),
+                by: uid,
+                staffName: `${user.firstName} ${user.lastName}`,
+                staffId: uid
+            });
+            
+            alert("Product removed!");
+            loadViewProducts();
+            sidebarOptions.forEach(b => b.classList.remove("active"));
+            sidebarOptions[0].classList.add("active");
+            mainHeaderTitle.textContent = "View Products";
+        } catch (error) {
+            console.error("Error removing product:", error);
+            alert("Failed to remove product: " + error.message);
+        }
     }
 };
+
+// Make functions globally available
+window.loadViewProducts = loadViewProducts;
+window.loadAddProduct = loadAddProduct;
+window.loadEditProduct = loadEditProduct;
+window.loadRemoveProduct = loadRemoveProduct;

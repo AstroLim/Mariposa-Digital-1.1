@@ -14,7 +14,15 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-const user = JSON.parse(localStorage.getItem('user'));
+// Set username in navbar with debug logging
+const user = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('strLoginAccount'));
+console.log('Loaded user for navbar:', user);
+const userNameElem = document.querySelector('.userName');
+console.log('Navbar .userName element:', userNameElem);
+if (user && user.username && userNameElem) {
+    userNameElem.textContent = user.username;
+}
+
 const uid = localStorage.getItem('uid');
 
 // Redirect if not logged in or not a courier
@@ -28,11 +36,6 @@ if (!user || !uid) {
   window.location.href = 'landingPage.html';
 }
   
-// Update UI with username
-if (user.username && document.querySelector(".userName")) {
-  document.querySelector(".userName").textContent = user.username;
-}
-
 // Logout function
 function logoutClient() {
   localStorage.removeItem("user");

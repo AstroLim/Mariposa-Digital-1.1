@@ -1,10 +1,12 @@
 // Initializing the currently logged-in user
-let accountLogin = JSON.parse(localStorage.getItem("strLoginAccount"));
+const user = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('strLoginAccount'));
+console.log('Loaded user for navbar:', user);
+const userNameElem = document.querySelector('.userName');
+console.log('Navbar .userName element:', userNameElem);
 
 // Making Client Home Page Username Content Dynamic based on who's logged in
-if (accountLogin) {
-    const accountLoginName = `${accountLogin.username}`;
-    document.querySelector(".userName").innerHTML = `<p>${accountLoginName}</p>`;
+if (user && user.username && userNameElem) {
+    userNameElem.textContent = user.username;
 }
 
 // Logout Function

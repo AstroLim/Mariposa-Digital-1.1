@@ -43,6 +43,11 @@ onAuthStateChanged(auth, async (firebaseUser) => {
     return;
   }
 
+  // Set username in navbar
+  if (userData && userData.username && document.querySelector('.userName')) {
+    document.querySelector('.userName').innerHTML = `<p>${userData.username}</p>`;
+  }
+
   // Load cart
   loadClientCart();
 });

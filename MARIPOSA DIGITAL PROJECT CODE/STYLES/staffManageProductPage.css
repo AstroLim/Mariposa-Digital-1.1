@@ -26,6 +26,11 @@ body {
     padding: 2rem 1.2rem 1.2rem 1.2rem;
     box-shadow: 2px 0 16px rgba(30,41,59,0.08);
     min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
 }
 .sidebar-header {
     display: flex;
@@ -107,6 +112,9 @@ body {
     flex-direction: column;
     background: #f6f7fb;
     min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
 }
 .main-header {
     background: #fff;

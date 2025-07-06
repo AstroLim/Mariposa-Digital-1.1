@@ -39,7 +39,15 @@ nav {
   height: 100%;
   display: flex;
   justify-content: flex-end;
+  gap: 10%;
   align-items: center;
+}
+
+.userName{
+  text-decoration: none;
+  color: #660001;
+  font-family: "Grenze", serif;
+  font-size: 1vw;
 }
 
 .btnA2 {
@@ -49,7 +57,7 @@ nav {
 }
 
 .nav-right-sec-btn {
-  width: 100%;
+  width: 70%;
   height: 100%;
   color: #ffffff;
   background-color: #850D0E;

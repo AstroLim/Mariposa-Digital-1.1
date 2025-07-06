@@ -20,6 +20,8 @@ module.exports = {
 
     'staffManageProductui': './SCRIPTS/staffManageProductui.js',
     'staffEAIPage': './SCRIPTS/staffEAIPage.js',
+    'staffViewShipping': './SCRIPTS/staffViewShipping.js',
+    'staffViewLotPage': './SCRIPTS/staffViewLotPage.js',
 
     'courierViewLoad' : './SCRIPTS/courierLoadPage.js',
     'courierViewLoadPage': './SCRIPTS/courierLoadPage.js',

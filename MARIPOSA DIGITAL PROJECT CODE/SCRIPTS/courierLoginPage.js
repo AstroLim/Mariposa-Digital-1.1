@@ -1,3 +1,12 @@
+// Set username in navbar with debug logging
+const user = JSON.parse(localStorage.getItem('user')) || JSON.parse(localStorage.getItem('strLoginAccount'));
+console.log('Loaded user for navbar:', user);
+const userNameElem = document.querySelector('.userName');
+console.log('Navbar .userName element:', userNameElem);
+if (user && user.username && userNameElem) {
+    userNameElem.textContent = user.username;
+}
+
 let courierUser = {
     courierID:1,
     username:"Vincent Lusung",

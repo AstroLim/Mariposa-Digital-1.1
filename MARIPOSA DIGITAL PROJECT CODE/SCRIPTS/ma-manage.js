@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, updateEmail, updatePassword, deleteUser, sendEmailVerification} from "firebase/auth";
 import { getDatabase, onValue, ref, set, update, get, child, push, remove} from "firebase/database";
-import jsPDF from "jspdf";
+// jsPDF will be loaded from CDN
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -470,6 +470,7 @@ const manageOrderSelectedOpt = (selected) => {
     // Fetch all orders from the database
     get(ref(db, 'orders')).then((snapshot) => {
       snapshot.forEach((userOrdersSnap) => {
+        const userOrders = userOrdersSnap.val();
         userOrdersSnap.forEach((orderSnap) => {
           const order = orderSnap.val();
           // Only show orders that are not completed or delivered
@@ -478,51 +479,50 @@ const manageOrderSelectedOpt = (selected) => {
             order.status.toLowerCase() !== 'completed' &&
             order.status.toLowerCase() !== 'delivered'
           ) {
-            // Build product list HTML from productDetails array
-            let productsHTML = '';
-            if (Array.isArray(order.productDetails)) {
-              productsHTML = order.productDetails.map(item => `
-                <div>
-                  <strong>Product:</strong> ${item.productName || 'N/A'}<br>
-                  <strong>Quantity:</strong> ${item.quantity || 'N/A'}
-                </div>
-              `).join('<hr>');
-            } else {
-              productsHTML = `<div>No products found.</div>`;
-            }
-
             ordersDisplay += `
-              <div class="view-orders-container">
-                <h2 class="view-orders-container-header">Order ID: ${order.orderId || orderSnap.key}</h2>
-                <div class="view-orders-container-info">
-                  <div class="view-orders-container-info-left">
-                    <div class="view-orders-container-info-left-description">
-                      ${productsHTML}
-                      <strong>Customer:</strong> ${order.addressOfClient || 'N/A'}<br>
-                      <strong>Courier Contact:</strong> ${order.courierContactDetails || 'N/A'}<br>
-                      <strong>Paid With:</strong> ${order.paidWith || 'N/A'}<br>
-                      <strong>Shipping Fee:</strong> ${order.shippingFee || 'N/A'}<br>
-                      <strong>Subtotal:</strong> ${order.subtotal || 'N/A'}<br>
-                      <strong>Total:</strong> ${order.total || 'N/A'}<br>
-                      <strong>Status:</strong> ${order.status || 'N/A'}
-                    </div>
-                    <button class="view-orders-container-info-left-button" onclick="prefillUpdateOrder('${order.orderId || orderSnap.key}', '${order.status || ''}')">Update Order</button>
+              <div class="order-card">
+                <div class="order-card-header">
+                  <span class="order-id">Order #${order.orderId || orderSnap.key}</span>
+                  <span class="order-status">
+                    Status:
+                    <span class="order-status-badge" data-status="${order.status || "Pending"}">${order.status || "Pending"}</span>
+                  </span>
+                </div>
+                <div class="order-card-body">
+                  <div class="order-card-row"><span class="label">Client Name:</span> <span>${order.clientName || "Unknown Client"}</span></div>
+                  <div class="order-card-row"><span class="label">Client Contact:</span> <span>${order.clientContactDetails || "No contact provided"}</span></div>
+                  <div class="order-card-row"><span class="label">Client ID:</span> <span>${order.clientId || userOrdersSnap.key}</span></div>
+                  <div class="order-card-row"><span class="label">Courier Name:</span> <span>${order.courierName || "Not assigned"}</span></div>
+                  <div class="order-card-row"><span class="label">Courier Contact:</span> <span>${order.courierContactDetails || "Not assigned"}</span></div>
+                  <div class="order-card-row"><span class="label">Address:</span> <span>${order.addressOfClient || "N/A"}</span></div>
+                  <div class="order-card-row"><span class="label">Paid with:</span> <span>${order.paidWith || "N/A"}</span></div>
+                  <div class="order-card-row"><span class="label">Delivery Option:</span> <span>${order.deliveryOption || "N/A"}</span></div>
+                  <div class="order-card-row"><span class="label">ETA:</span> <span>${order.eta || "N/A"}</span></div>
+                  <div class="order-card-row"><span class="label">Subtotal:</span> <span>₱${(order.subtotal || 0).toLocaleString()}</span></div>
+                  <div class="order-card-row"><span class="label">Shipping:</span> <span>₱${(order.shippingFee || 0).toLocaleString()}</span></div>
+                  <div class="order-card-row"><span class="label">Total:</span> <span>₱${(order.total || 0).toLocaleString()}</span></div>
+                  <div class="order-card-products">
+                    <div class="order-card-products-title">Products:</div>
+                    <ul class="order-card-products-list">
+                      ${(order.productDetails || []).map(prod => `
+                        <li><strong>${prod.productName || "Product"}</strong> (${prod.weight || 0}kg x ${prod.quantity || 1}) - ₱${((prod.pricePerKilo || prod.pricePerSack || 0) * (prod.weight || 0) * (prod.quantity || 1)).toLocaleString()}</li>
+                      `).join("")}
+                    </ul>
                   </div>
-                  <div>
-                    <img src="" alt="order">
-                  </div>
+                </div>
+                <div class="order-card-footer">
+                  <span>Order ID: ${order.orderId || orderSnap.key}</span>
+                  <span>${order.status || "Pending"}</span>
                 </div>
               </div>
             `;
           }
         });
       });
-
-      interfaceElement.innerHTML = `
-        <div class="view-orders">
-          ${ordersDisplay || '<p>No active orders found.</p>'}
-        </div>
-      `;
+      interfaceElement.innerHTML = ordersDisplay;
+    }).catch((error) => {
+      console.error("Error fetching orders:", error);
+      interfaceElement.innerHTML = "<p>Error loading orders.</p>";
     });
   } else if (selected === 'Update Order') {
     interfaceElement.innerHTML = `
@@ -664,6 +664,76 @@ const manageOrderSelectedOpt = (selected) => {
           </div>
         </div>
       `;
+    });
+  } else if (selected === 'Courier Management') {
+    let courierDisplay = '';
+
+    // Fetch courier assignment counter and courier statistics
+    Promise.all([
+      get(ref(db, 'system/courierAssignmentCounter')),
+      get(ref(db, 'users')),
+      get(ref(db, 'orders'))
+    ]).then(([counterSnap, usersSnap, ordersSnap]) => {
+      const counter = counterSnap.exists() ? counterSnap.val() : { index: 0 };
+      const users = usersSnap.exists() ? usersSnap.val() : {};
+      const orders = ordersSnap.exists() ? ordersSnap.val() : {};
+
+      // Get couriers
+      const couriers = Object.entries(users)
+        .filter(([id, user]) => user.accessLevel && user.accessLevel.toLowerCase() === "courier")
+        .map(([id, user]) => ({ id, ...user }));
+
+      // Count orders per courier
+      const courierStats = {};
+      couriers.forEach(courier => {
+        courierStats[courier.id] = { name: courier.username, total: 0, pending: 0, delivered: 0 };
+      });
+
+      // Count orders
+      Object.values(orders).forEach(userOrders => {
+        Object.values(userOrders).forEach(order => {
+          if (order.courierId && courierStats[order.courierId]) {
+            courierStats[order.courierId].total++;
+            if (order.status && order.status.toLowerCase() === 'delivered') {
+              courierStats[order.courierId].delivered++;
+            } else if (order.status && order.status.toLowerCase() !== 'completed') {
+              courierStats[order.courierId].pending++;
+            }
+          }
+        });
+      });
+
+      courierDisplay = `
+        <div class="courier-management-section">
+          <h2>Courier Assignment System</h2>
+          
+          <div class="courier-counter-info">
+            <h3>Current Assignment Counter: ${counter.index}</h3>
+            <p>Next order will be assigned to: ${couriers[counter.index % couriers.length]?.username || 'No couriers available'}</p>
+            <button onclick="resetCourierCounter()" class="reset-counter-btn">Reset Counter to 0</button>
+          </div>
+
+          <div class="courier-stats">
+            <h3>Courier Statistics</h3>
+            <div class="courier-stats-grid">
+              ${couriers.map((courier, index) => `
+                <div class="courier-stat-card">
+                  <h4>${courier.username}</h4>
+                  <p><strong>Total Orders:</strong> ${courierStats[courier.id]?.total || 0}</p>
+                  <p><strong>Pending:</strong> ${courierStats[courier.id]?.pending || 0}</p>
+                  <p><strong>Delivered:</strong> ${courierStats[courier.id]?.delivered || 0}</p>
+                  <p><strong>Next in Rotation:</strong> ${index === (counter.index % couriers.length) ? 'Yes' : 'No'}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      interfaceElement.innerHTML = courierDisplay;
+    }).catch((error) => {
+      console.error("Error fetching courier data:", error);
+      interfaceElement.innerHTML = "<p>Error loading courier management data.</p>";
     });
   }
 }
@@ -1086,7 +1156,7 @@ const downloadAccountLogs = async (event) => {
     return;
   }
 
-  const doc = new jsPDF();
+  const doc = new window.jspdf.jsPDF();
 
   // Theme colors
   const red = [182, 23, 24];
@@ -1467,7 +1537,7 @@ const downloadProductLogs = async (event) => {
     return;
   }
 
-  const doc = new jsPDF();
+  const doc = new window.jspdf.jsPDF();
 
   // Theme colors
   const red = [182, 23, 24];
@@ -2007,7 +2077,7 @@ const downloadLotLogs = async (event) => {
     return;
   }
 
-  const doc = new jsPDF();
+  const doc = new window.jspdf.jsPDF();
 
   // Theme colors
   const red = [182, 23, 24];
@@ -2063,6 +2133,7 @@ const downloadLotLogs = async (event) => {
       if (y + rowHeight > 280) {
         doc.addPage();
         y = 20;
+        // Redraw header on new page
         doc.setFillColor(...green);
         doc.setTextColor(255,255,255);
         doc.roundedRect(10, y-8, 190, 10, 2, 2, 'F');
@@ -2073,7 +2144,7 @@ const downloadLotLogs = async (event) => {
         doc.setFontSize(11);
       }
 
-      y += rowHeight + 3;
+      y += rowHeight + 3; // Add spacing after each row
     });
 
   doc.save(`lot_logs(${month}_${year}).pdf`);
@@ -2381,7 +2452,7 @@ const downloadOrderLogs = async function() {
     return;
   }
 
-  const doc = new jsPDF();
+  const doc = new window.jspdf.jsPDF();
 
   // Theme colors
   const red = [182, 23, 24];
@@ -2526,6 +2597,7 @@ async function fetchAllOrders() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // Only run dashboard functionality on the reports page
   if (!document.querySelector('.dashboard-mainview')) return;
 
   showDashboardSkeletons();
@@ -2925,3 +2997,16 @@ function renderDashboardCalendar() {
 }
 
 // --- End Dashboard Reports Section ---
+
+// Add reset courier counter function
+window.resetCourierCounter = async function() {
+  try {
+    await set(ref(db, 'system/courierAssignmentCounter'), { index: 0 });
+    alert('Courier assignment counter reset to 0');
+    // Refresh the courier management view
+    manageOrderSelectedOpt('Courier Management');
+  } catch (error) {
+    console.error("Error resetting counter:", error);
+    alert('Failed to reset counter: ' + error.message);
+  }
+};

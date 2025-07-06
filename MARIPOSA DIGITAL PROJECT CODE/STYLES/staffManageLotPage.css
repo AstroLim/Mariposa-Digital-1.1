@@ -317,7 +317,7 @@
 }
 
 /* ADD LOT CSS */
-.addLotBox{
+.addLotBox {
     width: 55%;
     height: 90%;
     display: flex;
@@ -325,83 +325,114 @@
     background-color: #B61718;
     border-radius: 32px;
     opacity: 90%;
-    gap: 5%;
+
 }
 
-.addLotBox-sec-top{
+.addLotBox-sec-top {
     width: 100%;
     height: 20%;
     display: flex;
-    align-items: start;
-    justify-content: start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2vw 2vw 1vw 2vw;
+    box-sizing: border-box;
 }
 
-.addLotBox-sec-top > h1{
+.addLotBox-sec-top > h1 {
     color: #FFFFFF;
     font-family: "Grenze", serif;
-    font-size: 2.2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
+    font-size: 2.3vw;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 1px;
 }
 
-.addLotBox-sec-bot{
+.addLotBox-header-btn {
+    width: 13vw;
+    min-width: 140px;
+    height: 2.8vw;
+    min-height: 38px;
+    background: linear-gradient(90deg, #B61718 60%, #660001 100%);
+    border-radius: 24px;
+    color: #fff;
+    font-family: "Grenze", serif;
+    font-size: 1.1vw;
+    font-weight: bold;
+    margin-left: 2vw;
+    border: 3px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+    outline: none;
+    letter-spacing: 0.5px;
+}
+.addLotBox-header-btn:hover, .addLotBox-header-btn:focus {
+    background: linear-gradient(90deg, #a01314 60%, #440000 100%);
+    transform: scale(1.04);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    border-color: #eee;
+}
+
+.addLotBox-sec-bot {
     width: 100%;
-    height: 60%;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2vw;
+    gap: 2vw;
+    flex-wrap: wrap;
 }
 
-.sec-bot-leftSec{
-    width: 50%;
-    height: 100%;
+.addLotCol {
+    flex: 1;
+    min-width: 45%;
     display: flex;
     flex-direction: column;
-    gap: 12%;
+    gap: 0.8vw;
 }
 
-.sec-bot-leftSec > label{
+.addLotCol label {
     color: #FFFFFF;
     font-family: "Grenze", serif;
-    font-size: 1.3vw;  
-    margin-left: 50%;
+    font-size: 1.2vw;
 }
 
-.sec-bot-rightSec{
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 13%;
-}
-
-.sec-bot-rightSec > input{
-    width: 80%;
-    height: 12%;
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 1vw;  
+.addLotCol input,
+.addLotCol select {
+    height: 2.5vw;
+    min-height: 35px;
+    font-size: 1vw;
+    padding: 0.5vw 1vw;
     background-color: #223a23da;
+    border: none;
     border-radius: 22px;
-
+    color: #fff;
+    font-family: "Grenze", serif;
 }
 
-.addLotBox-sec-footer{
+.addLotBox-sec-footer {
     width: 100%;
-    height: 30%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    margin-top: 2vw;
 }
 
-.addLotBox-sec-footer > button{
-    width: 50%;
-    height: 30%;
+.addLotBox-sec-footer > button {
+    width: 40%;
+    height: 3vw;
+    min-height: 40px;
     background-color: #F5F5F5;
     border-radius: 32px;
     color: #000000;
     font-family: "Grenze", serif;
-    font-size: 1vw;
+    font-size: 1.1vw;
 }
+
+/* Remove old left/right section styles for add lot form */
+/* .sec-bot-leftSec, .sec-bot-rightSec { display: none !important; } */
 
 /*Remove LOT CSS */
 .removeLotBox{
@@ -684,4 +715,67 @@
     color: #F5F5F5;
     font-family: "Grenze", serif;
     font-size: 0.7vw;
+}
+
+.addLotBox-sec-bot.addLotBox-cols {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3vw;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0;
+    padding: 2vw 1vw 1vw 1vw;
+}
+
+.addLotCol {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vw;
+    width: 48%;
+    padding: 0.5vw 1vw;
+}
+
+.addLotCol label {
+    color: #FFFFFF;
+    font-family: "Grenze", serif;
+    font-size: 1.1vw;
+    margin-bottom: 0.2vw;
+}
+
+.addLotCol input,
+.addLotCol select {
+    width: 100%;
+    height: 2vw;
+    min-height: 28px;
+    font-size: 1vw;
+    padding-left: 12px;
+    background-color: #223a23da;
+    border-radius: 22px;
+    border: none;
+    color: #fff;
+    margin-bottom: 0.5vw;
+    box-sizing: border-box;
+}
+
+.addLotBox-sec-footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2vw;
+}
+
+.addLotBox-sec-footer > button {
+    width: 50%;
+    height: 3vw;
+    min-height: 40px;
+    background-color: #F5F5F5;
+    border-radius: 32px;
+    color: #000000;
+    font-family: "Grenze", serif;
+    font-size: 1.1vw;
+    margin: 0 auto;
+    display: block;
 }

@@ -31,7 +31,7 @@ body {
     object-fit: contain;
 }
 
-.main-nav a {
+.main-nav a, .nav-right-sec > div > p {
     color: #B61718;
     text-decoration: none;
     font-weight: 500;
@@ -41,7 +41,7 @@ body {
     border-radius: 6px;
 }
 
-.main-nav a:hover {
+.main-nav a:hover, .nav-right-sec > div > p:hover {
     color: #223a23;
     background: #f8f8f8;
 }

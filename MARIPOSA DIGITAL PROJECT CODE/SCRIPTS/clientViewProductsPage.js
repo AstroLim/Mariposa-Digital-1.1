@@ -22,6 +22,19 @@ const db = getDatabase();
 const user = JSON.parse(localStorage.getItem('user'));
 const uid = localStorage.getItem('uid');
 
+// Set username in navbar after DOM is loaded
+window.addEventListener('DOMContentLoaded', () => {
+  const userNameDiv = document.querySelector('.userName');
+  console.log('user from localStorage:', user);
+  if (user) {
+    console.log('user.username:', user.username);
+  }
+  console.log('.userName element found:', !!userNameDiv);
+  if (user && user.username && userNameDiv) {
+    userNameDiv.innerHTML = `<p>${user.username}</p>`;
+  }
+});
+
 if (!user || !uid) {
   document.body.innerHTML = '';
   alert('Please log in to access this page.');

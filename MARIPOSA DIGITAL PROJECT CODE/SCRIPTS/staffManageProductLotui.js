@@ -35,7 +35,7 @@ if (!user || !uid) {
 }
 
 // Display username
-document.querySelector('.nav-user-container div').textContent = `${user.lastName}, ${user.firstName}`;
+document.querySelector('.nav-user-container div').textContent = `${user.username}`;
 
 // Function to update dashboard statistics
 async function updateDashboard() {
@@ -163,10 +163,12 @@ async function addProduct(event) {
 
         const newProductRef = await push(ref(db, 'products'), newProduct);
         await push(ref(db, 'logs/products'), {
-            action: `Product ${productName} added`,
+            action: `Product ${productName} added by staff member ${user.firstName} ${user.lastName}`,
             date: new Date().toUTCString(),
             by: uid,
-            productId: newProductRef.key
+            productId: newProductRef.key,
+            staffName: `${user.firstName} ${user.lastName}`,
+            staffId: uid
         });
 
         alert('Product added successfully');
@@ -269,9 +271,11 @@ async function viewPendingOrders() {
                 try {
                     await update(ref(db, `orders/${key}`), { status: 'Processing' });
                     await push(ref(db, 'logs/orders'), {
-                        action: `Order ${key} confirmed`,
+                        action: `Order ${key} confirmed by staff member ${user.firstName} ${user.lastName}`,
                         date: new Date().toUTCString(),
-                        by: uid
+                        by: uid,
+                        staffName: `${user.firstName} ${user.lastName}`,
+                        staffId: uid
                     });
                     alert('Order confirmed successfully');
                     await viewPendingOrders(); // Refresh orders
@@ -288,9 +292,11 @@ async function viewPendingOrders() {
                 try {
                     await update(ref(db, `orders/${key}`), { status: 'Cancelled' });
                     await push(ref(db, 'logs/orders'), {
-                        action: `Order ${key} cancelled`,
+                        action: `Order ${key} cancelled by staff member ${user.firstName} ${user.lastName}`,
                         date: new Date().toUTCString(),
-                        by: uid
+                        by: uid,
+                        staffName: `${user.firstName} ${user.lastName}`,
+                        staffId: uid
                     });
                     alert('Order cancelled successfully');
                     await viewPendingOrders(); // Refresh orders
