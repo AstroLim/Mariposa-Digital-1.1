@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../STYLES/clientViewReservedLots.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Grenze:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jua&family=Noto+Serif+Hentaigana:wght@200..900&display=swap" rel="stylesheet">
     <script src="../dist/clientViewReservedLots.bundle.js" defer></script>
 </head>
 <body>
@@ -22,19 +22,57 @@
         </div>
         <div class="navbar-right">
             <a href="clientCartPage.html" class="navbar-link">Cart</a>
-            <span class="navbar-user userName">Lim, Evan Vincent B.</span>
+            <span class="navbar-user userName"></span>
             <a href="clientEAIPage.html" class="navbar-link">Settings</a>
         </div>
     </nav>
-
     <header class="page-header">
         <div class="client-lots-tabs">
             <button id="tab-reserved" class="client-lots-tab active">Reserved Lots</button>
             <button id="tab-owned" class="client-lots-tab">Owned Lots</button>
+            <button id="tab-payments" class="client-lots-tab">Payments</button>
         </div>
     </header>
-    <main class="lots-grid" id="lots-list">
-    <!-- Reserved lot cards will be injected here by JS -->
+    <main>
+        <div id="lots-list"></div>
     </main>
+    <!-- Payment Modal -->
+    <!-- Payment Modal for Full Lot Price -->
+    <div id="payment-modal" class="modal" style="display:none;">
+        <div class="modal-content payment-modal-modern">
+            <button type="button" id="close-payment-modal" class="modal-close-btn" aria-label="Close">&times;</button>
+            <div class="payment-modal-header">
+            <img src="../RESOURCES/imgFiles/Logo.png" alt="Logo" class="payment-modal-logo">
+            <h2>Pay Full Lot Price</h2>
+            <p class="payment-modal-desc">Complete your payment securely to reserve your lot.</p>
+            </div>
+            <div class="payment-modal-body">
+            <div class="payment-modal-amount">
+                <span class="payment-modal-amount-label">Amount Due</span>
+                <span id="payment-fee-display" class="payment-modal-amount-value"></span>
+            </div>
+            <div class="payment-methods-modern">
+                <button type="button" class="payment-method-btn" data-method="gcash">
+                <img src="../RESOURCES/imgFiles/gcash.png" alt="GCash" class="payment-icon-modern">
+                <span>GCash</span>
+                </button>
+                <button type="button" class="payment-method-btn" data-method="debitcard">
+                <img src="../RESOURCES/imgFiles/debitcard.png" alt="Debit Card" class="payment-icon-modern">
+                <span>Debit Card</span>
+                </button>
+            </div>
+            <div id="selected-method-summary" class="selected-method-summary" style="display:none;">
+                <span>Selected:</span> <span id="selected-method-label"></span>
+            </div>
+            <button id="submit-payment-btn" class="modal-next-btn-modern" disabled>
+                <span class="pay-btn-text">Submit Payment</span>
+            </button>
+            <p class="payment-modal-note">
+                <span class="payment-modal-lock">&#128274;</span>
+                Your payment is secure and will be reviewed by our staff.
+            </p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

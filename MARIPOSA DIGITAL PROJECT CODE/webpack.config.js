@@ -26,6 +26,8 @@ module.exports = {
     'courierViewLoad' : './SCRIPTS/courierLoadPage.js',
     'courierViewLoadPage': './SCRIPTS/courierLoadPage.js',
     'courierManageLoadPage': './SCRIPTS/courierManageLoadPage.js',
+
+    'test' : './test/test.js',
   },
   // Output configuration
   output: {

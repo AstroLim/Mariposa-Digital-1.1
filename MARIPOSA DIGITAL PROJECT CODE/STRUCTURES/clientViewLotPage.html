@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head>  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client View Lot Page</title>
@@ -10,12 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jua&family=Noto+Serif+Hentaigana:wght@200..900&display=swap" rel="stylesheet">
     <script src="../dist/clientViewLotPage.bundle.js" defer></script> 
 </head>
-</head>
 <body>
     <div class="Main-Container">
-        <!-- VIEWPORT-1 CODE -->
         <div class="ViewPort-1">
-            <!-- VIEWPORT-1 | Nav-->
             <nav class="ViewPort-1-nav">
                 <div class="nav-left-sec">
                     <a href="clientHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
@@ -23,83 +20,75 @@
                     <a href="clientViewReservedLots.html" class="lotsA3">Your Lots</a>
                     <a href="clientViewOrders.html" class="ordersA4">Your Orders</a>
                 </div>
-
                 <div class="nav-right-sec">
                     <a href="clientCartPage.html" class="cartA6">Cart</a>
                     <div class="userName"></div>
                     <a href="clientEAIPage.html" class="settingsA7">Settings</a>
                 </div>
             </nav>
-
-            <!-- VIEWPORT-1 | MainSection-->
-             
             <section class="MainSection">
                 <header class="MainSection-header">
                     <div class="header-box">
                         <h1 class="header-box-content1">Rentable Lots</h1>
                     </div>
                 </header>
-
                 <main class="lots-main">
                     <div id="lots-list"></div>
                 </main>
-
-                <!-- Modal for contract date -->
+                <!-- Reservation Modal -->
                 <div id="contract-modal" class="modal">
-                    <div class="modal-content">
+                    <div class="modal-content" style="position:relative;">
+                        <!-- Floating Close Button -->
+                        <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
                         <!-- Step 1: Terms -->
                         <div id="modal-step-1" class="modal-step">
-                        <h2>Terms and Agreement</h2>
-                        <div id="terms-scrollbox" class="terms-scrollbox">
-                            <!-- ... your terms here ... -->
-                            <ol>
-                            <li>
-                                <strong>Reservation Fee:</strong> The reservation fee is refundable, but a penalty charge of 10% will be deducted from the fee if you cancel your reservation.
-                            </li>
-                            <li>
-                                <strong>Reservation Period:</strong> The lot will be reserved for you for a period of 30 days from the date of reservation. Failure to complete the contract signing within this period may result in cancellation of your reservation and a penalty charge.
-                            </li>
-                            <li>
-                                <strong>Contract Signing:</strong> You agree to appear on the selected contract signing date to finalize the purchase and sign all necessary documents.
-                            </li>
-                            <li>
-                                <strong>Non-Transferable:</strong> The reservation is strictly non-transferable without written consent from Mariposa Digital.
-                            </li>
-                            <li>
-                                <strong>Refunds:</strong> If you cancel your reservation, 90% of the reservation fee will be refunded to you. The remaining 10% will be retained as a penalty charge.
-                            </li>
-                            <li>
-                                <strong>Compliance:</strong> You agree to comply with all community rules and regulations as set forth by Mariposa Digital.
-                            </li>
-                            </ol>
-                            <p>
-                            By proceeding, you acknowledge that you have read, understood, and agreed to the terms and conditions stated above.
-                            </p>
+                            <h2>Terms and Agreement</h2>
+                            <div id="terms-scrollbox" class="terms-scrollbox">
+                                <ol>
+                                    <li><strong>Reservation Fee:</strong> The reservation fee is refundable, but a penalty charge of 10% will be deducted if you cancel.</li>
+                                    <li><strong>Reservation Period:</strong> The lot will be reserved for 30 days. Failure to complete the contract signing may result in cancellation and penalty.</li>
+                                    <li><strong>Contract Signing:</strong> You agree to appear on the selected contract signing date to finalize the purchase.</li>
+                                    <li><strong>Non-Transferable:</strong> The reservation is non-transferable without written consent.</li>
+                                    <li><strong>Refunds:</strong> If you cancel, 90% of the fee will be refunded. 10% is retained as penalty.</li>
+                                    <li><strong>Compliance:</strong> You agree to comply with all community rules and regulations.</li>
+                                </ol>
+                                <p>By proceeding, you acknowledge that you have read, understood, and agreed to the terms above.</p>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <input type="checkbox" id="accept-terms-checkbox">
+                                <label for="accept-terms-checkbox">I accept the terms and agreement</label>
+                            </div>
+                            <button id="next-to-contract-date" class="modal-next-btn" disabled>Next</button>
                         </div>
-                        <div style="margin: 1rem 0;">
-                            <input type="checkbox" id="accept-terms-checkbox">
-                            <label for="accept-terms-checkbox">I accept the terms and agreement</label>
-                        </div>
-                        <button id="next-to-payment" class="modal-next-btn" disabled>Next</button>
-                        </div>
-                        <!-- Step 2: Payment -->
+                        <!-- Step 2: Contract Date -->
                         <div id="modal-step-2" class="modal-step" style="display:none;">
-                        <h2>Reservation Fee Payment</h2>
-                        <div id="reservation-fee-display" style="margin-bottom:1rem;font-weight:bold;"></div>
-                        <select id="reservation-payment-method" required>
-                            <option value="" disabled selected>Select payment method</option>
-                            <option value="gcash">GCash</option>
-                            <option value="debitcard">Debit Card</option>
-                        </select>
-                        <button id="next-to-date" class="modal-next-btn" disabled>Next</button>
+                            <h2>Contract Signing Date</h2>
+                            <input type="date" id="contract-date" required>
+                            <button id="next-to-payment" class="modal-next-btn">Next</button>
                         </div>
-                        <!-- Step 3: Contract Date -->
+                        <!-- Step 3: Payment -->
                         <div id="modal-step-3" class="modal-step" style="display:none;">
-                        <h2>Contract Signing Date</h2>
-                        <input type="date" id="contract-date" required>
-                        <button id="confirm-contract-btn" class="modal-next-btn">Confirm Reservation</button>
+                            <h2>Reservation Fee Payment</h2>
+                            <div id="reservation-fee-display" class="reservation-fee-display"></div>
+                            <div class="payment-methods-modern">
+                                <button type="button" class="payment-method-btn-modern" data-method="gcash">
+                                    <span class="payment-icon-modern-wrap">
+                                        <img src="../RESOURCES/imgFiles/gcash.png" alt="GCash" class="payment-icon-modern">
+                                    </span>
+                                    <span class="payment-method-label-main">GCash</span>
+                                </button>
+                                <button type="button" class="payment-method-btn-modern" data-method="debitcard">
+                                    <span class="payment-icon-modern-wrap">
+                                        <img src="../RESOURCES/imgFiles/debitcard.png" alt="Debit Card" class="payment-icon-modern">
+                                    </span>
+                                    <span class="payment-method-label-main">Debit Card</span>
+                                </button>
+                            </div>
+                            <div id="selected-method-summary" class="selected-method-summary" style="display:none;">
+                                <span>Selected:</span> <span id="selected-method-label"></span>
+                            </div>
+                            <button id="confirm-payment-btn" class="modal-next-btn-modern" disabled>Confirm & Reserve</button>
                         </div>
-                        <button id="close-modal" class="modal-close-btn">Close</button>
                     </div>
                 </div>
             </section>
