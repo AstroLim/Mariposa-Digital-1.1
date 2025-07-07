@@ -193,6 +193,49 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.address-input').forEach(input => input.addEventListener('input', checkOrderRequirements));
   document.querySelectorAll('.pmc-sec-bot button[data-method]').forEach(btn => btn.addEventListener('click', checkOrderRequirements));
   checkOrderRequirements();
+  const provinceSelect = document.getElementById('province-select');
+  const deliveryOptionElem = document.getElementById('delivery-option');
+
+  function updateShippingAndEta() {
+    const province = provinceSelect ? provinceSelect.value : "";
+    const deliveryOption = deliveryOptionElem ? deliveryOptionElem.value : "";
+    if (!province || !deliveryOption) {
+      document.getElementById('eta-display').textContent = "";
+      return;
+    }
+
+    const region = getRegionByProvince(province);
+    const { fee, eta } = getShippingAndEta(region, deliveryOption);
+    shippingFee = fee;
+
+    // Update summary
+    let subtotal = 0;
+    cartItems.forEach(item => {
+      subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
+    });
+    const total = subtotal + shippingFee;
+
+    document.getElementById('summary-shipping').textContent = `₱${shippingFee.toLocaleString()}`;
+    document.getElementById('summary-total').textContent = `₱${total.toLocaleString()}`;
+
+    // --- ETA Display ---
+    const etaDisplay = document.getElementById('eta-display');
+    if (etaDisplay) {
+      if (deliveryOption === "pickup") {
+        etaDisplay.textContent = "ETA: Ready for pickup today";
+      } else if (eta > 0) {
+        etaDisplay.textContent = `ETA: ${eta} day${eta > 1 ? "s" : ""} after confirmation`;
+      } else {
+        etaDisplay.textContent = "";
+      }
+    }
+
+  checkOrderRequirements();
+}
+
+  // Listen for changes
+  provinceSelect?.addEventListener('change', updateShippingAndEta);
+  deliveryOptionElem?.addEventListener('change', updateShippingAndEta);
 });
 
 // --- Complete Order Handler ---
@@ -236,20 +279,20 @@ document.getElementById("completeOrderBtn")?.addEventListener("click", async () 
     return;
   }
 
-  // ETA Calculation
-  let eta = "";
-  const now = new Date();
-  if (deliveryOption === "standard") {
-    const etaDate = new Date(now);
-    etaDate.setDate(now.getDate() + 4); // average 4 days
-    eta = etaDate.toLocaleDateString();
-  } else if (deliveryOption === "express") {
-    const etaDate = new Date(now);
-    etaDate.setDate(now.getDate() + 1); // average 1 day
-    eta = etaDate.toLocaleDateString();
-  } else if (deliveryOption === "pickup") {
-    eta = now.toLocaleDateString();
-  }
+  // ETA Calculation based on province and delivery option
+    const province = provinceSelect ? provinceSelect.value : "";
+    const region = getRegionByProvince(province);
+    const { eta: etaDays } = getShippingAndEta(region, deliveryOption);
+
+    let eta = "";
+    const now = new Date();
+    if (etaDays > 0) {
+      const etaDate = new Date(now);
+      etaDate.setDate(now.getDate() + etaDays);
+      eta = etaDate.toLocaleDateString();
+    } else {
+      eta = now.toLocaleDateString();
+    }
 
   // Gather address and cart info
   const address = Array.from(document.querySelectorAll('.address-input')).map(input => input.value).join(", ");
@@ -406,3 +449,43 @@ document.getElementById("completeOrderBtn")?.addEventListener("click", async () 
     alert("Order failed: " + e.message);
   }
 });
+
+function getRegionByProvince(province) {
+  // Luzon
+  const luzon = [
+    "Abra","Apayao","Aurora","Bataan","Batanes","Batangas","Benguet","Bulacan","Cagayan","Camarines Norte","Camarines Sur","Catanduanes","Cavite","Ifugao","Ilocos Norte","Ilocos Sur","Isabela","Kalinga","La Union","Laguna","Mountain Province","Nueva Ecija","Nueva Vizcaya","Occidental Mindoro","Oriental Mindoro","Pampanga","Pangasinan","Quezon","Quirino","Rizal","Romblon","Sorsogon","Tarlac","Zambales","Metro Manila"
+  ];
+  // Visayas
+  const visayas = [
+    "Aklan","Antique","Biliran","Bohol","Capiz","Cebu","Eastern Samar","Guimaras","Iloilo","Leyte","Negros Occidental","Negros Oriental","Northern Samar","Samar","Siquijor","Southern Leyte","Western Samar"
+  ];
+  // Mindanao
+  const mindanao = [
+    "Agusan del Norte","Agusan del Sur","Basilan","Bukidnon","Camiguin","Compostela Valley","Cotabato","Davao de Oro","Davao del Norte","Davao del Sur","Davao Occidental","Davao Oriental","Dinagat Islands","Lanao del Norte","Lanao del Sur","Maguindanao","Misamis Occidental","Misamis Oriental","North Cotabato","Sarangani","South Cotabato","Sultan Kudarat","Sulu","Surigao del Norte","Surigao del Sur","Tawi-Tawi","Zamboanga del Norte","Zamboanga del Sur","Zamboanga Sibugay"
+  ];
+  if (luzon.includes(province)) return "Luzon";
+  if (visayas.includes(province)) return "Visayas";
+  if (mindanao.includes(province)) return "Mindanao";
+  return "Other";
+}
+
+function getShippingAndEta(region, deliveryOption) {
+  // You can adjust these values as needed
+  if (region === "Luzon") {
+    if (deliveryOption === "standard") return { fee: 80, eta: 3 };
+    if (deliveryOption === "express") return { fee: 150, eta: 1 };
+    if (deliveryOption === "pickup") return { fee: 0, eta: 0 };
+  }
+  if (region === "Visayas") {
+    if (deliveryOption === "standard") return { fee: 120, eta: 5 };
+    if (deliveryOption === "express") return { fee: 200, eta: 2 };
+    if (deliveryOption === "pickup") return { fee: 0, eta: 0 };
+  }
+  if (region === "Mindanao") {
+    if (deliveryOption === "standard") return { fee: 180, eta: 7 };
+    if (deliveryOption === "express") return { fee: 250, eta: 3 };
+    if (deliveryOption === "pickup") return { fee: 0, eta: 0 };
+  }
+  // Default fallback
+  return { fee: 200, eta: 7 };
+}
