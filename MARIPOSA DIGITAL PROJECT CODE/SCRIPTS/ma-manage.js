@@ -480,46 +480,47 @@ const manageOrderSelectedOpt = (selected) => {
             order.status.toLowerCase() !== 'delivered'
           ) {
             ordersDisplay += `
-              <div class="order-card">
-                <div class="order-card-header">
-                  <span class="order-id">Order #${order.orderId || orderSnap.key}</span>
-                  <span class="order-status">
-                    Status:
-                    <span class="order-status-badge" data-status="${order.status || "Pending"}">${order.status || "Pending"}</span>
-                  </span>
+              <div class="view-orders-container">
+                <div class="view-orders-container-header">
+                  Order #${order.orderId || orderSnap.key}
                 </div>
-                <div class="order-card-body">
-                  <div class="order-card-row"><span class="label">Client Name:</span> <span>${order.clientName || "Unknown Client"}</span></div>
-                  <div class="order-card-row"><span class="label">Client Contact:</span> <span>${order.clientContactDetails || "No contact provided"}</span></div>
-                  <div class="order-card-row"><span class="label">Client ID:</span> <span>${order.clientId || userOrdersSnap.key}</span></div>
-                  <div class="order-card-row"><span class="label">Courier Name:</span> <span>${order.courierName || "Not assigned"}</span></div>
-                  <div class="order-card-row"><span class="label">Courier Contact:</span> <span>${order.courierContactDetails || "Not assigned"}</span></div>
-                  <div class="order-card-row"><span class="label">Address:</span> <span>${order.addressOfClient || "N/A"}</span></div>
-                  <div class="order-card-row"><span class="label">Paid with:</span> <span>${order.paidWith || "N/A"}</span></div>
-                  <div class="order-card-row"><span class="label">Delivery Option:</span> <span>${order.deliveryOption || "N/A"}</span></div>
-                  <div class="order-card-row"><span class="label">ETA:</span> <span>${order.eta || "N/A"}</span></div>
-                  <div class="order-card-row"><span class="label">Subtotal:</span> <span>₱${(order.subtotal || 0).toLocaleString()}</span></div>
-                  <div class="order-card-row"><span class="label">Shipping:</span> <span>₱${(order.shippingFee || 0).toLocaleString()}</span></div>
-                  <div class="order-card-row"><span class="label">Total:</span> <span>₱${(order.total || 0).toLocaleString()}</span></div>
-                  <div class="order-card-products">
-                    <div class="order-card-products-title">Products:</div>
-                    <ul class="order-card-products-list">
-                      ${(order.productDetails || []).map(prod => `
-                        <li><strong>${prod.productName || "Product"}</strong> (${prod.weight || 0}kg x ${prod.quantity || 1}) - ₱${((prod.pricePerKilo || prod.pricePerSack || 0) * (prod.weight || 0) * (prod.quantity || 1)).toLocaleString()}</li>
-                      `).join("")}
-                    </ul>
+                <div class="view-orders-container-info">
+                  <div class="view-orders-container-info-left">
+                    <div><strong>Client Name:</strong> ${order.clientName || "Unknown Client"}</div>
+                    <div><strong>Client Contact:</strong> ${order.clientContactDetails || "No contact provided"}</div>
+                    <div><strong>Client ID:</strong> ${order.clientId || userOrdersSnap.key}</div>
+                    <div><strong>Courier Name:</strong> ${order.courierName || "Not assigned"}</div>
+                    <div><strong>Courier Contact:</strong> ${order.courierContactDetails || "Not assigned"}</div>
+                    <div><strong>Address:</strong> ${order.addressOfClient || "N/A"}</div>
+                    <div><strong>Paid with:</strong> ${order.paidWith || "N/A"}</div>
+                    <div><strong>Delivery Option:</strong> ${order.deliveryOption || "N/A"}</div>
+                    <div><strong>ETA:</strong> ${order.eta || "N/A"}</div>
+                    <div><strong>Subtotal:</strong> ₱${(order.subtotal || 0).toLocaleString()}</div>
+                    <div><strong>Shipping:</strong> ₱${(order.shippingFee || 0).toLocaleString()}</div>
+                    <div><strong>Total:</strong> ₱${(order.total || 0).toLocaleString()}</div>
+                    <div class="view-orders-container-info-left-description">
+                      <strong>Products:</strong>
+                      <ul>
+                        ${(order.productDetails || []).map(prod => `
+                          <li><strong>${prod.productName || "Product"}</strong> (${prod.weight || 0}kg x ${prod.quantity || 1}) - ₱${((prod.pricePerKilo || prod.pricePerSack || 0) * (prod.weight || 0) * (prod.quantity || 1)).toLocaleString()}</li>
+                        `).join("")}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <div class="order-card-footer">
-                  <span>Order ID: ${order.orderId || orderSnap.key}</span>
-                  <span>${order.status || "Pending"}</span>
+                <div class="view-orders-container-actions">
+                  <span class="order-status-badge">${order.status || "Pending"}</span>
                 </div>
               </div>
             `;
           }
         });
       });
-      interfaceElement.innerHTML = ordersDisplay;
+      interfaceElement.innerHTML = `
+        <div class="view-orders">
+          ${ordersDisplay}
+        </div>
+      `;
     }).catch((error) => {
       console.error("Error fetching orders:", error);
       interfaceElement.innerHTML = "<p>Error loading orders.</p>";
