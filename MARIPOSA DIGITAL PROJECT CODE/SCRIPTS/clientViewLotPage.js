@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref as realRef, get, push, update, set } from "firebase/database";
+import emailjs from "@emailjs/browser";
+
+emailjs.init("jPowbOSrYKngXnPVD"); // Use your public key here
 
 // Firebase config
 const firebaseConfig = {
@@ -280,11 +283,30 @@ document.addEventListener('DOMContentLoaded', function() {
       await set(paymentDbRef, paymentDetails);
 
       const reserveRef = realRef(db, 'reserveLots');
-      await push(reserveRef, reservation);
-
-      // Update lot status to 'reserved'
       const lotRef = realRef(db, `lots/${selectedLot.lotKey}`);
+
+      // Write both records
+      await set(paymentDbRef, paymentDetails);
+      await push(reserveRef, reservation);
       await update(lotRef, { status: "reserved", reservedBy: uid });
+
+      // --- Send EmailJS notification ---
+      emailjs.send("service_4hc3h0c", "template_9kcskto", {
+        to_email: user.email,
+        to_name: user.username,
+        reference_number: paymentDetails.referenceNumber,
+        amount: paymentDetails.amount,
+        lot_number: paymentDetails.lotNumber,
+        lot_description: paymentDetails.lotDescription,
+        payment_method: paymentDetails.paymentMethod,
+        contract_signing_date: paymentDetails.contractSigningDate,
+        description: "Thank you for your payment! Here are your transaction details:",
+        subject: "Payment Received"
+      }).then(function(response) {
+        console.log("Reservation payment email sent!", response.status, response.text);
+      }, function(error) {
+        console.error("Reservation payment email failed:", error);
+      });
 
       alert(`Payment successful! Reference Number: ${refNum}`);
       modal.style.display = 'none';

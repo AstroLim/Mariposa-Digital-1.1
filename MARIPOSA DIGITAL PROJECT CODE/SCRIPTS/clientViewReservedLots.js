@@ -1,5 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, query, orderByChild, equalTo, remove, set, update } from "firebase/database";
+import emailjs from "@emailjs/browser";
+
+emailjs.init("jPowbOSrYKngXnPVD"); // Use your public key here
 
 // Firebase config
 const firebaseConfig = {
@@ -147,6 +150,7 @@ async function loadClientReservedLots() {
         originalAmount = Number(fullPayment.amount) || 0;
         refundAmount = Math.round(originalAmount * 0.9);
         refundType = "full";
+         await update(ref(db, `payments/lots/${uid}/${fullPayment.referenceNumber}`), { status: "refunded" });
       } else if (lot && lot.reservationFee && !isNaN(Number(lot.reservationFee))) {
         originalAmount = Number(lot.reservationFee);
         refundAmount = Math.round(originalAmount * 0.9);
@@ -172,6 +176,25 @@ async function loadClientReservedLots() {
           paymentType: refundType
         };
         await set(ref(db, `payments/lots/${uid}/${refundRefNum}`), refundDetails);
+
+        // After refund is recorded in the database
+        emailjs.send("service_4hc3h0c", "template_9kcskto", {
+          to_email: user.email,
+          to_name: user.username,
+          reference_number: refundRefNum, // or the variable you use for the refund reference
+          amount: refundAmount, // negative or positive, as you prefer to show in the email
+          lot_number: lot.lotNumber,
+          lot_description: lot.lotDescription,
+          payment_method: "Refund",
+          contract_signing_date: lot.contractSigningDate || "",
+          description: "Your reservation has been canceled and a refund has been processed.",
+          subject: "Refund Success"
+          // Optionally, add a feedback_link or other fields if your template supports it
+        }).then(function(response) {
+          console.log("Refund email sent!", response.status, response.text);
+        }, function(error) {
+          console.error("Refund email failed:", error);
+        });
       }
 
       // Optionally, update the lot's status back to available
@@ -276,6 +299,23 @@ function showPaymentMethodModal(lot) {
       // Save to database
       const paymentDbRef = ref(db, `payments/lots/${uid}/${refNum}`);
       await set(paymentDbRef, paymentDetails);
+
+      emailjs.send("service_4hc3h0c", "template_9kcskto", {
+        to_email: user.email,
+        to_name: user.username,
+        reference_number: paymentDetails.referenceNumber,
+        amount: paymentDetails.amount,
+        lot_number: paymentDetails.lotNumber,
+        lot_description: paymentDetails.lotDescription,
+        payment_method: paymentDetails.paymentMethod,
+        contract_signing_date: paymentDetails.contractSigningDate,
+        description: "Thank you for your payment! Here are your transaction details:",
+        subject: "Payment Received"
+      }).then(function(response) {
+        console.log("Payment email sent!", response.status, response.text);
+      }, function(error) {
+        console.error("Payment email failed:", error);
+      });
 
       alert(`Full payment submitted! Reference Number: ${refNum}\nYour payment will be reviewed by staff.`);
       modal.style.display = "none";
