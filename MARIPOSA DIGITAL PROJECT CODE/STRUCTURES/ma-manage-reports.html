@@ -184,6 +184,85 @@
           </div>
           <canvas id="topProductsChart"></canvas>
         </div>
+        <!-- Monthly Payment Monitoring -->
+        <div class="dashboard-visual dashboard-visual-large" style="position:relative;">
+          <div class="dashboard-visual-title">
+            Monthly Payment Monitoring
+          </div>
+          <div class="chart-loading" id="monthlyPaymentMonitoring-loading">
+            <div class="skeleton-linechart"></div>
+          </div>
+          <canvas id="monthlyPaymentMonitoringChart"></canvas>
+        </div>
+
+        <!-- Monthly Payment Reports -->
+        <div class="dashboard-visual dashboard-visual-large" style="position:relative;">
+          <div class="dashboard-visual-title">
+            Monthly Payment Reports
+          </div>
+          <div class="chart-loading" id="monthlyPaymentReports-loading">
+            <div class="skeleton-barchart">
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+              <div class="skeleton-bar"></div>
+            </div>
+          </div>
+          <canvas id="monthlyPaymentReportsChart"></canvas>
+        </div>
+
+        <!-- Loyal Users Report -->
+        <div class="dashboard-visual dashboard-visual-small" style="position:relative;">
+          <div class="dashboard-visual-title">
+            Loyal Users
+          </div>
+          <div class="chart-loading" id="loyalUsersChart-loading">
+            <div class="skeleton-piechart"></div>
+          </div>
+          <canvas id="loyalUsersChart"></canvas>
+        </div>
+        <!-- Top Users by Loyalty Points -->
+        <div class="dashboard-visual dashboard-visual-small" style="position:relative;">
+          <div class="dashboard-visual-title">
+            Top Loyal Users
+          </div>
+          <div id="topLoyalUsersPreview" class="loyal-users-table-preview">
+            <div class="skeleton"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-visual dashboard-visual-large" style="position:relative;">
+          <div class="dashboard-visual-title">
+            All Payments
+          </div>
+          <div id="paymentsPreview" class="payments-table-preview">
+            <div class="skeleton"></div>
+          </div>
+          <button id="view-all-payments-btn" class="inventory-viewall-btn" style="margin-bottom:12px;">View All Payments</button>
+        </div>
+
+        <!-- Payments Modal -->
+        <div id="payments-modal" class="inventory-modal" style="display:none;">
+          <div class="inventory-modal-content" style="max-width:900px;">
+            <span class="inventory-modal-close" id="payments-modal-close">&times;</span>
+            <h2>All Payments</h2>
+            <div style="margin-bottom:12px;">
+              <input id="payments-filter-user" type="text" placeholder="Filter by user..." style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;margin-right:8px;">
+              <input id="payments-filter-ref" type="text" placeholder="Filter by ref #" style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;margin-right:8px;">
+              <select id="payments-filter-method" style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;">
+                <option value="">All Methods/Status</option>
+                <option value="GCash">GCash</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="Reservation">Reservation</option>
+                <option value="Refund">Refund</option>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+              </select>
+            </div>
+            <div id="payments-modal-list" class="inventory-modal-list" style="max-height:60vh;overflow-y:auto;"></div>
+          </div>
+        </div>
       </section>
     </div>
   </main>

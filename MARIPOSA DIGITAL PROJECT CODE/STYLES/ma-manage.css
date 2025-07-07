@@ -2344,6 +2344,138 @@ body {
   margin-top: 0.7rem;
 }
 
+/* Developer badge for dashboard cards */
+.dashboard-dev-badge {
+  display: inline-block;
+  background: #2D5F4D;
+  color: #fff;
+  font-size: 0.85em;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 2px 10px;
+  margin-left: 12px;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+  box-shadow: 0 1px 4px rgba(45,95,77,0.08);
+}
+
+.loyal-users-table-preview, .payments-table-preview {
+  width: 100%;
+  margin: 0 auto;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(45,95,77,0.04);
+  padding: 10px 0;
+  min-height: 80px;
+  overflow-x: auto;
+}
+.loyal-users-table-preview table, .payments-table-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1em;
+}
+.loyal-users-table-preview th, .loyal-users-table-preview td,
+.payments-table-preview th, .payments-table-preview td {
+  padding: 7px 12px;
+  text-align: left;
+}
+.loyal-users-table-preview th, .payments-table-preview th {
+  background: #2D5F4D;
+  color: #fff;
+  font-weight: 600;
+}
+.loyal-users-table-preview tr:nth-child(even), .payments-table-preview tr:nth-child(even) {
+  background: #f3f3f3;
+}
+.loyal-users-table-preview tr:hover, .payments-table-preview tr:hover {
+  background: #e9f7ef;
+}
+
+/* Modern All Payments Modal Table */
+#payments-modal-list table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 1.08em;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(182,23,24,0.07);
+}
+#payments-modal-list th, #payments-modal-list td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #f3f3f3;
+}
+#payments-modal-list th {
+  background: #2D5F4D;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05em;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+#payments-modal-list tr:nth-child(even) {
+  background: #f8f8fa;
+}
+#payments-modal-list tr:hover {
+  background: #f3f9f6;
+}
+#payments-modal-list td {
+  vertical-align: middle;
+}
+#payments-modal-list .amount-pos {
+  color: #2D5F4D;
+  font-weight: 700;
+}
+#payments-modal-list .amount-neg {
+  color: #b61718;
+  font-weight: 700;
+}
+#payments-modal-list .status-completed {
+  color: #2D5F4D;
+  font-weight: 600;
+}
+#payments-modal-list .status-refunded {
+  color: #b61718;
+  font-weight: 600;
+}
+#payments-modal-list .status-pending {
+  color: #f5a623;
+  font-weight: 600;
+}
+#payments-modal-list .status-other {
+  color: #888;
+  font-weight: 600;
+}
+#payments-modal-list .method-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.98em;
+  font-weight: 600;
+  color: #fff;
+  background: #b61718;
+  margin-right: 2px;
+}
+#payments-modal-list .method-badge.gcash { background: #2D5F4D; }
+#payments-modal-list .method-badge.debitcard { background: #b61718; }
+#payments-modal-list .method-badge.reservation { background: #888; }
+#payments-modal-list .method-badge.refund { background: #f5a623; color: #222; }
+@media (max-width: 700px) {
+  #payments-modal-list table, #payments-modal-list thead, #payments-modal-list tbody, #payments-modal-list th, #payments-modal-list td, #payments-modal-list tr {
+    display: block;
+  }
+  #payments-modal-list th {
+    position: static;
+  }
+  #payments-modal-list td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+  }
+}
+
 aside {
   position: fixed;
   z-index: 100;

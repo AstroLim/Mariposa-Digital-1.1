@@ -2677,6 +2677,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   await renderInventoryChart();
   await renderUserActivityChart();
   await renderTopProductsChart();
+  await renderMonthlyPaymentMonitoringChart();
+  await renderMonthlyPaymentReportsChart();
+  await renderLoyalUsersChart();
+  await renderTopLoyalUsersTable();
+  await renderPaymentsPreview();
 
   // Render calendar
   renderDashboardCalendar();
@@ -2995,6 +3000,335 @@ function renderDashboardCalendar() {
   html += `</table></div>`;
   container.innerHTML = html;
 }
+
+// --- Monthly Payment Monitoring Chart ---
+async function renderMonthlyPaymentMonitoringChart() {
+  const loadingDiv = document.getElementById("monthlyPaymentMonitoring-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  // Fetch payment data (simulate with random data for now)
+  // Replace with your actual Firebase fetch logic
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const payments = months.map(() => Math.floor(Math.random() * 200000) + 50000);
+
+  const ctx = document.getElementById('monthlyPaymentMonitoringChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Total Payments',
+        data: payments,
+        borderColor: '#2D5F4D',
+        backgroundColor: 'rgba(45,95,77,0.08)',
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+// --- Monthly Payment Reports Chart ---
+async function renderMonthlyPaymentReportsChart() {
+  const loadingDiv = document.getElementById("monthlyPaymentReports-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  // Fetch payment breakdown data (simulate for now)
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const reservationPayments = months.map(() => Math.floor(Math.random() * 50000) + 10000);
+  const fullPayments = months.map(() => Math.floor(Math.random() * 150000) + 30000);
+
+  const ctx = document.getElementById('monthlyPaymentReportsChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Reservation Payments',
+          data: reservationPayments,
+          backgroundColor: '#b61718'
+        },
+        {
+          label: 'Full Payments',
+          data: fullPayments,
+          backgroundColor: '#2D5F4D'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, beginAtZero: true }
+      }
+    }
+  });
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+// --- Loyal Users Chart ---
+async function renderLoyalUsersChart() {
+  const loadingDiv = document.getElementById("loyalUsersChart-loading");
+  if (loadingDiv) loadingDiv.style.display = "block";
+
+  // Fetch loyal user data (simulate for now)
+  // Replace with actual logic: e.g., users with >X payments or reservations
+  const labels = ["1-2 Payments", "3-5 Payments", "6+ Payments"];
+  const data = [24, 12, 7];
+
+  const ctx = document.getElementById('loyalUsersChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: ['#b61718', '#2D5F4D', '#888']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+
+  if (loadingDiv) loadingDiv.style.display = "none";
+}
+
+// Modal open/close logic
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('view-all-payments-btn');
+  const modal = document.getElementById('payments-modal');
+  const close = document.getElementById('payments-modal-close');
+  if (btn && modal && close) {
+    btn.onclick = showAllPaymentsModal;
+    close.onclick = () => { modal.style.display = 'none'; };
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+  }
+});
+
+async function renderTopLoyalUsersTable() {
+  const container = document.getElementById("topLoyalUsersPreview");
+  container.innerHTML = '<div class="skeleton"></div>';
+
+  // Fetch loyalty points and users
+  const [loyaltySnap, usersSnap] = await Promise.all([
+    get(ref(db, 'loyalty')),
+    get(ref(db, 'users'))
+  ]);
+  const loyalty = loyaltySnap.exists() ? loyaltySnap.val() : {};
+  const users = usersSnap.exists() ? usersSnap.val() : {};
+
+  // Build array of users with points
+  const usersWithPoints = Object.entries(loyalty)
+    .map(([uid, data]) => ({
+      name: `${users[uid]?.lastName || ''}, ${users[uid]?.firstName || ''}`,
+      email: users[uid]?.email || '',
+      points: Number(data.points) || 0
+    }))
+    .filter(u => u.points > 0);
+
+  usersWithPoints.sort((a, b) => b.points - a.points);
+  const top = usersWithPoints.slice(0, 5);
+
+  container.innerHTML = top.length
+    ? `<table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Loyalty Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${top.map(u => `
+            <tr>
+              <td>${u.name}</td>
+              <td>${u.email}</td>
+              <td style="color:#b61718;font-weight:700;">${u.points}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`
+    : '<div>No loyal users found.</div>';
+}
+
+async function renderPaymentsPreview() {
+  const container = document.getElementById("paymentsPreview");
+  container.innerHTML = '<div class="skeleton"></div>';
+
+  // Fetch all payments
+  const paymentsSnap = await get(ref(db, 'payments/lots'));
+  let payments = [];
+  if (paymentsSnap.exists()) {
+    paymentsSnap.forEach(userSnap => {
+      userSnap.forEach(paymentSnap => {
+        payments.push(paymentSnap.val());
+      });
+    });
+  }
+  payments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
+  const preview = payments.slice(0, 5);
+
+  container.innerHTML = preview.length
+    ? `<table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Ref #</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${preview.map(p => `
+            <tr>
+              <td>${p.userName || 'Unknown'}</td>
+              <td>${p.referenceNumber}</td>
+              <td style="color:#2D5F4D;font-weight:600;">₱${Number(p.amount).toLocaleString()}</td>
+              <td>${p.paymentMethod || ''}</td>
+              <td>${p.paidAt ? new Date(p.paidAt).toLocaleString() : ''}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`
+    : '<div>No payments found.</div>';
+}
+
+let allPaymentsData = [];
+async function showAllPaymentsModal() {
+  const modal = document.getElementById('payments-modal');
+  const modalList = document.getElementById('payments-modal-list');
+  modalList.innerHTML = '<div class="skeleton"></div>';
+
+  // Fetch all payments if not already loaded
+  if (!allPaymentsData.length) {
+    const paymentsSnap = await get(ref(db, 'payments/lots'));
+    let payments = [];
+    if (paymentsSnap.exists()) {
+      paymentsSnap.forEach(userSnap => {
+        userSnap.forEach(paymentSnap => {
+          payments.push(paymentSnap.val());
+        });
+      });
+    }
+    payments.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt));
+    allPaymentsData = payments;
+  }
+
+  renderPaymentsTable(allPaymentsData);
+
+  // Filtering logic
+  document.getElementById('payments-filter-user').oninput =
+  document.getElementById('payments-filter-ref').oninput =
+  document.getElementById('payments-filter-method').onchange = function() {
+    const userVal = document.getElementById('payments-filter-user').value.toLowerCase();
+    const refVal = document.getElementById('payments-filter-ref').value.toLowerCase();
+    const methodVal = document.getElementById('payments-filter-method').value;
+
+    const filtered = allPaymentsData.filter(p => {
+      // User and Ref filtering
+      const userMatch = !userVal || (p.userName || '').toLowerCase().includes(userVal);
+      const refMatch = !refVal || (p.referenceNumber || '').toLowerCase().includes(refVal);
+
+      // Payment Method/Status filtering
+      let methodMatch = true;
+      if (methodVal) {
+        if (methodVal === "GCash") {
+          methodMatch = (p.paymentMethod || '').toLowerCase() === "gcash";
+        } else if (methodVal === "Debit Card") {
+          methodMatch = (p.paymentMethod || '').toLowerCase() === "debitcard";
+        } else if (methodVal === "Reservation") {
+          methodMatch = (p.paymentMethod || '').toLowerCase() === "reservation";
+        } else if (methodVal === "Refund") {
+          methodMatch = (p.status || '').toLowerCase() === "refunded";
+        } else if (methodVal === "Completed") {
+          methodMatch = (p.status || '').toLowerCase() === "completed";
+        } else if (methodVal === "Pending") {
+          methodMatch = (p.status || '').toLowerCase() === "pending";
+        } else {
+          methodMatch = true;
+        }
+      }
+
+      return userMatch && refMatch && methodMatch;
+    });
+
+    renderPaymentsTable(filtered);
+  };
+
+  modal.style.display = 'flex';
+}
+
+function renderPaymentsTable(payments) {
+  const modalList = document.getElementById('payments-modal-list');
+  modalList.innerHTML = payments.length
+    ? `<table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Ref #</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${payments.map(p => {
+            // Amount color
+            const amountClass = Number(p.amount) < 0 ? 'amount-neg' : 'amount-pos';
+            // Status color
+            let statusClass = 'status-other';
+            if ((p.status || '').toLowerCase() === 'completed') statusClass = 'status-completed';
+            else if ((p.status || '').toLowerCase() === 'refunded') statusClass = 'status-refunded';
+            else if ((p.status || '').toLowerCase() === 'pending') statusClass = 'status-pending';
+            // Method badge
+            let method = (p.paymentMethod || '').toLowerCase();
+            let methodLabel = p.paymentMethod || '';
+            let methodClass = 'method-badge';
+            if (method === 'gcash') methodClass += ' gcash';
+            else if (method === 'debitcard') methodClass += ' debitcard';
+            else if (method === 'reservation') methodClass += ' reservation';
+            else if (method === 'refund') methodClass += ' refund';
+
+            return `
+              <tr>
+                <td>${p.userName || 'Unknown'}</td>
+                <td>${p.referenceNumber}</td>
+                <td class="${amountClass}">₱${Number(p.amount).toLocaleString()}</td>
+                <td><span class="${methodClass}">${methodLabel}</span></td>
+                <td>${p.paidAt ? new Date(p.paidAt).toLocaleString() : ''}</td>
+                <td class="${statusClass}">${p.status || ''}</td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>`
+    : '<div>No payments found.</div>';
+}
+
+// Modal open/close logic (already present)
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('view-all-payments-btn');
+  const modal = document.getElementById('payments-modal');
+  const close = document.getElementById('payments-modal-close');
+  if (btn && modal && close) {
+    btn.onclick = showAllPaymentsModal;
+    close.onclick = () => { modal.style.display = 'none'; };
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+  }
+});
 
 // --- End Dashboard Reports Section ---
 
