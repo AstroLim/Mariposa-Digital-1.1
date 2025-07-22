@@ -1,781 +1,348 @@
-/* Applied to All HTML Tags */
-*{
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
-
-/* Main Container */
-.Main-Container{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-image: url(../RESOURCES/imgFiles/Client_Home-Page/Landing-Homepage\ Ricefield.png);
-    background-size: cover;
-}
-
-/*NAV*/
-.mainCont-nav{
-    width: 100%;
-    height: 12%;
-    display: flex;
-    flex-direction: row;
-    background: rgba( 255, 255, 255, 0.1 );
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 3.5px );
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-}
-
-.mainCont-nav > div > a ,
-.mainCont-nav > div > p{
-    text-decoration: none;
-    color: #660001;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-}
-
-/*NAV - Left-Sec*/
-.nav-left-sec{
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: start;
-    gap: 8%;
-}
-
-.Logo{
-    margin-left: 15%;
-    width: 65%;
-}
-
-/*NAV - Right-Sec*/
-.nav-right-sec{
-    width: 47.5%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: end;
-    gap: 8%;
-    margin-right: 2.5%;
-}
-
-/*Main Content*/
-.MainSection{
-    width: 100%;
-    height: 88%;
-    background-color: transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.MainSection-header{
-    width: 100%;
-    height: 15vh;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: start;
-    background-color: #162416;
-    margin-top: 2.5%;
-}
-
-.header-box1{
-    width: 30%;
-    height: 50%;
-    background-color: #223a23da;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 10%;
-}
-
-.header-box-content1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2vw;  
-}
-
-.MainSection-Content{
-    width: 100%;
-    height: 70vh;
-    display: flex;
-    flex-direction: row;
-}
-
-.MainSection-Content-left-sec{
-    width: 40%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: start;
-}
-
-.lotManagementBox{
-    width: 55%;
-    height: 60%;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-    margin-left: 15%;
-}
-
-.lotManagementBox-sec-top{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.lotManagementBox-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2.2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.lotManagementBox-sec-bot{
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    gap: 10%;
-    margin-top: 10%;
-}
-
-.lotManagementBox-sec-bot > button{
-    width: 90%;
-    height: 15%;
-    background-color: #660001;
-    border-radius: 32px;
-    color: #F5F5F5;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-}
-
-/* DASHBOARD CSS */
-.MainSection-Content-right-sec{
-    width: 60%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.right-sec-topContent{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 5%;
-}
-
-.availableLotsStat-container{
-    width: 35%;
-    height: 75%;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-}
-
-.availableLotsStat-sec-top{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.availableLotsStat-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.availableLotsStat-sec-bot{
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.statContainer{
-    width: 90%;
-    height: 20%;
-    background-color: #223a23da;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2.5%;
-}
-
-.statLabel, .stat{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 1vw;  
-}
-
-.reservedLotsStat-container{
-    width: 35%;
-    height: 75%;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-}
-
-.reservedLotsStat-sec-top{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.reservedLotsStat-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.reservedLotsStat-sec-bot{
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.right-sec-botContent{
-    width: 100%;
-    height: 50%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-
-.rentedLotsStat-container{
-    width: 75%;
-    height: 73%;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-}
-
-.rentedLotsStat-sec-top{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.rentedLotsStat-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.rentedLotsStat-sec-bot{
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* ADD LOT CSS */
-.addLotBox {
-    width: 55%;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-
-}
-
-.addLotBox-sec-top {
-    width: 100%;
-    height: 20%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2vw 2vw 1vw 2vw;
-    box-sizing: border-box;
-}
-
-.addLotBox-sec-top > h1 {
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2.3vw;
-    font-weight: bold;
+/* Reset and base styles */
+* {
     margin: 0;
     padding: 0;
-    letter-spacing: 1px;
-}
-
-.addLotBox-header-btn {
-    width: 13vw;
-    min-width: 140px;
-    height: 2.8vw;
-    min-height: 38px;
-    background: linear-gradient(90deg, #B61718 60%, #660001 100%);
-    border-radius: 24px;
-    color: #fff;
-    font-family: "Grenze", serif;
-    font-size: 1.1vw;
-    font-weight: bold;
-    margin-left: 2vw;
-    border: 3px solid #fff;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s, border-color 0.2s;
-    outline: none;
-    letter-spacing: 0.5px;
-}
-.addLotBox-header-btn:hover, .addLotBox-header-btn:focus {
-    background: linear-gradient(90deg, #a01314 60%, #440000 100%);
-    transform: scale(1.04);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-    border-color: #eee;
-}
-
-.addLotBox-sec-bot {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 2vw;
-    gap: 2vw;
-    flex-wrap: wrap;
-}
-
-.addLotCol {
-    flex: 1;
-    min-width: 45%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8vw;
-}
-
-.addLotCol label {
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 1.2vw;
-}
-
-.addLotCol input,
-.addLotCol select {
-    height: 2.5vw;
-    min-height: 35px;
-    font-size: 1vw;
-    padding: 0.5vw 1vw;
-    background-color: #223a23da;
-    border: none;
-    border-radius: 22px;
-    color: #fff;
-    font-family: "Grenze", serif;
-}
-
-.addLotBox-sec-footer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 2vw;
-}
-
-.addLotBox-sec-footer > button {
-    width: 40%;
-    height: 3vw;
-    min-height: 40px;
-    background-color: #F5F5F5;
-    border-radius: 32px;
-    color: #000000;
-    font-family: "Grenze", serif;
-    font-size: 1.1vw;
-}
-
-/* Remove old left/right section styles for add lot form */
-/* .sec-bot-leftSec, .sec-bot-rightSec { display: none !important; } */
-
-/*Remove LOT CSS */
-.removeLotBox{
-    width: 60%;
-    height: 45%;
-    display: flex;
-    flex-direction: column;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    gap: 5%;
-}
-
-.removeLotBox-sec-top{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.removeLotBox-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2.2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.removeLotBox-sec-bot{
-    width: 100%;
-    height: 60%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 5%;
-}
-
-.removeLotBox-sec-bot > label{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 1.5vw;  
-    margin-left: 10%;
-}
-
-.removeLotBox-sec-bot > input{
-    width: 60%;
-    height: 20%;
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 1.5vw;  
-    background-color: #223a23da;
-    border-radius: 22px;
-    margin-top: 1%;
-}
-
-.removeLotBox-sec-footer{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: start;
-    justify-content: center;
-}
-
-.removeLotBox-sec-footer > button{
-    width: 50%;
-    height: 70%;
-    background-color: #F5F5F5;
-    border-radius: 32px;
-    color: #000000;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-}
-
-/*Cancel LOT Reservation CSS */
-.cancelLotReservationBox{
-    width: 50%;
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    gap: 5%;
-}
-
-.cancelLotReservationBox-sec-top{
-    width: 100%;
-    height: 15%;
-    display: flex;
-    align-items: start;
-    justify-content: start;
-}
-
-.cancelLotReservationBox-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2.2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.cancelLotReservation-sec-bot{
-    width: 100%;
-    height: 80%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2.5%;
-    overflow-y: auto;
-}
-
-.cancelLotBox{
-    width: 40%;
-    height: 45%;
-    display: flex;
-    flex-direction: column;
-    background-color: #D9D9D9 ;
-}
-
-.cancelLotBox > header{
-    width: 100%;
-    height: 55%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.lotImg{
-    width: 40%;
-    height: 85%;
-    background-color: #660001;
-}
-
-.cancelLotBox > main{
-    width: 100%;
-    height: 55%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10%;
-}
-
-.cancelLotBox > main > div{
-    width: 90%;
-    height: 30%;
-    background-color: #142214;
-    border-radius: 5px;
-    color: #F5F5F5;
-    font-family: "Grenze", serif;
-    font-size: 1vw;
-    display: flex;
-    justify-content: center;
-}
-
-.cancelLotBox > main > button{
-    width: 80%;
-    height: 30%;
-    background-color: #142214;
-    border-radius: 32px;
-    color: #F5F5F5;
-    font-family: "Grenze", serif;
-    font-size: 0.8vw;
-}
-
-/*Lot Contract Signing Date CSS*/
-.manageContractScheduleBox{
-    width: 80%;
-    height: 90%;
-    background-color: #B61718;
-    border-radius: 32px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-    gap: 5%;
-    margin-left: 5%;
-}
-
-.manageContractScheduleBox-sec-top{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-}
-
-.manageContractScheduleBox-sec-top > h1{
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 2.2vw;  
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.manageContractScheduleBox-sec-bot{
-    width: 100%;
-    height: 75%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2.5%;
-    overflow-y: auto;
-}
-
-.contractLotInfoBox{
-    width: 30%;
-    height: 70%;
-    display: flex;
-    flex-direction: column;
-    background-color: #D9D9D9 ;
-    border-radius: 8px;
-}
-
-.contractLotInfoBox > header{
-    width: 100%;
-    height: 20%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.contractLotInfoBox > header >  h1{
-    color: #000000;
-    font-family: "Grenze", serif;
-    font-size: 2vw;  
-}
-
-.contractLotInfoBox > main{
-    width: 100%;
-    height: 70%;
-    display: flex;
-    flex-direction: row;
-}
-
-.main-contractLotInfoBox-leftSec{
-    width: 45%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5%;
-    margin-left: 3%;
-}
-
-.main-contractLotInfoBox-rightSec{
-    width: 55%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.lotImg{
-    width: 80%;
-    height: 75%;
-    background-color: #660001;
-}
-
-.main-contractLotInfoBox-leftSec > button{
-    width: 95%;
-    height: 30%;
-    background-color: #142214;
-    border-radius: 32px;
-    color: #F5F5F5;
-    font-family: "Grenze", serif;
-    font-size: 0.8vw;
-}
-
-.main-contractLotInfoBox-leftSec > div{
-    width: 90%;
-    height: 19%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #142214;
-    border-radius: 5px;
-    color: #F5F5F5;
-    font-family: "Grenze", serif;
-    font-size: 0.7vw;
-}
-
-.addLotBox-sec-bot.addLotBox-cols {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 3vw;
-    width: 100%;
-    height: auto;
-    margin-bottom: 0;
-    padding: 2vw 1vw 1vw 1vw;
-}
-
-.addLotCol {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5vw;
-    width: 48%;
-    padding: 0.5vw 1vw;
-}
-
-.addLotCol label {
-    color: #FFFFFF;
-    font-family: "Grenze", serif;
-    font-size: 1.1vw;
-    margin-bottom: 0.2vw;
-}
-
-.addLotCol input,
-.addLotCol select {
-    width: 100%;
-    height: 2vw;
-    min-height: 28px;
-    font-size: 1vw;
-    padding-left: 12px;
-    background-color: #223a23da;
-    border-radius: 22px;
-    border: none;
-    color: #fff;
-    margin-bottom: 0.5vw;
     box-sizing: border-box;
 }
-
-.addLotBox-sec-footer {
-    width: 100%;
+body {
+    background: #f6f7fb;
+    font-family: 'Arimo', 'Segoe UI', Arial, sans-serif;
+    color: #23272f;
+    min-height: 100vh;
+}
+.staff-manage-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2vw;
+    min-height: 100vh;
 }
 
-.addLotBox-sec-footer > button {
-    width: 50%;
-    height: 3vw;
-    min-height: 40px;
-    background-color: #F5F5F5;
-    border-radius: 32px;
-    color: #000000;
+/* Sidebar */
+.sidebar {
+    width: 270px;
+    background: linear-gradient(135deg, #223a23 80%, #B61718 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 2rem 1.2rem 1.2rem 1.2rem;
+    box-shadow: 2px 0 16px rgba(30,41,59,0.08);
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+}
+.sidebar-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+.sidebar-logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 0.7rem;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(30,41,59,0.10);
+}
+.sidebar-header h2 {
     font-family: "Grenze", serif;
-    font-size: 1.1vw;
-    margin: 0 auto;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+}
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    margin-bottom: auto;
+}
+.sidebar-option {
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: "Grenze", serif;
+    font-size: 1.08rem;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+.sidebar-option.active,
+.sidebar-option:hover {
+    background: #fff;
+    color: #B61718;
+    box-shadow: 0 2px 8px rgba(30,41,59,0.10);
+}
+.sidebar-user {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+.userName {
+    font-family: "Grenze", serif;
+    font-size: 1.08rem;
+    color: #fff;
+    background: #223a23;
+    padding: 0.3rem 1rem;
+    border-radius: 7px;
+}
+.sidebar-settings {
+    color: #fff;
+    text-decoration: underline;
+    font-size: 1rem;
+    margin-top: 0.2rem;
+    transition: color 0.16s;
+}
+.sidebar-settings:hover {
+    color: #B61718;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #f6f7fb;
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+}
+.main-header {
+    background: #fff;
+    padding: 2rem 2.5rem 1.2rem 2.5rem;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.04);
+    margin-bottom: 1.5rem;
+}
+.main-header h1 {
+    font-family: "Grenze", serif;
+    font-size: 2rem;
+    color: #B61718;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+#main-content-section {
+    padding: 0 2.5rem 2.5rem 2.5rem;
+    min-height: 60vh;
+}
+
+/* Lot Card */
+.lot-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.08);
+    padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    transition: box-shadow 0.18s, transform 0.18s;
+}
+.lot-card:hover {
+    box-shadow: 0 8px 32px rgba(30,41,59,0.13), 0 2px 8px rgba(30,41,59,0.06);
+    transform: translateY(-2px) scale(1.012);
+}
+.lot-image {
+    width: 90px;
+    height: 90px;
+    background: #fafbfc;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 1.2rem;
+}
+.lot-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.lot-details h3 {
+    font-family: "Grenze", serif;
+    font-size: 1.2rem;
+    color: #223a23;
+    margin-bottom: 0.2rem;
+}
+.lot-details p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 0.2rem;
+}
+.lot-actions {
+    display: flex;
+    gap: 0.7rem;
+    margin-top: 0.7rem;
+}
+.lot-actions button {
+    padding: 0.5rem 1.1rem;
+    border: none;
+    border-radius: 8px;
+    font-family: "Grenze", serif;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    background: #B61718;
+    color: #fff;
+    transition: background 0.18s, transform 0.13s;
+}
+.lot-actions button:hover {
+    background: #223a23;
+    color: #fff;
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Form Styles */
+.form-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.08);
+    margin-bottom: 1.5rem;
+}
+.form-section h2 {
+    font-family: "Grenze", serif;
+    font-size: 1.5rem;
+    color: #223a23;
+    margin-bottom: 1.5rem;
+}
+.form-group {
+    margin-bottom: 1.2rem;
+}
+.form-group label {
     display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #23272f;
+}
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.18s;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    outline: none;
+    border-color: #B61718;
+}
+.form-actions {
+    margin-top: 1.5rem;
+}
+.form-actions button {
+    background: #B61718;
+    color: #fff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-family: "Grenze", serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.13s;
+}
+.form-actions button:hover {
+    background: #223a23;
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.08);
+    text-align: center;
+}
+.stat-card h3 {
+    font-family: "Grenze", serif;
+    font-size: 1.2rem;
+    color: #223a23;
+    margin-bottom: 0.5rem;
+}
+.stat-card .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #B61718;
+}
+
+/* Back Button */
+.sidebar-back {
+    background: #223a23;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-family: "Grenze", serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.13s;
+    margin-top: 0.5rem;
+}
+.sidebar-back:hover {
+    background: #B61718;
+    transform: translateY(-1px) scale(1.03);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+    .staff-manage-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        max-height: none;
+        position: relative;
+    }
+    .sidebar-header {
+        margin-bottom: 1.5rem;
+    }
+    .sidebar-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        margin-bottom: 1rem;
+    }
+    .sidebar-user {
+        margin-top: 1rem;
+    }
+    .main-content {
+        height: auto;
+        max-height: none;
+    }
+    .main-header {
+        padding: 1.5rem 1.5rem 1rem 1.5rem;
+    }
+    #main-content-section {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+}
+@media (max-width: 600px) {
+    .sidebar {
+        padding: 1rem 1rem 1rem 1rem;
+    }
+    .main-header h1 {
+        font-size: 1.5rem;
+    }
+    .form-section {
+        padding: 1.5rem;
+    }
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
 }

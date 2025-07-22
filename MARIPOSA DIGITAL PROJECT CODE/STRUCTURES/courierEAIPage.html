@@ -3,75 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Courier Edit Account Information Page</title>
-  <link rel="stylesheet" href="../STYLES/courierEAIPage.css"/>
+  <title>Edit Courier Account Information</title>
+  <link rel="stylesheet" href="../STYLES/clientEAIPage.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jua&family=Noto+Serif+Hentaigana:wght@200..900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Grenze:wght@400;700&display=swap" rel="stylesheet"/>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   <script src="../SCRIPTS/courierEAIPage.js" defer></script>
 </head>
 <body>
-  <div class="Main-Container">
-    <nav>
-      <div class="nav-left-sec">
-        <a href="courierHomePage.html" class="btnA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo" /></a>
-      </div>
-      <div class="nav-right-sec">
-        <div class="userName"></div>
-        <a href="courierHomePage.html" class="btnA2"><button class="nav-right-sec-btn">Go Back</button></a>
-      </div>
-    </nav>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <a href="courierHomePage.html" class="navbar-logo">
+        <img src="../RESOURCES/imgFiles/Logo.png" alt="Logo">
+      </a>
+      <a href="courierHomePage.html" class="navbar-link">Home</a>
+      <a href="courierViewLoadPage.html" class="navbar-link">View Loads</a>
+      <a href="courierEAIPage.html" class="navbar-link active">Settings</a>
+    </div>
+    <div class="navbar-right">
+      <span class="navbar-user userName"></span>
+      <button class="logout-btn" onclick="logoutClient()">Logout</button>
+    </div>
+  </nav>
 
-    <section class="Main-Section">
-      <div class="editAccInfoBox">
-        <header class="editAccInfoBox-header">
-          <p>Edit Account Information</p>
-        </header>
-
-        <main class="editAccInfoBox-main">
-          <div>
-            <div>
-              <label for="username">Username</label>
-              <input type="text" id="username" required />
-            </div>
-            <div>
-              <label for="password">New Password</label>
-              <input type="password" id="password" />
-            </div>
-            <div>
-              <label for="email">Email</label>
-              <input type="email" id="email" required />
-            </div>
-            <div>
-              <label></label>
-              <button type="button" id="sendReverification" class="reverify-btn" style="display:none;">Send Reverification</button>
-            </div>
-            <div>
-              <label for="firstname">First Name</label>
-              <input type="text" id="firstname" required />
-            </div>
-            <div>
-              <label for="lastname">Last Name</label>
-              <input type="text" id="lastname" required />
-            </div>
-            <div>
-              <label for="mobilenumber">Phone</label>
-              <input type="tel" id="mobilenumber" required pattern="[0-9]{10,15}" />
-            </div>
-          </div>
-        </main>
-
-        <footer class="editAccInfoBox-footer">
-          <button class="logout" onclick="logoutClient()">Logout</button>
-          <button class="submit" onclick="updateAccountInfo()">Save Changes</button>
-        </footer>
-      </div>
-
-      <img src="../RESOURCES/imgFiles/Courier_EditAccountInfo-Page/Truck.png" alt="Image of a Truck" class="truckImg" />
+  <main class="eai-main">
+    <section class="eai-card">
+      <h1>Edit Account Information</h1>
+      <form id="editAccountForm" autocomplete="off">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="">
+        </div>
+        <div class="form-group">
+          <label for="password">New Password</label>
+          <input id="password" name="password" type="password" placeholder="">
+        </div>
+        <div class="form-group">
+          <label for="firstname">First Name</label>
+          <input id="firstname" name="firstname" type="text" placeholder="">
+        </div>
+        <div class="form-group">
+          <label for="lastname">Last Name</label>
+          <input id="lastname" name="lastname" type="text" placeholder="">
+        </div>
+        <div class="form-group">
+          <label for="mobilenumber">Phone Number</label>
+          <input id="mobilenumber" name="mobilenumber" type="tel" pattern="[0-9]{10,15}" placeholder="">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input id="email" name="email" type="email" placeholder="">
+          <button type="button" id="sendReverification" class="reverify-btn" style="display:none;">Send Reverification</button>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="save-btn" onclick="updateAccountInfo()">Save Changes</button>
+        </div>
+      </form>
     </section>
-  </div>
+  </main>
 </body>
 </html>

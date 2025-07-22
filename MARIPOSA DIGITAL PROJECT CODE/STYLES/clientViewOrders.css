@@ -97,6 +97,61 @@ nav > div > p{
     padding-bottom: 3%;
 }
 
+/* Filter Section Styles */
+.filter-section {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(30,41,59,0.08);
+    border: 1px solid #e9ecef;
+}
+
+.filter-label {
+    font-family: "Grenze", serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #660001;
+    white-space: nowrap;
+}
+
+.status-filter {
+    padding: 0.75rem 1.5rem;
+    font-family: "Grenze", serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #660001;
+    background-color: #ffffff;
+    border: 2px solid #B61718;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    outline: none;
+}
+
+.status-filter:hover {
+    border-color: #8B0000;
+    box-shadow: 0 4px 12px rgba(182, 23, 24, 0.15);
+}
+
+.status-filter:focus {
+    border-color: #8B0000;
+    box-shadow: 0 0 0 3px rgba(182, 23, 24, 0.1);
+}
+
+.status-filter option {
+    font-family: "Grenze", serif;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
 .orders-list {
     width: 100%;
     display: flex;
@@ -198,24 +253,87 @@ nav > div > p{
     padding: 0.2em 0.8em;
     border-radius: 1em;
     font-size: 0.95em;
-    font-weight: 700;
-    background: #ffe082;
-    color: #B61718;
-    margin-left: 0.5em;
+    font-weight: 600;
+    text-transform: capitalize;
 }
+
 .order-card .order-status-badge[data-status="Pending"] {
-    background: #ffe082;
-    color: #B61718;
+    background-color: #ff9800;
+    color: #fff;
 }
+
 .order-card .order-status-badge[data-status="Delivered"] {
-    background: #4caf50;
+    background-color: #4caf50;
     color: #fff;
 }
+
 .order-card .order-status-badge[data-status="Cancelled"] {
-    background: #b71c1c;
+    background-color: #f44336;
     color: #fff;
 }
+
 .order-card .order-status-badge[data-status="Processing"] {
-    background: #2196f3;
+    background-color: #2196f3;
     color: #fff;
+}
+
+.order-card .order-status-badge[data-status="delivery soon"] {
+    background-color: #9c27b0;
+    color: #fff;
+}
+
+.order-card .order-status-badge[data-status="pick-up"] {
+    background-color: #ff5722;
+    color: #fff;
+}
+
+.order-card .order-status-badge[data-status="in-transit"] {
+    background-color: #2196f3;
+    color: #fff;
+}
+
+.order-card .order-status-badge[data-status="on-the-way"] {
+    background-color: #673ab7;
+    color: #fff;
+}
+
+.order-card .order-status-badge[data-status="delivery-soon"] {
+    background-color: #9c27b0;
+    color: #fff;
+}
+
+/* Responsive Design for Filter */
+@media (max-width: 768px) {
+    .filter-section {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+    
+    .filter-label {
+        font-size: 1rem;
+    }
+    
+    .status-filter {
+        min-width: 180px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-section {
+        margin-bottom: 1.5rem;
+        padding: 0.75rem;
+    }
+    
+    .filter-label {
+        font-size: 0.95rem;
+    }
+    
+    .status-filter {
+        min-width: 160px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
 }

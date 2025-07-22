@@ -31,6 +31,18 @@
                 </div>
             </header>
             <main class="MainSection-mainCont">
+                <div class="filter-section">
+                    <label for="status-filter" class="filter-label">Filter by Status:</label>
+                    <select id="status-filter" class="status-filter">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="pick-up">Pick-Up</option>
+                        <option value="in-transit">In Transit</option>
+                        <option value="on-the-way">On the way</option>
+                        <option value="delivery-soon">Delivery Soon</option>
+                        <option value="delivered">Delivered</option>
+                    </select>
+                </div>
                 <div class="orders-list" id="orders-list">
                     <!-- Orders will be loaded here -->
                 </div>

@@ -286,7 +286,7 @@ function showPaymentMethodModal(lot) {
         paymentMethod: selectedPaymentMethod,
         referenceNumber: refNum,
         paidAt: new Date().toISOString(),
-        status: "pending", // Staff/admin will verify and move to owned
+        status: "pending", // Staff/admin will verify and move to rented
         userId: uid,
         userName: user.username || "",
         lotDescription: lot.lotDescription || "",
@@ -328,30 +328,30 @@ function showPaymentMethodModal(lot) {
   };
 }
 
-// Load owned lots (unchanged)
+// Load rented lots (unchanged)
 async function loadClientOwnedLots() {
   if (!lotsListSection) return;
-  lotsListSection.innerHTML = "<p>Loading your owned lots...</p>";
+  lotsListSection.innerHTML = "<p>Loading your rented lots...</p>";
 
   const lotsRef = ref(db, "lots");
   const q = query(lotsRef, orderByChild("reservedBy"), equalTo(uid));
   const snapshot = await get(q);
 
   if (!snapshot.exists()) {
-    lotsListSection.innerHTML = `<p>You have no owned lots.</p>`;
+    lotsListSection.innerHTML = `<p>You have no rented lots.</p>`;
     return;
   }
 
   const lots = [];
   snapshot.forEach(child => {
     const lot = child.val();
-    if ((lot.status || '').toLowerCase() === 'owned') {
+    if ((lot.status || '').toLowerCase() === 'rented') {
       lots.push({ ...lot, key: child.key });
     }
   });
 
   if (lots.length === 0) {
-    lotsListSection.innerHTML = `<p>You have no owned lots.</p>`;
+    lotsListSection.innerHTML = `<p>You have no rented lots.</p>`;
     return;
   }
 
@@ -369,12 +369,12 @@ async function loadClientOwnedLots() {
           ${images.map(img => `<img src="${img}" alt="Lot Image" class="lot-image">`).join('')}
         </div>
         <div class="lot-details">
-          <h2>Lot #${lot.lotNumber || ""} <span class="owned-badge">Owned</span></h2>
+          <h2>Lot #${lot.lotNumber || ""} <span class="owned-badge">Rented</span></h2>
           <div class="lot-info">
             <p>${lot.lotDescription || ""}</p>
             <p>Size: ${lot.lotSize || ""}</p>
             <p>Price: ₱${priceDisplay}</p>
-            <p>Ownership Date: ${lot.ownershipDate || "N/A"}</p>
+            <p>Rental Date: ${lot.ownershipDate || "N/A"}</p>
           </div>
         </div>
       </div>

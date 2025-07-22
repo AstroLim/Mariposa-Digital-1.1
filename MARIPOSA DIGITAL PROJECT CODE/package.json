@@ -6,7 +6,8 @@
     "express": "^4.21.2",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.2.0",
-    "jspdf": "^1.5.3"
+    "jspdf": "^1.5.3",
+    "yocto-queue": "^1.2.1"
   },
   "devDependencies": {
     "webpack": "^5.98.0",

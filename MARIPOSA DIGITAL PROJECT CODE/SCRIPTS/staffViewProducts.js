@@ -21,7 +21,9 @@ function loadProducts() {
     
     listOfProducts.forEach((product, index) => {
         productSection.innerHTML += `   <div class="lot-box">
-                                            <img src="lot1.jpg" alt="Lot Image">
+                                            <div class="product-image-placeholder" style="width: 100px; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 10px;">
+          <span style="font-size: 2rem;">🌾</span>
+        </div>
                                             <h3>${product.name}</h3>
                                             <p>${product.description}</p>
                                             <p>Price Per Kilo: ${product.pricePerKilo}</p>

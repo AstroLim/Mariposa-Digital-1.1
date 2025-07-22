@@ -1,3 +1,29 @@
+// Password toggle functionality
+function togglePassword() {
+    const passwordInput = document.querySelector('#inputPassword');
+    const hideIcon = document.querySelector('.hide-icon');
+    const showIcon = document.querySelector('.show-icon');
+    
+    if (passwordInput.type === 'password') {
+        // Show password
+        passwordInput.type = 'text';
+        hideIcon.style.display = 'none';
+        showIcon.style.display = 'inline';
+    } else {
+        // Hide password
+        passwordInput.type = 'password';
+        hideIcon.style.display = 'inline';
+        showIcon.style.display = 'none';
+    }
+}
+
+// Add event listener when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleButton = document.querySelector('#passwordToggle');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', togglePassword);
+    }
+});
 
 function loginAccount(){
     let loginEmail = document.querySelector('#inputEmail').value.trim();

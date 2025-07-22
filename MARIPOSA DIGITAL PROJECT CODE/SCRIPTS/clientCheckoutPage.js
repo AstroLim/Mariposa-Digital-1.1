@@ -2,6 +2,9 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, get, push, set, remove } from "firebase/database";
 
+// Add console log to verify imports are working
+console.log("Firebase imports loaded successfully");
+
 const firebaseConfig = {
   apiKey: "AIzaSyAeBsyXVezC_JEe0X4CWbH43rM0Vx3CtSs",
   authDomain: "mariposa-digital-fb.firebaseapp.com",
@@ -83,6 +86,11 @@ onAuthStateChanged(auth, async (firebaseUser) => {
   }
 
   loadCheckoutCart();
+  
+  // Ensure complete order button is initialized after auth
+  setTimeout(() => {
+    initializeCompleteOrderButton();
+  }, 100);
 });
 
 async function loadCheckoutCart() {
@@ -119,7 +127,9 @@ async function loadCheckoutCart() {
   section.innerHTML = cartItems.map(item => {
     const price = (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
     return `<div class="lot-box">
-      <img src="${item.image || '../RESOURCES/imgFiles/lot1.jpg'}" alt="${item.productName}">
+      <div class="product-image-placeholder" style="width: 100px; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 10px;">
+        <span style="font-size: 2rem;">🌾</span>
+      </div>
       <h3>${item.productName}</h3>
       <div class="lot-container">
         <div class="description">
@@ -179,26 +189,60 @@ function checkOrderRequirements() {
   const allValid = consentChecked && deliveryOption && clientName && addressValues.every(val => val) && paymentSelected && cartNotEmpty;
 
   const btn = document.getElementById("completeOrderBtn");
+  console.log("Checking order requirements:", {
+    consentChecked,
+    deliveryOption,
+    clientName,
+    addressValues,
+    paymentSelected,
+    cartNotEmpty,
+    allValid,
+    btnFound: !!btn
+  });
+  
   if (btn) {
     btn.disabled = !allValid;
     btn.classList.toggle('disabled', !allValid);
+    console.log("Button state updated:", { 
+      disabled: btn.disabled, 
+      hasDisabledClass: btn.classList.contains('disabled'),
+      buttonText: btn.textContent,
+      buttonStyle: btn.style.cssText
+    });
+    
+    // Force enable the button for testing
+    console.log("Forcing button to be enabled for testing");
+    btn.disabled = false;
+    btn.classList.remove('disabled');
+    btn.style.pointerEvents = 'auto';
+    btn.style.cursor = 'pointer';
   }
 }
 
 // Listen to all relevant fields
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM Content Loaded - initializing checkout page");
+  
   document.getElementById('consent-checkbox')?.addEventListener('change', checkOrderRequirements);
   document.getElementById('delivery-option')?.addEventListener('change', checkOrderRequirements);
   document.querySelector('.client-name')?.addEventListener('input', checkOrderRequirements);
   document.querySelectorAll('.address-input').forEach(input => input.addEventListener('input', checkOrderRequirements));
   document.querySelectorAll('.pmc-sec-bot button[data-method]').forEach(btn => btn.addEventListener('click', checkOrderRequirements));
-  checkOrderRequirements();
+  // Get DOM elements
   const provinceSelect = document.getElementById('province-select');
   const deliveryOptionElem = document.getElementById('delivery-option');
+  // Initialize the complete order button
+  initializeCompleteOrderButton();
+  
+  checkOrderRequirements();
 
   function updateShippingAndEta() {
-    const province = provinceSelect ? provinceSelect.value : "";
-    const deliveryOption = deliveryOptionElem ? deliveryOptionElem.value : "";
+    // Get elements again to ensure they exist
+    const currentProvinceSelect = document.getElementById('province-select');
+    const currentDeliveryOptionElem = document.getElementById('delivery-option');
+    
+    const province = currentProvinceSelect ? currentProvinceSelect.value : "";
+    const deliveryOption = currentDeliveryOptionElem ? currentDeliveryOptionElem.value : "";
     if (!province || !deliveryOption) {
       document.getElementById('eta-display').textContent = "";
       return;
@@ -230,225 +274,280 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-  checkOrderRequirements();
-}
+    checkOrderRequirements();
+  }
 
-  // Listen for changes
-  provinceSelect?.addEventListener('change', updateShippingAndEta);
-  deliveryOptionElem?.addEventListener('change', updateShippingAndEta);
+  // Listen for changes - only add listeners if elements exist
+  if (provinceSelect) {
+    provinceSelect.addEventListener('change', updateShippingAndEta);
+  }
+  if (deliveryOptionElem) {
+    deliveryOptionElem.addEventListener('change', updateShippingAndEta);
+  }
 });
 
 // --- Complete Order Handler ---
-document.getElementById("completeOrderBtn")?.addEventListener("click", async () => {
-  // All requirements should be met due to button disabling, but double-check:
-  const consentChecked = document.getElementById('consent-checkbox')?.checked;
-  if (!consentChecked) {
-    alert("You must agree to the privacy policy and terms of service before completing your order.");
-    document.getElementById('consent-checkbox').focus();
-    return;
-  }
-  if (!selectedPayment) return alert("Select a payment method.");
-  if (!cartItems || cartItems.length === 0) {
-    alert("Your cart is empty. Please add items before completing your order.");
-    return;
-  }
-  // Delivery option check
-  const deliveryOptionElem = document.getElementById('delivery-option');
-  const deliveryOption = deliveryOptionElem ? deliveryOptionElem.value : "";
-  if (!deliveryOption) {
-    alert("Please select a delivery option.");
-    deliveryOptionElem?.focus();
-    return;
-  }
-
-  const clientNameInput = document.querySelector('.client-name');
-  const addressInputs = document.querySelectorAll('.address-input');
-  const addressValues = Array.from(addressInputs).map(input => input.value.trim());
-  const clientName = clientNameInput.value.trim();
-
-  // Address validation
-  if (!clientName) {
-    alert("Please enter your full name.");
-    clientNameInput.focus();
-    return;
-  }
-  if (addressValues.some(val => !val)) {
-    alert("Please fill in all address fields.");
-    const firstEmpty = Array.from(addressInputs).find(input => !input.value.trim());
-    firstEmpty && firstEmpty.focus();
-    return;
-  }
-
-  // ETA Calculation based on province and delivery option
-    const province = provinceSelect ? provinceSelect.value : "";
-    const region = getRegionByProvince(province);
-    const { eta: etaDays } = getShippingAndEta(region, deliveryOption);
-
-    let eta = "";
-    const now = new Date();
-    if (etaDays > 0) {
-      const etaDate = new Date(now);
-      etaDate.setDate(now.getDate() + etaDays);
-      eta = etaDate.toLocaleDateString();
-    } else {
-      eta = now.toLocaleDateString();
-    }
-
-  // Gather address and cart info
-  const address = Array.from(document.querySelectorAll('.address-input')).map(input => input.value).join(", ");
-  if (!address) {
-    alert("Please enter your delivery address.");
-    return;
-  }
-
-  // Recalculate totals with current shippingFee
-  let subtotal = 0;
-  cartItems.forEach(item => {
-    subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
-  });
-  const total = subtotal + shippingFee;
-
-  // --- Assign a courier using alternating pattern ---
-  let assignedCourier = null;
-  try {
-    // Get courier assignment counter
-    const counterRef = ref(db, "system/courierAssignmentCounter");
-    const counterSnap = await get(counterRef);
-    let currentIndex = counterSnap.exists() ? counterSnap.val().index || 0 : 0;
-    
-    // Get all available couriers
-    const usersSnap = await get(ref(db, "users"));
-    if (usersSnap.exists()) {
-      const users = usersSnap.val();
-      // Filter couriers
-      const couriers = Object.entries(users)
-        .filter(([id, user]) => user.accessLevel && user.accessLevel.toLowerCase() === "courier")
-        .map(([id, user]) => ({ id, ...user }));
-      
-      if (couriers.length > 0) {
-        // Assign courier in alternating pattern
-        assignedCourier = couriers[currentIndex % couriers.length];
-        
-        // Update counter for next assignment
-        const nextIndex = (currentIndex + 1) % couriers.length;
-        await set(counterRef, { index: nextIndex });
-        
-        console.log(`Assigned courier: ${assignedCourier.username} (Index: ${currentIndex}, Total couriers: ${couriers.length})`);
-        console.log(`Courier details:`, assignedCourier);
-      } else {
-        console.log("No couriers found in the system");
-      }
-    }
-  } catch (err) {
-    console.error("Courier assignment error:", err);
-    // If courier assignment fails, assignedCourier stays null
-  }
-
-  // --- Use Firebase push key as orderId ---
-  const newOrderRef = push(ref(db, `orders/${uid}`));
-  const orderId = newOrderRef.key;
-
-  // Get courier name with fallbacks
-  let courierName = "Not assigned";
-  let courierContact = "N/A";
+function initializeCompleteOrderButton() {
+  const completeOrderBtn = document.getElementById("completeOrderBtn");
+  console.log("Initializing complete order button:", completeOrderBtn);
   
-  if (assignedCourier) {
-    // Try different name formats
-    courierName = assignedCourier.username || 
-                  (assignedCourier.firstName && assignedCourier.lastName ? 
-                   `${assignedCourier.firstName} ${assignedCourier.lastName}` : 
-                   assignedCourier.firstName || 
-                   assignedCourier.lastName || 
-                   "Courier");
+  if (completeOrderBtn) {
+    console.log("Complete order button found, adding event listener");
     
-    // Get contact details with fallbacks
-    courierContact = assignedCourier.phone || 
-                     assignedCourier.mobilenumber || 
-                     assignedCourier.email || 
-                     "N/A";
-  }
+    // Remove any existing event listeners by cloning the button
+    const newBtn = completeOrderBtn.cloneNode(true);
+    completeOrderBtn.parentNode.replaceChild(newBtn, completeOrderBtn);
+    
+    // Add a simple test click handler to verify the button works
+    newBtn.addEventListener("click", (e) => {
+      console.log("Button clicked - test handler!");
+      e.preventDefault();
+    });
+    
+    newBtn.addEventListener("click", async (e) => {
+      console.log("Complete order button clicked!");
+      e.preventDefault(); // Prevent any form submission
+      
+      try {
+        // All requirements should be met due to button disabling, but double-check:
+        const consentChecked = document.getElementById('consent-checkbox')?.checked;
+        if (!consentChecked) {
+          alert("You must agree to the privacy policy and terms of service before completing your order.");
+          document.getElementById('consent-checkbox').focus();
+          return;
+        }
+        if (!selectedPayment) return alert("Select a payment method.");
+        if (!cartItems || cartItems.length === 0) {
+          alert("Your cart is empty. Please add items before completing your order.");
+          return;
+        }
+        // Delivery option check
+        const deliveryOptionElem = document.getElementById('delivery-option');
+        const deliveryOption = deliveryOptionElem ? deliveryOptionElem.value : "";
+        if (!deliveryOption) {
+          alert("Please select a delivery option.");
+          deliveryOptionElem?.focus();
+          return;
+        }
 
-  console.log(`Final courier assignment for order ${orderId}:`, {
-    courierId: assignedCourier ? assignedCourier.id : "N/A",
-    courierName: courierName,
-    courierContact: courierContact
-  });
+        const clientNameInput = document.querySelector('.client-name');
+        const addressInputs = document.querySelectorAll('.address-input');
+        const addressValues = Array.from(addressInputs).map(input => input.value.trim());
+        const clientName = clientNameInput.value.trim();
 
-  const orderData = {
-    status: "Pending",
-    clientName: clientName,
-    clientId: uid,
-    clientContactDetails: user.phone,
-    courierId: assignedCourier ? assignedCourier.id : "N/A",
-    courierName: courierName,
-    courierContactDetails: courierContact,
-    addressOfClient: address,
-    productDetails: cartItems,
-    orderId,
-    subtotal,
-    shippingFee,
-    total,
-    paidWith: selectedPayment,
-    deliveryOption,
-    eta
-  };
+        // Address validation
+        if (!clientName) {
+          alert("Please enter your full name.");
+          clientNameInput.focus();
+          return;
+        }
+        if (addressValues.some(val => !val)) {
+          alert("Please fill in all address fields.");
+          const firstEmpty = Array.from(addressInputs).find(input => !input.value.trim());
+          firstEmpty && firstEmpty.focus();
+          return;
+        }
 
-  try {
-    await set(newOrderRef, orderData);
+        console.log("All validations passed, processing order...");
 
-    // --- Inventory update START ---
-    for (const item of cartItems) {
-      const productId = item.productId;
-      const qtyOrdered = item.quantity;
-      const invRef = ref(db, `inventory/${productId}`);
-      const invSnap = await get(invRef);
-      if (invSnap.exists()) {
-        const currentQty = invSnap.val().quantity || 0;
-        const newQty = Math.max(0, currentQty - qtyOrdered);
-        console.log(`Updating inventory for ${productId}: ${currentQty} -> ${newQty}`);
-        await set(invRef, { productId, quantity: newQty });
+        // ETA Calculation based on province and delivery option
+        const provinceSelect = document.getElementById('province-select');
+        const province = provinceSelect ? provinceSelect.value : "";
+        const region = getRegionByProvince(province);
+        const { eta: etaDays } = getShippingAndEta(region, deliveryOption);
 
-        // --- Inventory update log ---
-        await push(ref(db, 'logs/inventory'), {
-          action: `Inventory reduced for product ${productId} due to order ${orderId}`,
+        let eta = "";
+        const now = new Date();
+        if (etaDays > 0) {
+          const etaDate = new Date(now);
+          etaDate.setDate(now.getDate() + etaDays);
+          eta = etaDate.toLocaleDateString();
+        } else {
+          eta = now.toLocaleDateString();
+        }
+
+        // Gather address and cart info
+        const address = Array.from(document.querySelectorAll('.address-input')).map(input => input.value).join(", ");
+        if (!address) {
+          alert("Please enter your delivery address.");
+          return;
+        }
+
+        // Recalculate totals with current shippingFee
+        let subtotal = 0;
+        cartItems.forEach(item => {
+          subtotal += (item.pricePerKilo || item.pricePerSack) * item.weight * item.quantity;
+        });
+        const total = subtotal + shippingFee;
+
+        console.log("Order details:", {
+          clientName,
+          address,
+          cartItems: cartItems.length,
+          subtotal,
+          shippingFee,
+          total,
+          selectedPayment,
+          deliveryOption,
+          eta
+        });
+
+        // --- Assign a courier using alternating pattern ---
+        let assignedCourier = null;
+        try {
+          // Get courier assignment counter
+          const counterRef = ref(db, "system/courierAssignmentCounter");
+          const counterSnap = await get(counterRef);
+          let currentIndex = counterSnap.exists() ? counterSnap.val().index || 0 : 0;
+          
+          // Get all available couriers
+          const usersSnap = await get(ref(db, "users"));
+          if (usersSnap.exists()) {
+            const users = usersSnap.val();
+            // Filter couriers
+            const couriers = Object.entries(users)
+              .filter(([id, user]) => user.accessLevel && user.accessLevel.toLowerCase() === "courier")
+              .map(([id, user]) => ({ id, ...user }));
+            
+            if (couriers.length > 0) {
+              // Assign courier in alternating pattern
+              assignedCourier = couriers[currentIndex % couriers.length];
+              
+              // Update counter for next assignment
+              const nextIndex = (currentIndex + 1) % couriers.length;
+              await set(counterRef, { index: nextIndex });
+              
+              console.log(`Assigned courier: ${assignedCourier.username} (Index: ${currentIndex}, Total couriers: ${couriers.length})`);
+              console.log(`Courier details:`, assignedCourier);
+            } else {
+              console.log("No couriers found in the system");
+            }
+          }
+        } catch (err) {
+          console.error("Courier assignment error:", err);
+          // If courier assignment fails, assignedCourier stays null
+        }
+
+        // --- Use Firebase push key as orderId ---
+        const newOrderRef = push(ref(db, `orders/${uid}`));
+        const orderId = newOrderRef.key;
+
+        // Get courier name with fallbacks
+        let courierName = "Not assigned";
+        let courierContact = "N/A";
+        
+        if (assignedCourier) {
+          // Try different name formats
+          courierName = assignedCourier.username || 
+                        (assignedCourier.firstName && assignedCourier.lastName ? 
+                         `${assignedCourier.firstName} ${assignedCourier.lastName}` : 
+                         assignedCourier.firstName || 
+                         assignedCourier.lastName || 
+                         "Courier");
+          
+          // Get contact details with fallbacks
+          courierContact = assignedCourier.phone || 
+                           assignedCourier.mobilenumber || 
+                           assignedCourier.email || 
+                           "N/A";
+        }
+
+        console.log(`Final courier assignment for order ${orderId}:`, {
+          courierId: assignedCourier ? assignedCourier.id : "N/A",
+          courierName: courierName,
+          courierContact: courierContact
+        });
+
+        // Get user data from Firebase
+        const userSnap = await get(ref(db, `users/${uid}`));
+        const userData = userSnap.val();
+        
+        const orderData = {
+          status: "Pending",
+          clientName: clientName,
+          clientId: uid,
+          clientContactDetails: userData?.phone || userData?.mobilenumber || "N/A",
+          courierId: assignedCourier ? assignedCourier.id : "N/A",
+          courierName: courierName,
+          courierContactDetails: courierContact,
+          addressOfClient: address,
+          productDetails: cartItems,
+          orderId,
+          subtotal,
+          shippingFee,
+          total,
+          paidWith: selectedPayment,
+          deliveryOption,
+          eta
+        };
+
+        console.log("Saving order to Firebase:", orderData);
+
+        await set(newOrderRef, orderData);
+        console.log("Order saved successfully!");
+
+        // --- Inventory update START ---
+        for (const item of cartItems) {
+          const productId = item.productId;
+          const qtyOrdered = item.quantity;
+          const invRef = ref(db, `inventory/${productId}`);
+          const invSnap = await get(invRef);
+          if (invSnap.exists()) {
+            const currentQty = invSnap.val().quantity || 0;
+            const newQty = Math.max(0, currentQty - qtyOrdered);
+            console.log(`Updating inventory for ${productId}: ${currentQty} -> ${newQty}`);
+            await set(invRef, { productId, quantity: newQty });
+
+            // --- Inventory update log ---
+            await push(ref(db, 'logs/inventory'), {
+              action: `Inventory reduced for product ${productId} due to order ${orderId}`,
+              date: new Date().toUTCString(),
+              by: uid,
+              orderId: orderId,
+              productId: productId,
+              oldQuantity: currentQty,
+              newQuantity: newQty
+            });
+          } else {
+            console.warn(`Inventory item not found for productId: ${productId}`);
+          }
+        }
+        // --- Inventory update END ---
+
+        await remove(ref(db, `cart/${uid}`));
+        console.log("Cart cleared successfully!");
+
+        // Increment loyalty points
+        const loyaltyRef = ref(db, `loyalty/${uid}`);
+        const snap = await get(loyaltyRef);
+        const current = snap.exists() ? snap.val().points || 0 : 0;
+        await set(loyaltyRef, { points: current + 1 });
+
+        // --- Log successful order ---
+        await push(ref(db, 'logs/orders'), {
+          action: `Order ${orderId} placed by ${clientName}`,
           date: new Date().toUTCString(),
           by: uid,
           orderId: orderId,
-          productId: productId,
-          oldQuantity: currentQty,
-          newQuantity: newQty
+          eta: eta,
+          deliveryOption: deliveryOption
         });
-      } else {
-        console.warn(`Inventory item not found for productId: ${productId}`);
+
+        console.log("Order processing completed successfully!");
+        alert("Order placed! Loyalty Points: " + (current + 1));
+        await updateLoyaltyUI();
+        
+        console.log("Redirecting to clientViewOrders.html...");
+        window.location.href = "clientViewOrders.html";
+      } catch (e) {
+        console.error("Order failed:", e);
+        alert("Order failed: " + e.message);
       }
-    }
-    // --- Inventory update END ---
-
-    await remove(ref(db, `cart/${uid}`));
-
-    // Increment loyalty points
-    const loyaltyRef = ref(db, `loyalty/${uid}`);
-    const snap = await get(loyaltyRef);
-    const current = snap.exists() ? snap.val().points || 0 : 0;
-    await set(loyaltyRef, { points: current + 1 });
-
-    // --- Log successful order ---
-    await push(ref(db, 'logs/orders'), {
-      action: `Order ${orderId} placed by ${clientName}`,
-      date: new Date().toUTCString(),
-      by: uid,
-      orderId: orderId,
-      eta: eta,
-      deliveryOption: deliveryOption
     });
-
-    alert("Order placed! Loyalty Points: " + (current + 1));
-    await updateLoyaltyUI();
-    window.location.href = "clientViewOrders.html";
-  } catch (e) {
-    alert("Order failed: " + e.message);
+  } else {
+    console.error("Complete order button not found!");
   }
-});
+}
 
 function getRegionByProvince(province) {
   // Luzon

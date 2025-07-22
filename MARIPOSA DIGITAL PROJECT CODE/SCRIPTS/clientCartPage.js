@@ -84,7 +84,9 @@ async function loadClientCart() {
   cartItems.forEach((item, i) => {
     section.innerHTML += `
       <div class="cart-item-box">
-        <img src="${item.image || 'default-image.jpg'}" alt="${item.productName}" class="cart-item-img">
+        <div class="cart-item-img" style="width: 80px; height: 80px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+          <span style="font-size: 1.5rem;">🌾</span>
+        </div>
         <div class="cart-item-details">
           <div class="cart-item-title">${item.productName}</div>
           <div class="cart-item-desc">${item.productDescription || item.description}</div>

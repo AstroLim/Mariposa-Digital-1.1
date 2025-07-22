@@ -1939,16 +1939,16 @@ async function renderReservedLotsAdmin() {
       const lotKey = btn.getAttribute('data-lotkey');
       const uid = btn.getAttribute('data-uid');
       if (!confirm("Mark this lot as contract signed and transfer ownership?")) return;
-      await update(ref(db, `lots/${lotKey}`), { status: "owned", reservedBy: uid });
+      await update(ref(db, `lots/${lotKey}`), { status: "rented", reservedBy: uid });
       // Remove the reservation entry
       const reservationKey = btn.getAttribute('data-key');
       await remove(ref(db, `reserveLots/${reservationKey}`));
       push(ref(db, 'logs/lots'), {
-        action: `Lot ${lotKey} marked as owned after contract signing.`,
+        action: `Lot ${lotKey} marked as rented after contract signing.`,
         date: new Date().toUTCString(),
         by: uid
       });
-      alert("Lot marked as owned.");
+      alert("Lot marked as rented.");
       renderReservedLotsAdmin();
     };
   });
@@ -1997,7 +1997,7 @@ async function renderOwnedLotsAdmin() {
   // Fetch all lots
   const lotsSnap = await get(ref(db, 'lots'));
   if (!lotsSnap.exists()) {
-    html += `<p>No owned lots found.</p></div>`;
+    html += `<p>No rented lots found.</p></div>`;
     interfaceElement.innerHTML = html;
     return;
   }
@@ -2006,11 +2006,11 @@ async function renderOwnedLotsAdmin() {
   const usersSnap = await get(ref(db, 'users'));
   const users = usersSnap.exists() ? usersSnap.val() : {};
 
-  let ownedCount = 0;
+  let rentedCount = 0;
   lotsSnap.forEach(child => {
     const lot = child.val();
-    if ((lot.status || '').toLowerCase() === 'owned') {
-      ownedCount++;
+    if ((lot.status || '').toLowerCase() === 'rented') {
+      rentedCount++;
       const owner = users[lot.reservedBy] || {};
       html += `
         <div class="owned-lot-admin-card">
@@ -2018,7 +2018,7 @@ async function renderOwnedLotsAdmin() {
           <div class="owned-lot-admin-card-content">
             <div class="owned-lot-admin-card-header">
               <span class="owned-lot-admin-card-lotnum">Lot #${lot.lotNumber || ""}</span>
-              <span class="owned-lot-admin-card-status">Owned</span>
+              <span class="owned-lot-admin-card-status">Rented</span>
             </div>
             <div class="owned-lot-admin-card-details">
               <div class="owned-lot-admin-owner">
@@ -2043,8 +2043,8 @@ async function renderOwnedLotsAdmin() {
     }
   });
 
-  if (ownedCount === 0) {
-    html += `<p>No owned lots found.</p>`;
+  if (rentedCount === 0) {
+    html += `<p>No rented lots found.</p>`;
   }
 
   html += `</div>`;

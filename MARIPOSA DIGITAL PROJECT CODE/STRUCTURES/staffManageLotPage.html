@@ -3,88 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Manage Lot Page</title>
+    <title>Staff Manage Lots</title>
     <link rel="stylesheet" href="../STYLES/staffManageLotPage.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Grenze:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jua&family=Noto+Serif+Hentaigana:wght@200..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Grenze:wght@400;700&display=swap" rel="stylesheet">
     <script src="../SCRIPTS/staffManageLotui.js" type="module" defer></script>
 </head>
 <body>
-    <div class="Main-Container">
-        <nav class="mainCont-nav">
-            <div class="nav-left-sec">
-                <a href="staffHomePage.html" class="logoA1"><img src="../RESOURCES/imgFiles/Logo.png" class="Logo"></a>
-                <a href="staffHomePage.html" class="hommeA2">Home</a>
-                <a href="staffViewLotPage.html" class="lotsA3">View Lots</a>
+    <div class="staff-manage-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../RESOURCES/imgFiles/Logo.png" alt="Logo" class="sidebar-logo">
+                <h2>Manage Lots</h2>
             </div>
-            
-            <div class="nav-right-sec">
-                <p class="userName">Lim, Evan Vincent B.</p>
-                <a href="../STRUCTURES/staffEAIPage.html" class="settingsA4">Settings</a>
+            <nav class="sidebar-nav">
+                <button class="sidebar-option active" data-option="view">View Lots</button>
+                <button class="sidebar-option" data-option="add">Add Lot</button>
+                <button class="sidebar-option" data-option="edit">Edit Lot</button>
+                <button class="sidebar-option" data-option="remove">Remove Lot</button>
+            </nav>
+            <div class="sidebar-user">
+                <span class="userName"></span>
+                <a href="staffEAIPage.html" class="sidebar-settings">Settings</a>
+                <button class="sidebar-back" onclick="window.location.href='staffHomePage.html'">Go Back</button>
             </div>
-        </nav>
-
-        <section class="MainSection">
-            <header class="MainSection-header">
-                    <div class="header-box1">
-                        <h1 class="header-box-content1">Orders in Shipping</h1>
-                    </div>
+        </aside>
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="main-header-title">View Lots</h1>
             </header>
-
-            <div class="MainSection-Content">
-                <div class="MainSection-Content-left-sec">
-                    <div class="lotManagementBox">
-                        <div class="lotManagementBox-sec-top">
-                            <h1>Manage Lots</h1>
-                        </div>
-        
-                        <div class="lotManagementBox-sec-bot">
-                            <button class="addLotBtn" onclick="addLotui()">Add Lot</button>
-                            <button class="removeLotBtn" onclick="removeLotui()">Remove Lot</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="MainSection-Content-right-sec">
-                    <div class="right-sec-topContent">
-                        <div class="availableLotsStat-container">
-                            <div class="availableLotsStat-sec-top">
-                                <h1>Available Lots</h1>
-                            </div>
-        
-                            <div class="availableLotsStat-sec-bot">
-                                <div class="statContainer"><h1 class="statLabel">Number of Lots:</h1><p class="stat"></p></div>
-                            </div>
-                        </div>
-
-                        <div class="reservedLotsStat-container">
-                            <div class="reservedLotsStat-sec-top">
-                                <h1>Reserved Lots</h1>
-                            </div>
-        
-                            <div class="reservedLotsStat-sec-bot">
-                                <div class="statContainer"><h1 class="statLabel">Number of Lots:</h1><p class="stat"></p></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="right-sec-botContent">
-                        <div class="rentedLotsStat-container">
-                            <div class="rentedLotsStat-sec-top">
-                                <h1>Rented Lots</h1>
-                            </div>
-        
-                            <div class="rentedLotsStat-sec-bot">
-                                <div class="statContainer"><h1 class="statLabel">Number of Lots:</h1><p class="stat"></p></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            <section id="main-content-section">
+                <!-- Dynamic content will be injected here by JS -->
+            </section>
+        </main>
     </div>
-
-
 </body>
 </html>
