@@ -3272,6 +3272,7 @@ async function showAllPaymentsModal() {
 }
 
 function renderPaymentsTable(payments) {
+  document.getElementById('download-payments-report-btn').onclick = downloadPaymentsReport;
   const modalList = document.getElementById('payments-modal-list');
   modalList.innerHTML = payments.length
     ? `<table>
@@ -3317,6 +3318,81 @@ function renderPaymentsTable(payments) {
         </tbody>
       </table>`
     : '<div>No payments found.</div>';
+}
+
+function downloadPaymentsReport() {
+  const table = document.querySelector('#payments-modal-list table');
+  if (!table) {
+    alert('No payments to export.');
+    return;
+  }
+
+  // Use portrait orientation
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "portrait" });
+
+  // Title
+  doc.setFontSize(18);
+  doc.setTextColor(182, 23, 24);
+  doc.text('All Payments Report', doc.internal.pageSize.getWidth() / 2, 16, { align: 'center' });
+
+  // Table headers
+  const headers = [];
+  table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+
+  // Table rows
+  const rows = [];
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const row = [];
+    tr.querySelectorAll('td').forEach((td, i) => {
+      let text = td.textContent.trim();
+      // Format amount column (index 2)
+      if (i === 2) text = text.replace(/₱/g, '').replace(/,/g, '');
+      row.push(text);
+    });
+    rows.push(row);
+  });
+
+  // Use autoTable for a modern, readable table
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: 28,
+    styles: {
+      fontSize: 10,
+      cellPadding: 4,
+      overflow: 'linebreak',
+      valign: 'middle'
+    },
+    headStyles: {
+      fillColor: [182, 23, 24],
+      textColor: 255,
+      fontStyle: 'bold'
+    },
+    alternateRowStyles: { fillColor: [245, 245, 245] },
+    margin: { left: 10, right: 10 },
+    tableWidth: 'auto', // Let autoTable decide the best fit
+    didDrawPage: function (data) {
+      // Center the table if it's not full width
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const tableWidth = data.table.width;
+      if (tableWidth < pageWidth - 20) {
+        data.settings.margin.left = (pageWidth - tableWidth) / 2;
+      }
+    }
+  });
+
+  // Footer with export date
+  const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
+  doc.setFontSize(9);
+  doc.setTextColor(120, 120, 120);
+  doc.text(
+    `Exported: ${new Date().toLocaleString()}`,
+    12,
+    pageHeight - 8
+  );
+
+  doc.save('all_payments_report.pdf');
 }
 
 // Modal open/close logic (already present)

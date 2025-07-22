@@ -6,6 +6,8 @@
   <title>Mariposa Digital - Reports Dashboard</title>
   <link rel="stylesheet" href="../STYLES/ma-manage.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.0/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
   <nav class="nav-container">
@@ -247,6 +249,7 @@
           <div class="inventory-modal-content" style="max-width:900px;">
             <span class="inventory-modal-close" id="payments-modal-close">&times;</span>
             <h2>All Payments</h2>
+            <button id="download-payments-report-btn" class="inventory-viewall-btn" style="margin-bottom:12px;">Download Payments Report</button>
             <div style="margin-bottom:12px;">
               <input id="payments-filter-user" type="text" placeholder="Filter by user..." style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;margin-right:8px;">
               <input id="payments-filter-ref" type="text" placeholder="Filter by ref #" style="padding:6px 12px;border-radius:6px;border:1px solid #ccc;margin-right:8px;">
