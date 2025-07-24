@@ -139,17 +139,28 @@ function loadLots() {
 
     section.innerHTML = "";
     availableLots.forEach(([key, lot]) => {
+      console.log(lot); // Debug: log the lot object to inspect its fields
       const images = Array.isArray(lot.lotImages) ? lot.lotImages : [];
+      // Calculate price for debug
+      let priceValue = lot.lotPrice
+        ? Number(lot.lotPrice.replace(/[^\d.]/g, "")).toLocaleString()
+        : (lot.price
+            ? Number(lot.lotPrice.replace(/[^\d.]/g, "")).toLocaleString()
+            : "N/A");
+      console.log('Calculated price for lot', lot.lotNumber, ':', priceValue);
+      console.log('Raw lotPrice:', lot.lotPrice);
+      console.log('Stripped lotPrice:', lot.lotPrice ? lot.lotPrice.replace(/[^\d.]/g, "") : "undefined");
+      console.log('Number conversion:', lot.lotPrice ? Number(lot.lotPrice.replace(/[^\d.]/g, "")) : "undefined");
       section.innerHTML += `
         <div class="lot-card">
           <h2>Lot #${lot.lotNumber}</h2>
           <p>${lot.lotDescription}</p>
           <p>Size: ${lot.lotSize}</p>
           <p>Price: ₱${
-            lot.lotPrice && !isNaN(Number(lot.lotPrice.toString().replace(/,/g, "")))
-              ? Number(lot.lotPrice.toString().replace(/,/g, "")).toLocaleString()
-              : "N/A"
-          }</p>
+  lot.lotPrice && !isNaN(Number(lot.lotPrice.toString().replace(/,/g, "")))
+    ? Number(lot.lotPrice.toString().replace(/,/g, "")).toLocaleString()
+    : "N/A"
+}</p>
           <div class="lot-images">
             ${images.map(img => `<img src="${img}" alt="Lot Image" class="lot-image">`).join('')}
           </div>

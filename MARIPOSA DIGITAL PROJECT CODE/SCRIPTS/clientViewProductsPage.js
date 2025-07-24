@@ -73,7 +73,11 @@ function loadProducts(productData) {
     productSection.innerHTML += `
       <div class="lot-box">
         <div class="product-image-placeholder" style="width: 100px; height: 100px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin-bottom: 10px;">
-          <span style="font-size: 2rem;">🌾</span>
+          ${
+            product.productImages
+              ? `<img src="${product.productImages}" alt="Product Image" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`
+              : `<img src="../RESOURCES/imgFiles/Logo.png" alt="Default Logo" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`
+          }
         </div>
         <h3>${product.productName}</h3>
         <p>${product.productDescription}</p>

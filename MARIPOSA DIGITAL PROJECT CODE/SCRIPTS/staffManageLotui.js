@@ -105,13 +105,16 @@ async function updateDashboardStats() {
         });
 
         const availableLots = lots.filter(lot => 
-            lot.status && lot.status.toLowerCase() === "available"
+            ((lot.status && lot.status.toLowerCase() === "available") ||
+             (lot.lotStatus && lot.lotStatus.toLowerCase() === "available"))
         );
         const reservedLots = lots.filter(lot => 
-            lot.status && lot.status.toLowerCase() === "reserved"
+            ((lot.status && lot.status.toLowerCase() === "reserved") ||
+             (lot.lotStatus && lot.lotStatus.toLowerCase() === "reserved"))
         );
         const rentedLots = lots.filter(lot => 
-            lot.status && lot.status.toLowerCase() === "rented"
+            ((lot.status && lot.status.toLowerCase() === "rented") ||
+             (lot.lotStatus && lot.lotStatus.toLowerCase() === "rented"))
         );
 
         document.getElementById("available-count").textContent = availableLots.length;
@@ -142,7 +145,7 @@ async function loadLotList() {
                         <h3>${lot.lotNumber || "No Number"}</h3>
                         <p>Size: ${lot.lotSize || "N/A"} sqm</p>
                         <p>Price: ${lot.lotPrice || "N/A"}</p>
-                        <p>Status: ${lot.status || "Unknown"}</p>
+                        <p>Status: ${lot.status || lot.lotStatus || "Unknown"}</p>
                         <p>${lot.lotDescription || ""}</p>
                         <div class="lot-actions">
                             <button onclick="editLotPrompt('${child.key}')">Edit</button>
